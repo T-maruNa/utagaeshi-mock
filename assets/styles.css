@@ -553,3 +553,56 @@ details.fold .fold-body { padding: 0 18px 18px; }
   text-align: center; color: var(--ink-faint); font-size: 13px;
   padding: 40px 20px;
 }
+
+/* 段階制の表示切替（投稿前 / 投稿後） */
+[hidden] { display: none !important; }
+
+/* ---------- 投稿フォーム 補助文・カウンタ状態 ---------- */
+.form-note {
+  font-size: 12.5px;
+  color: var(--accent-ink);
+  line-height: 1.75;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  margin: 0 0 12px;
+}
+.count-status { font-variant-numeric: tabular-nums; color: var(--ink-faint); }
+.count-status.ok { color: var(--accent-ink); }
+.count-status.danger { color: var(--danger); font-weight: 600; }
+
+/* ---------- 段階制ロック案内 ---------- */
+.locked {
+  text-align: center;
+  padding: 28px 22px;
+  background: var(--surface-2);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+.locked .ico { font-size: 22px; opacity: .8; }
+.locked .msg { font-size: 14.5px; margin: 10px 0 18px; line-height: 1.85; color: var(--ink); }
+.locked .btn { max-width: 280px; margin: 0 auto; }
+
+/* ---------- 投稿済み状態 ---------- */
+.posted-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--accent-ink);
+  background: var(--accent-soft); border-radius: 999px; padding: 5px 12px;
+}
+.myreply {
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.myreply .lbl { font-size: 11px; letter-spacing: .08em; color: var(--ink-faint); }
+.myreply .b { font-size: 15px; line-height: 1.85; margin: 8px 0 0; color: var(--ink); }
+
+/* ---------- デモ用の状態リセット ---------- */
+.demo-reset {
+  display: inline-block; margin-top: 10px;
+  font-size: 11.5px; color: var(--ink-faint);
+  text-decoration: underline dotted; cursor: pointer;
+  background: none; border: none; font-family: var(--sans);
+}

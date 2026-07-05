@@ -23,113 +23,127 @@
       <div class="meta">持統天皇／百人一首・二番 ・ <a href="index.html">お題を見る ›</a></div>
     </section>
 
-    <div style="display:flex; align-items:center; justify-content:space-between;">
-      <span class="muted" style="font-size:13px;">128件の返し</span>
-      <div class="tabs">
-        <button class="tab on" data-sort="new">新着</button>
-        <button class="tab" data-sort="popular">人気</button>
+    <!-- ===== 投稿前：ロック案内 ===== -->
+    <div data-when="unposted">
+      <div class="locked">
+        <div class="ico">🔒</div>
+        <div class="msg">まずはあなたの返しを投稿してみましょう。<br>投稿後に、みんなの言葉が開きます。</div>
+        <a class="btn btn-primary" href="index.html">自分の言葉で返す</a>
       </div>
     </div>
 
-    <div data-list>
+    <!-- ===== 投稿後：みんなの返し一覧 ===== -->
+    <div data-when="posted">
 
-      <!-- data-reactions = リアクション総数, data-time = 新着ソート用 -->
-      <article class="post" data-reactions="101" data-time="1720">
-        <div class="post-head">
-          <span class="avatar">ゆ</span>
-          <div>
-            <div class="post-user">ゆき</div>
-            <div class="post-time">3分前</div>
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span class="posted-badge">✓ あなたも返しました</span>
+        <div class="tabs">
+          <button class="tab on" data-sort="new">新着</button>
+          <button class="tab" data-sort="popular">人気</button>
+        </div>
+      </div>
+      <p class="muted" style="font-size:13px; margin:10px 2px 0;">128件の返し</p>
+
+      <div data-list>
+
+        <!-- data-reactions = リアクション総数, data-time = 新着ソート用 -->
+        <article class="post" data-reactions="101" data-time="1720">
+          <div class="post-head">
+            <span class="avatar">ゆ</span>
+            <div>
+              <div class="post-user">ゆき</div>
+              <div class="post-time">3分前</div>
+            </div>
           </div>
-        </div>
-        <p class="post-body">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
-        <div class="reactions">
-          <button class="react on"><span class="emoji">🫧</span>わかる<span class="count">42</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">31</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">28</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="54" data-time="1690">
-        <div class="post-head">
-          <span class="avatar">は</span>
-          <div>
-            <div class="post-user">はると</div>
-            <div class="post-time">12分前</div>
+          <p class="post-body">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
+          <div class="reactions">
+            <button class="react on"><span class="emoji">🫧</span>わかる<span class="count">42</span></button>
+            <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">31</span></button>
+            <button class="react"><span class="emoji">🤍</span>好き<span class="count">28</span></button>
           </div>
-        </div>
-        <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
-          <button class="react on"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-        </div>
-      </article>
+        </article>
 
-      <article class="post" data-reactions="33" data-time="1705">
-        <div class="post-head">
-          <span class="avatar">そ</span>
-          <div>
-            <div class="post-user">そら</div>
-            <div class="post-time">8分前</div>
+        <article class="post" data-reactions="54" data-time="1690">
+          <div class="post-head">
+            <span class="avatar">は</span>
+            <div>
+              <div class="post-user">はると</div>
+              <div class="post-time">12分前</div>
+            </div>
           </div>
-        </div>
-        <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="27" data-time="1712">
-        <div class="post-head">
-          <span class="avatar">み</span>
-          <div>
-            <div class="post-user">みお</div>
-            <div class="post-time">5分前</div>
+          <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
+          <div class="reactions">
+            <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
+            <button class="react on"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
+            <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
           </div>
-        </div>
-        <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
-        </div>
-      </article>
+        </article>
 
-      <article class="post" data-reactions="18" data-time="1698">
-        <div class="post-head">
-          <span class="avatar">な</span>
-          <div>
-            <div class="post-user">なな</div>
-            <div class="post-time">10分前</div>
+        <article class="post" data-reactions="33" data-time="1705">
+          <div class="post-head">
+            <span class="avatar">そ</span>
+            <div>
+              <div class="post-user">そら</div>
+              <div class="post-time">8分前</div>
+            </div>
           </div>
-        </div>
-        <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="9" data-time="1718">
-        <div class="post-head">
-          <span class="avatar">れ</span>
-          <div>
-            <div class="post-user">れん</div>
-            <div class="post-time">1分前</div>
+          <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
+          <div class="reactions">
+            <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
+            <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
+            <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
           </div>
-        </div>
-        <p class="post-body">気づけば夏。今年はちゃんと、やりたいことをやる。まず海。</p>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">4</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">3</span></button>
-        </div>
-      </article>
+        </article>
 
+        <article class="post" data-reactions="27" data-time="1712">
+          <div class="post-head">
+            <span class="avatar">み</span>
+            <div>
+              <div class="post-user">みお</div>
+              <div class="post-time">5分前</div>
+            </div>
+          </div>
+          <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
+          <div class="reactions">
+            <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
+            <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
+            <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
+          </div>
+        </article>
+
+        <article class="post" data-reactions="18" data-time="1698">
+          <div class="post-head">
+            <span class="avatar">な</span>
+            <div>
+              <div class="post-user">なな</div>
+              <div class="post-time">10分前</div>
+            </div>
+          </div>
+          <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
+          <div class="reactions">
+            <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
+            <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
+            <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
+          </div>
+        </article>
+
+        <article class="post" data-reactions="9" data-time="1718">
+          <div class="post-head">
+            <span class="avatar">れ</span>
+            <div>
+              <div class="post-user">れん</div>
+              <div class="post-time">1分前</div>
+            </div>
+          </div>
+          <p class="post-body">気づけば夏。今年はちゃんと、やりたいことをやる。まず海。</p>
+          <div class="reactions">
+            <button class="react"><span class="emoji">🫧</span>わかる<span class="count">4</span></button>
+            <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
+            <button class="react"><span class="emoji">🤍</span>好き<span class="count">3</span></button>
+          </div>
+        </article>
+
+      </div>
     </div>
 
     <div class="spacer"></div>

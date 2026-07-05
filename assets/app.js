@@ -2,11 +2,39 @@
 (function () {
   "use strict";
 
+  /* ===== 投稿前 / 投稿後 の状態（段階制） =====
+     実際のサービスでは投稿の有無をサーバーで判定するが、
+     モックでは localStorage で「今日返したか」を保持してデモする。 */
+  var POSTED_KEY = "utagaeshi_posted";
+  function isPosted() { return localStorage.getItem(POSTED_KEY) === "1"; }
+  function setPosted(v) {
+    if (v) localStorage.setItem(POSTED_KEY, "1");
+    else localStorage.removeItem(POSTED_KEY);
+  }
+
+  /* data-when="posted" / "unposted" の要素を状態に応じて出し分け */
+  function applyState() {
+    var posted = isPosted();
+    document.querySelectorAll("[data-when]").forEach(function (el) {
+      var want = el.getAttribute("data-when");
+      el.hidden = (want === "posted") !== posted;
+    });
+  }
+  applyState();
+
+  /* デモ用：投稿前の状態に戻す */
+  document.querySelectorAll("[data-demo-reset]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.preventDefault();
+      setPosted(false);
+      location.reload();
+    });
+  });
+
   /* --- 下部ナビの現在地ハイライト --- */
   var path = location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-item").forEach(function (el) {
-    var href = el.getAttribute("href");
-    if (href === path) el.classList.add("on");
+    if (el.getAttribute("href") === path) el.classList.add("on");
   });
 
   /* --- リアクションのトグル（1回押し = 追加 / もう一度 = 取り消し） --- */
@@ -25,21 +53,54 @@
     });
   });
 
-  /* --- 投稿フォームの送信可否（空のときは押せない・文字数制限なし） --- */
+  /* --- 投稿フォーム：10〜200字のカウントと送信可否 --- */
   var ta = document.querySelector(".textarea");
   if (ta) {
+    var MIN = 10, MAX = 200;
     var submit = document.querySelector("[data-submit]");
+    var numEl = document.querySelector("[data-count-num]");
+    var statusEl = document.querySelector("[data-count-status]");
+    var wrap = document.querySelector(".count");
+
     var update = function () {
-      if (submit) submit.disabled = ta.value.trim().length === 0;
+      var raw = ta.value.length;
+      var len = ta.value.trim().length;
+      if (numEl) numEl.textContent = raw;
+
+      var over = raw > MAX;
+      var under = len < MIN;
+      if (wrap) wrap.classList.toggle("over", over);
+
+      if (statusEl) {
+        if (over) {
+          statusEl.textContent = (raw - MAX) + "字オーバー";
+          statusEl.className = "count-status danger";
+        } else if (under) {
+          statusEl.textContent = "あと" + (MIN - len) + "字";
+          statusEl.className = "count-status";
+        } else {
+          statusEl.textContent = "OK";
+          statusEl.className = "count-status ok";
+        }
+      }
+      if (submit) submit.disabled = over || under;
     };
     ta.addEventListener("input", update);
     update();
 
-    /* AI投稿例をタップしたら入力欄に下書きとして入れる */
+    /* 送信（モック）：投稿済みにして、みんなの返しが開いた一覧へ */
+    if (submit) {
+      submit.addEventListener("click", function () {
+        if (submit.disabled) return;
+        setPosted(true);
+        location.href = "posts.html";
+      });
+    }
+
+    /* AI「返しの例」をタップしたら入力欄に下書きとして入れる */
     document.querySelectorAll(".example").forEach(function (ex) {
       ex.addEventListener("click", function () {
-        var text = ex.getAttribute("data-text") || "";
-        ta.value = text;
+        ta.value = ex.getAttribute("data-text") || "";
         update();
         ta.focus();
         ta.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -62,7 +123,7 @@
           if (mode === "popular") {
             return (+b.dataset.reactions) - (+a.dataset.reactions);
           }
-          return (+b.dataset.time) - (+a.dataset.time); // 新着 = time降順
+          return (+b.dataset.time) - (+a.dataset.time);
         });
         items.forEach(function (it) { list.appendChild(it); });
       });

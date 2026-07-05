@@ -23,8 +23,8 @@
       <div class="meta">持統天皇／百人一首・二番 ・ <a href="index.html">お題を見る ›</a></div>
     </section>
 
-    <!-- 1位（トップ投稿を大きく） -->
-    <p class="section-label">今日のトップ投稿</p>
+    <!-- 1位（今日いちばん響いた返し）は投稿前でも見える -->
+    <p class="section-label">今日いちばん響いた返し</p>
     <section class="toppost" style="border-color:#e4d7b3;">
       <div class="crown">♔ 1位 ・ リアクション 101</div>
       <p class="body" style="font-size:16.5px;">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
@@ -39,80 +39,93 @@
       </div>
     </section>
 
-    <!-- 2位以下 -->
-    <p class="section-label">2位以下</p>
+    <!-- ===== 投稿前：2位以下はロック ===== -->
+    <div data-when="unposted">
+      <div class="locked">
+        <div class="ico">🔒</div>
+        <div class="msg">返すと、ランキングの続きが見られます。</div>
+        <a class="btn btn-primary" href="index.html">自分の言葉で返す</a>
+      </div>
+    </div>
 
-    <article class="post" style="border-color:var(--line-strong);">
-      <div class="post-head">
-        <span class="post-rank silver">2</span>
-        <span class="avatar">は</span>
-        <div>
-          <div class="post-user">はると</div>
-          <div class="post-time">リアクション 54</div>
+    <!-- ===== 投稿後：2位以下 ===== -->
+    <div data-when="posted">
+
+      <p class="section-label">2位以下</p>
+
+      <article class="post" style="border-color:var(--line-strong);">
+        <div class="post-head">
+          <span class="post-rank silver">2</span>
+          <span class="avatar">は</span>
+          <div>
+            <div class="post-user">はると</div>
+            <div class="post-time">リアクション 54</div>
+          </div>
         </div>
-      </div>
-      <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
-      <div class="reactions">
-        <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
-        <button class="react on"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-      </div>
-    </article>
-
-    <article class="post">
-      <div class="post-head">
-        <span class="post-rank">3</span>
-        <span class="avatar">そ</span>
-        <div>
-          <div class="post-user">そら</div>
-          <div class="post-time">リアクション 33</div>
+        <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
+          <button class="react on"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
         </div>
-      </div>
-      <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
-      <div class="reactions">
-        <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
-        <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-      </div>
-    </article>
+      </article>
 
-    <article class="post">
-      <div class="post-head">
-        <span class="post-rank">4</span>
-        <span class="avatar">み</span>
-        <div>
-          <div class="post-user">みお</div>
-          <div class="post-time">リアクション 27</div>
+      <article class="post">
+        <div class="post-head">
+          <span class="post-rank">3</span>
+          <span class="avatar">そ</span>
+          <div>
+            <div class="post-user">そら</div>
+            <div class="post-time">リアクション 33</div>
+          </div>
         </div>
-      </div>
-      <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
-      <div class="reactions">
-        <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
-        <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
-      </div>
-    </article>
-
-    <article class="post">
-      <div class="post-head">
-        <span class="post-rank">5</span>
-        <span class="avatar">な</span>
-        <div>
-          <div class="post-user">なな</div>
-          <div class="post-time">リアクション 18</div>
+        <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
         </div>
-      </div>
-      <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
-      <div class="reactions">
-        <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
-        <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
-      </div>
-    </article>
+      </article>
 
-    <p class="center muted" style="font-size:12px; margin-top:16px;">
-      同数のときは「刺さった」が多い順、それも同じなら投稿が早い順。
-    </p>
+      <article class="post">
+        <div class="post-head">
+          <span class="post-rank">4</span>
+          <span class="avatar">み</span>
+          <div>
+            <div class="post-user">みお</div>
+            <div class="post-time">リアクション 27</div>
+          </div>
+        </div>
+        <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
+        </div>
+      </article>
+
+      <article class="post">
+        <div class="post-head">
+          <span class="post-rank">5</span>
+          <span class="avatar">な</span>
+          <div>
+            <div class="post-user">なな</div>
+            <div class="post-time">リアクション 18</div>
+          </div>
+        </div>
+        <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
+        </div>
+      </article>
+
+      <p class="center muted" style="font-size:12px; margin-top:16px;">
+        同数のときは「刺さった」が多い順、それも同じなら投稿が早い順。
+      </p>
+
+    </div>
 
     <div class="spacer"></div>
 

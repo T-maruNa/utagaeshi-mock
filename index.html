@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>うたがえし｜昔のうたに、今の言葉で返す</title>
-<meta name="description" content="毎日届く古典短歌の原文をお題に、AIのやさしい解説をヒントにしながら、今の自分の言葉で返す投稿サービス。">
+<meta name="description" content="毎日届く古典短歌の原文をお題に、AIのやさしい読み解きをヒントにしながら、今の自分の言葉で返す投稿サービス。">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -22,7 +22,7 @@
 
     <p class="section-label">今日のお題</p>
 
-    <!-- 主役：短歌原文 -->
+    <!-- 主役：古典短歌の原文（一首） -->
     <section class="poem">
       <div class="poem-body">春過ぎて
 夏来にけらし
@@ -46,10 +46,14 @@
         <span class="chev">⌄</span>
       </summary>
       <div class="fold-body">
+        <div class="ai-head" style="margin-bottom:12px;">
+          <span>AIによる読み解きのヒント</span>
+          <span class="ai-note">※正解ではありません</span>
+        </div>
         <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してあるのが見える——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
         <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
 
-        <p class="section-label" style="margin-top:16px;">こんなふうに返せます</p>
+        <p class="section-label" style="margin-top:18px;">返しの例</p>
         <div class="examples">
           <button class="example" type="button" data-text="気づいたら夏だった。今年もあの人と、海に行けるかな。">
             <span class="n">1</span>
@@ -70,32 +74,68 @@
       </div>
     </details>
 
-    <!-- 入力フォーム：この画面から直接返せる -->
-    <p class="section-label">あなたの言葉</p>
-    <div class="field">
-      <textarea class="textarea"
-        placeholder="今の自分なら、どう返しますか？"></textarea>
-      <p class="hint" style="margin-top:8px;">1日1投稿</p>
+    <!-- ===== 投稿前：入力フォーム ===== -->
+    <div data-when="unposted">
+      <p class="section-label">あなたの言葉で返す</p>
+      <p class="form-note">正解じゃなくて大丈夫。今の自分ならどう言うかを書いてください。</p>
+      <div class="field">
+        <textarea class="textarea"
+          placeholder="今の自分なら、どう返しますか？"></textarea>
+        <div class="count">
+          <span class="hint">10〜200字</span>
+          <span><span data-count-status class="count-status">あと10字</span> ・ <b data-count-num>0</b> / 200</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" data-submit disabled>自分の言葉で返す</button>
     </div>
-    <button class="btn btn-primary" data-submit disabled>この言葉で返す</button>
 
-    <!-- 今日のトップ投稿 -->
-    <p class="section-label">今日のトップ投稿</p>
-    <a class="toppost" href="ranking.html" style="display:block; text-decoration:none; color:inherit;">
-      <div class="crown">♔ いちばん響いた一首</div>
+    <!-- ===== 投稿後：投稿済み表示 ===== -->
+    <div data-when="posted">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <p class="section-label" style="margin:0;">あなたの返し</p>
+        <span class="posted-badge">✓ 投稿済み</span>
+      </div>
+      <div class="myreply">
+        <div class="lbl">今日の返し</div>
+        <p class="b">気づいたら夏。今年はちゃんと、行きたかった場所に行く。</p>
+      </div>
+      <p class="center muted" style="font-size:12px; margin-top:10px;">
+        今日はもう返しました。みんなの返しが開いています。
+      </p>
+    </div>
+
+    <!-- 今日いちばん響いた返し（トップの返し 1件・常時表示） -->
+    <p class="section-label">今日いちばん響いた返し</p>
+    <div class="toppost">
+      <div class="crown">♔ いま最も反応を集めている返し</div>
       <p class="body">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
       <div class="foot">
         <span class="avatar" style="width:24px;height:24px;font-size:11px;">ゆ</span>
         <span>ゆき</span>
         <span class="muted">・ わかる 42 / 刺さった 31 / 好き 28</span>
       </div>
-    </a>
+    </div>
 
-    <!-- みんなの投稿への導線 -->
-    <a class="list-link" href="posts.html">
-      みんなの返しを読む
-      <span class="chev">›</span>
-    </a>
+    <!-- ===== 投稿前：みんなの返しはロック ===== -->
+    <div data-when="unposted">
+      <div class="locked">
+        <div class="ico">🔒</div>
+        <div class="msg">自分の言葉で返すと、みんなの返しが読めます。</div>
+        <div class="hint" style="font-size:12px;">まずはあなたの返しを投稿してみましょう。<br>投稿後に、みんなの言葉が開きます。</div>
+      </div>
+    </div>
+
+    <!-- ===== 投稿後：みんなの返し・ランキングへ ===== -->
+    <div data-when="posted">
+      <a class="list-link" href="posts.html">
+        みんなの返しを読む
+        <span class="chev">›</span>
+      </a>
+      <a class="list-link" href="ranking.html" style="margin-top:12px;">
+        今日のランキングを見る
+        <span class="chev">›</span>
+      </a>
+    </div>
 
     <div class="spacer"></div>
 
