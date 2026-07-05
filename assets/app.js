@@ -232,24 +232,36 @@
     var indicator = book.querySelector("[data-book-indicator]");
     var prevBtn = book.querySelector("[data-book-prev]");
     var nextBtn = book.querySelector("[data-book-next]");
-    var renderBook = function () {
-      pages.forEach(function (el, i) { el.hidden = i !== pageIdx; });
+    /* direction: "next"/"prev" でスライドしながらページが切り替わる。省略時はアニメーションなし（初期表示用） */
+    var renderBook = function (direction) {
+      pages.forEach(function (el, i) {
+        el.hidden = i !== pageIdx;
+        el.classList.remove("enter-next", "enter-prev");
+      });
+      if (direction) {
+        var current = pages[pageIdx];
+        current.classList.add(direction === "next" ? "enter-next" : "enter-prev");
+        void current.offsetWidth; /* reflowを強制してから解除し、遷移アニメーションを発火させる */
+        requestAnimationFrame(function () {
+          current.classList.remove("enter-next", "enter-prev");
+        });
+      }
       if (indicator) indicator.textContent = (pageIdx + 1) + " / " + pages.length;
       if (prevBtn) prevBtn.disabled = pageIdx === 0;
       if (nextBtn) nextBtn.disabled = pageIdx === pages.length - 1;
     };
-    if (prevBtn) prevBtn.addEventListener("click", function () { if (pageIdx > 0) { pageIdx--; renderBook(); } });
-    if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1) { pageIdx++; renderBook(); } });
+    if (prevBtn) prevBtn.addEventListener("click", function () { if (pageIdx > 0) { pageIdx--; renderBook("prev"); } });
+    if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1) { pageIdx++; renderBook("next"); } });
     renderBook();
 
-    /* 左右スワイプでもページをめくれる */
+    /* 左右スワイプでもスライドしながらページをめくれる */
     var touchStartX = null;
     book.addEventListener("touchstart", function (e) { touchStartX = e.touches[0].clientX; }, { passive: true });
     book.addEventListener("touchend", function (e) {
       if (touchStartX === null) return;
       var dx = e.changedTouches[0].clientX - touchStartX;
-      if (dx < -40 && pageIdx < pages.length - 1) { pageIdx++; renderBook(); }
-      else if (dx > 40 && pageIdx > 0) { pageIdx--; renderBook(); }
+      if (dx < -40 && pageIdx < pages.length - 1) { pageIdx++; renderBook("next"); }
+      else if (dx > 40 && pageIdx > 0) { pageIdx--; renderBook("prev"); }
       touchStartX = null;
     }, { passive: true });
   }

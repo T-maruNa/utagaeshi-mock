@@ -894,22 +894,49 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .book { margin-top: 14px; }
 .book-card {
   height: 300px;
-  padding: 26px 16px;
+  padding: 22px 18px;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
-  overflow-y: auto; overflow-x: hidden;
+  /* 縦方向はスクロールさせない。文字数が多い返し(最大200字)は列を増やして
+     右→左に折り返すので、その分だけ横方向にスライドして読む。
+     スクロールの基準もdirection:rtlにして、初期表示が本文の先頭（右端）に
+     なるようにする（通常のltrスクロールのままだと初期表示が末尾になってしまう） */
+  overflow-y: hidden; overflow-x: auto;
+  direction: rtl;
+  scroll-snap-type: x proximity;
 }
 /* 縦書きにするのは返し本文だけ。見出し・日付・導線・ボタン類は横書きのまま。
    CSSのwriting-mode:vertical-rlは環境によって一部の漢字の字送りが0になり
    文字が重なることがあるため（フォントの縦書きメトリクス欠落）、
-   1文字ずつ要素化してflexで縦に積む（＝確実にこの通りの見た目になる）方式にする */
+   1文字ずつ要素化し、flexの縦方向wrapで右→左に列を折り返す
+   （direction:rtlで折り返し方向を伝統的な縦書きと同じ向きにする）方式にする */
 .book-text {
-  display: flex; flex-direction: column; align-items: center;
+  height: 100%;
+  width: max-content; /* auto(既定)だと親の見える幅に収まってしまい、
+                          文字数が多いときに必要な列数ぶん広がらないため明示する */
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  direction: rtl;
   font-family: var(--serif);
   font-size: 17px;
   color: var(--ink);
 }
-.book-text .ch { line-height: 1.9; }
+.book-text .ch {
+  flex: none;
+  width: 1.9em; height: 1.9em;
+  line-height: 1.9em;
+  text-align: center;
+  scroll-snap-align: start;
+}
+
+/* ページをめくった返しがふわっとスライドして現れる */
+.book-entry {
+  transition: transform .28s ease, opacity .28s ease;
+}
+.book-entry.enter-next { transform: translateX(18px); opacity: 0; }
+.book-entry.enter-prev { transform: translateX(-18px); opacity: 0; }
 .book-meta {
   margin-top: 12px; padding: 0 2px;
   font-size: 11.5px; color: var(--ink-faint); line-height: 1.8;
