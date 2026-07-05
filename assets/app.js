@@ -212,6 +212,48 @@
 
   bindReactions(document);
 
+  /* 縦書き本文：1文字ずつ要素化して積む（writing-modeのフォント依存を避け、確実にこの見た目にする） */
+  document.querySelectorAll(".book-text").forEach(function (el) {
+    var chars = Array.prototype.slice.call(el.textContent);
+    el.textContent = "";
+    chars.forEach(function (ch) {
+      var span = document.createElement("span");
+      span.className = "ch";
+      span.textContent = ch;
+      el.appendChild(span);
+    });
+  });
+
+  /* ===== 返し帳：自分の返しを1ページずつめくる ===== */
+  var book = document.querySelector("[data-book]");
+  if (book) {
+    var pages = Array.prototype.slice.call(book.querySelectorAll("[data-book-entry]"));
+    var pageIdx = 0;
+    var indicator = book.querySelector("[data-book-indicator]");
+    var prevBtn = book.querySelector("[data-book-prev]");
+    var nextBtn = book.querySelector("[data-book-next]");
+    var renderBook = function () {
+      pages.forEach(function (el, i) { el.hidden = i !== pageIdx; });
+      if (indicator) indicator.textContent = (pageIdx + 1) + " / " + pages.length;
+      if (prevBtn) prevBtn.disabled = pageIdx === 0;
+      if (nextBtn) nextBtn.disabled = pageIdx === pages.length - 1;
+    };
+    if (prevBtn) prevBtn.addEventListener("click", function () { if (pageIdx > 0) { pageIdx--; renderBook(); } });
+    if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1) { pageIdx++; renderBook(); } });
+    renderBook();
+
+    /* 左右スワイプでもページをめくれる */
+    var touchStartX = null;
+    book.addEventListener("touchstart", function (e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+    book.addEventListener("touchend", function (e) {
+      if (touchStartX === null) return;
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if (dx < -40 && pageIdx < pages.length - 1) { pageIdx++; renderBook(); }
+      else if (dx > 40 && pageIdx > 0) { pageIdx--; renderBook(); }
+      touchStartX = null;
+    }, { passive: true });
+  }
+
   /* 「AIに読んでもらう」ダミー感想（将来枠） */
   document.querySelectorAll("[data-ai-read]").forEach(function (btn) {
     btn.addEventListener("click", function () {

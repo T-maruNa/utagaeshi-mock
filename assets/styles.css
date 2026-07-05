@@ -877,6 +877,52 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .tomorrow-preview-meta { font-size: 11.5px; color: var(--ink-faint); }
 .tomorrow-preview-note { font-size: 12px; color: var(--ink-soft); line-height: 1.7; margin: 10px 0 0; }
 
+/* ---------- 返し帳：自分の返しが本の1ページのように残る ---------- */
+.book { margin-top: 4px; }
+.book-card {
+  height: 240px;
+  padding: 22px 16px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-soft);
+  overflow-y: auto; overflow-x: hidden;
+}
+/* 縦書きにするのは返し本文だけ。見出し・日付・導線・ボタン類は横書きのまま。
+   CSSのwriting-mode:vertical-rlは環境によって一部の漢字の字送りが0になり
+   文字が重なることがあるため（フォントの縦書きメトリクス欠落）、
+   1文字ずつ要素化してflexで縦に積む（＝確実にこの通りの見た目になる）方式にする */
+.book-text {
+  display: flex; flex-direction: column; align-items: center;
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink);
+}
+.book-text .ch { line-height: 1.9; }
+.book-meta {
+  margin-top: 12px; padding: 0 2px;
+  font-size: 11.5px; color: var(--ink-faint); line-height: 1.8;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.book-meta .book-src { color: var(--ink-soft); }
+.book-src-link { color: var(--accent-ink); text-decoration: none; align-self: flex-start; margin-top: 2px; }
+.book-reactions {
+  margin-top: 10px; padding: 10px 2px 0; border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: 10px;
+  font-size: 11.5px; color: var(--ink-soft);
+}
+.book-reactions-label { color: var(--ink-faint); }
+.book-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px;
+}
+.book-nav button {
+  border: 1px solid var(--line-strong); background: var(--surface);
+  border-radius: 999px; padding: 8px 14px;
+  font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+  cursor: pointer;
+}
+.book-nav button:disabled { opacity: .35; cursor: default; }
+.book-indicator { font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
 /* 返し帳・返しカードの元うた情報 */
 .hist { display: block; }
 .hist .b { margin: 0 0 8px; font-size: 14px; line-height: 1.75; color: var(--ink); }
