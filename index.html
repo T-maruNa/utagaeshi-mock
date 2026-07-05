@@ -10,17 +10,26 @@
 <body>
 <div class="app">
 
-  <header class="header">
-    <a class="logo" href="index.html">うたがえし<small>UTAGAESHI</small></a>
-    <div class="header-date">
-      2026年7月
-      <b>7月5日（日）</b>
-    </div>
-  </header>
+  <!-- 固定トップバー：ヘッダー＋投稿バー -->
+  <div class="topbar">
+    <header class="header">
+      <a class="logo" href="index.html">うたがえし<small>UTAGAESHI</small></a>
+      <div class="header-date">
+        2026年7月
+        <b>7月5日（日）</b>
+      </div>
+    </header>
+    <!-- Xのコンポーズ風：タップで投稿モーダル（未ログインはログイン誘導） -->
+    <button class="compose-bar" type="button" data-compose>
+      <span class="avatar">＋</span>
+      <span class="compose-placeholder">今の自分なら、どう返しますか？</span>
+      <span class="compose-go">返す</span>
+    </button>
+  </div>
 
   <main class="page">
 
-    <!-- 1. 今日の短歌原文（主役） -->
+    <!-- お題の短歌（フィード最上部・主役） -->
     <p class="section-label">今日のお題</p>
     <section class="poem">
       <div class="poem-body">春過ぎて
@@ -32,14 +41,13 @@
         <span class="tag">夏</span>
         <span class="tag">季節</span>
       </div>
-      <!-- 2. 作者・出典 -->
       <div class="poem-meta">
         <span class="author">持統天皇</span>
         <span class="source">百人一首・二番／新古今和歌集</span>
       </div>
     </section>
 
-    <!-- 3. AIによる読み解きのヒント（控えめ・折りたたみ） / 4. 返しの例 -->
+    <!-- AIによる読み解きのヒント（控えめ・折りたたみ） / 返しの例 -->
     <details class="fold">
       <summary>
         <span class="ai-badge">AI</span> 読み解きのヒントを見る
@@ -55,112 +63,127 @@
 
         <p class="section-label" style="margin-top:18px;">返しの例</p>
         <div class="examples">
-          <button class="example" type="button" data-text="気づいたら夏だった。今年もあの人と、海に行けるかな。">
+          <button class="example" type="button" data-compose data-text="気づいたら夏だった。今年もあの人と、海に行けるかな。">
             <span class="n">1</span>
             <span>気づいたら夏だった。今年もあの人と、海に行けるかな。</span>
-            <span class="use">下書きに ›</span>
+            <span class="use">この例で返す ›</span>
           </button>
-          <button class="example" type="button" data-text="ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。">
+          <button class="example" type="button" data-compose data-text="ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。">
             <span class="n">2</span>
             <span>ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</span>
-            <span class="use">下書きに ›</span>
+            <span class="use">この例で返す ›</span>
           </button>
-          <button class="example" type="button" data-text="春の終わりって、いつも突然。もう半袖でいい気温になってた。">
+          <button class="example" type="button" data-compose data-text="春の終わりって、いつも突然。もう半袖でいい気温になってた。">
             <span class="n">3</span>
             <span>春の終わりって、いつも突然。もう半袖でいい気温になってた。</span>
-            <span class="use">下書きに ›</span>
+            <span class="use">この例で返す ›</span>
           </button>
         </div>
       </div>
     </details>
 
-    <!-- 5. 今日いちばん響いた返し -->
-    <p class="section-label">今日いちばん響いた返し</p>
-    <a class="toppost" href="post-detail.html" style="display:block; text-decoration:none; color:inherit;">
-      <div class="crown">♔ いま最も反応を集めている返し</div>
-      <p class="body">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
-      <div class="foot">
-        <span class="avatar" style="width:24px;height:24px;font-size:11px;">ゆ</span>
-        <span>ゆき</span>
-        <span class="muted">・ わかる 42 / 刺さった 31 / 好き 28</span>
-      </div>
-    </a>
-
-    <!-- 6. みんなの返し（読むだけでも楽しめる。プレビュー3件） -->
+    <!-- みんなの返し（フィード） -->
     <div style="display:flex; align-items:center; justify-content:space-between;">
       <p class="section-label" style="margin:0;">みんなの返し</p>
-      <a href="posts.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none;">もっと読む ›</a>
+      <div class="tabs">
+        <button class="tab on" data-sort="new">新着</button>
+        <button class="tab" data-sort="popular">人気</button>
+      </div>
     </div>
 
-    <article class="post">
-      <a class="post-main" href="post-detail.html">
-        <div class="post-head">
-          <span class="avatar">は</span>
-          <div>
-            <div class="post-user">はると</div>
-            <div class="post-time">12分前</div>
+    <div data-list>
+
+      <article class="post" data-reactions="101" data-time="1720">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head">
+            <span class="avatar">ゆ</span>
+            <div><div class="post-user">ゆき</div><div class="post-time">3分前</div></div>
+            <span class="post-rank gold" title="今日いちばん響いた返し" style="margin-left:auto;">♔</span>
           </div>
+          <p class="post-body">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
+        </a>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">42</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">31</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">28</span></button>
         </div>
-        <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
-      </a>
-      <div class="reactions">
-        <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
-        <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-      </div>
-    </article>
+      </article>
 
-    <article class="post">
-      <a class="post-main" href="post-detail.html">
-        <div class="post-head">
-          <span class="avatar">そ</span>
-          <div>
-            <div class="post-user">そら</div>
-            <div class="post-time">8分前</div>
+      <article class="post" data-reactions="54" data-time="1690">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head">
+            <span class="avatar">は</span>
+            <div><div class="post-user">はると</div><div class="post-time">12分前</div></div>
           </div>
+          <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
+        </a>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
         </div>
-        <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
-      </a>
-      <div class="reactions">
-        <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
-        <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-      </div>
-    </article>
+      </article>
 
-    <a class="list-link" href="posts.html">
-      みんなの返しをもっと読む
-      <span class="chev">›</span>
-    </a>
-
-    <!-- 7. 返す導線（強制しない・自然に置く） -->
-    <div class="reply-invite">
-      <p class="lead">あなたなら、どう返しますか？</p>
-      <p class="sub">読んで終わっても大丈夫。書きたくなったら、今の自分の言葉で返してみてください。</p>
-
-      <!-- 未ログイン：ログイン誘導 -->
-      <div data-auth="out">
-        <button class="btn btn-primary" type="button" data-login-msg="返すにはログインが必要です。">自分の言葉で返す</button>
-      </div>
-
-      <!-- ログイン済み：返しフォーム -->
-      <div data-auth="in" hidden>
-        <div data-post-form>
-          <p class="form-note" style="text-align:left;">正解じゃなくて大丈夫。今の自分ならどう言うかを書いてください。</p>
-          <div class="field">
-            <textarea class="textarea" placeholder="今の自分なら、どう返しますか？"></textarea>
-            <div class="count">
-              <span class="hint">10〜200字</span>
-              <span><span data-count-status class="count-status">あと10字</span> ・ <b data-count-num>0</b> / 200</span>
-            </div>
+      <article class="post" data-reactions="33" data-time="1705">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head">
+            <span class="avatar">そ</span>
+            <div><div class="post-user">そら</div><div class="post-time">8分前</div></div>
           </div>
-          <button class="btn btn-primary" data-submit disabled>この言葉で返す</button>
+          <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
+        </a>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
         </div>
-        <div data-post-done hidden>
-          <span class="posted-badge">✓ 返しました</span>
-          <p class="sub" style="margin-top:12px;">みんなの返しに並びます。返し帳からいつでも読み返せます。</p>
+      </article>
+
+      <article class="post" data-reactions="27" data-time="1712">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head">
+            <span class="avatar">み</span>
+            <div><div class="post-user">みお</div><div class="post-time">5分前</div></div>
+          </div>
+          <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
+        </a>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
         </div>
-      </div>
+      </article>
+
+      <article class="post" data-reactions="18" data-time="1698">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head">
+            <span class="avatar">な</span>
+            <div><div class="post-user">なな</div><div class="post-time">10分前</div></div>
+          </div>
+          <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
+        </a>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
+        </div>
+      </article>
+
+      <article class="post" data-reactions="9" data-time="1718">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head">
+            <span class="avatar">れ</span>
+            <div><div class="post-user">れん</div><div class="post-time">1分前</div></div>
+          </div>
+          <p class="post-body">気づけば夏。今年はちゃんと、やりたいことをやる。まず海。</p>
+        </a>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">4</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">3</span></button>
+        </div>
+      </article>
+
     </div>
 
     <div class="spacer"></div>
@@ -170,11 +193,7 @@
   <nav class="bottomnav">
     <a class="nav-item" href="index.html">
       <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
-      お題
-    </a>
-    <a class="nav-item" href="posts.html">
-      <svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-5 4z"/></svg>
-      みんな
+      ホーム
     </a>
     <a class="nav-item" href="ranking.html">
       <svg viewBox="0 0 24 24"><path d="M6 20v-6M12 20V8M18 20v-9M4 20h16"/></svg>

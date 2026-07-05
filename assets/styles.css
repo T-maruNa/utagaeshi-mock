@@ -678,3 +678,95 @@ details.fold .fold-body { padding: 0 18px 18px; }
   font-size: 13.5px; line-height: 1.85; color: var(--ink);
 }
 .ai-read .comment .lbl { font-size: 10.5px; color: var(--ink-faint); letter-spacing: .06em; display: block; margin-bottom: 6px; }
+
+/* ---------- 固定トップバー（ヘッダー＋投稿バー） ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(1.2) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar .header {
+  position: static;
+  background: none;
+  backdrop-filter: none;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Xのコンポーズ風・投稿バー */
+.compose-bar {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 11px 20px 12px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--sans); text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.compose-bar:active { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.compose-bar .avatar { width: 36px; height: 36px; flex: none; }
+.compose-placeholder { flex: 1; color: var(--ink-faint); font-size: 14.5px; }
+.compose-go {
+  flex: none; font-size: 13px; font-weight: 600; color: #fff;
+  background: var(--accent); padding: 8px 16px; border-radius: 999px;
+}
+@media (prefers-color-scheme: dark) { .compose-go { color: #14140f; } }
+
+/* ---------- 投稿モーダル ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 120;
+  background: rgba(20, 17, 15, .5);
+  display: flex; align-items: flex-start; justify-content: center;
+}
+.modal {
+  width: 100%; max-width: var(--app-max); min-height: 100%;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  animation: modal-in .2s ease;
+}
+@media (min-width: 520px) {
+  .modal-overlay { align-items: center; }
+  .modal { min-height: auto; max-height: 92vh; border-radius: 22px; overflow: hidden; }
+}
+@keyframes modal-in { from { transform: translateY(2%); opacity: .5; } to { transform: none; opacity: 1; } }
+.modal-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; background: var(--bg);
+}
+.modal-title { font-size: 15px; font-weight: 600; }
+.modal-close {
+  width: 34px; height: 34px; border: none; background: none;
+  font-size: 17px; color: var(--ink-soft); cursor: pointer; border-radius: 50%;
+}
+.modal-close:active { background: var(--surface-2); }
+.btn-post {
+  margin-left: auto; border: none; cursor: pointer;
+  background: var(--accent); color: #fff;
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  padding: 8px 20px; border-radius: 999px;
+}
+@media (prefers-color-scheme: dark) { .btn-post { color: #14140f; } }
+.btn-post[disabled] { opacity: .45; cursor: not-allowed; }
+.modal-body { padding: 16px 18px 24px; overflow-y: auto; }
+.modal-poem {
+  padding: 14px 16px; margin-bottom: 14px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+}
+.modal-poem .label { font-size: 11px; letter-spacing: .1em; color: var(--ink-faint); }
+.modal-poem .text { font-family: var(--serif); font-size: 15px; line-height: 1.9; margin: 6px 0 6px; color: var(--ink); }
+.modal-poem .meta { font-size: 12px; color: var(--ink-soft); }
+.modal-body .textarea { min-height: 180px; border: none; padding: 4px 2px; font-size: 17px; }
+.modal-body .textarea:focus { box-shadow: none; }
+.modal-body .count { padding: 0 2px; }
+
+/* ---------- トースト ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: calc(var(--nav-h) + 22px);
+  transform: translateX(-50%);
+  background: var(--ink); color: var(--bg);
+  padding: 12px 22px; border-radius: 999px;
+  font-size: 13.5px; font-weight: 600; z-index: 130;
+  box-shadow: var(--shadow); animation: toast-in .2s ease; white-space: nowrap;
+}
+.toast.out { opacity: 0; transition: opacity .4s ease; }
+@keyframes toast-in { from { transform: translate(-50%, 8px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
