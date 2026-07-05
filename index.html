@@ -17,42 +17,77 @@
 
   <main class="page">
 
-    <!-- 今日のお題 -->
-    <p class="section-label">今日のお題</p>
-    <!-- 別日への日付ナビ（poem-detail と揃える） -->
-    <div class="datenav">
-      <a href="poem-detail.html">← 昨日</a>
-      <span class="cur">2026年7月5日（日）</span>
-      <a href="#" class="disabled">明日 →</a>
-    </div>
-    <section class="poem">
-      <div class="poem-body">春過ぎて
+    <!-- お題（昨日・今日・明日を横スライド。初期表示・主役は今日のうた） -->
+    <p class="section-label">お題 ・ 横にスワイプ</p>
+    <div class="uta-slider">
+
+      <!-- 昨日のうた：受付終了・投稿導線なし -->
+      <article class="uta-card is-closed">
+        <div class="uta-card-head">
+          <span class="uta-label">昨日のうた</span>
+          <span class="uta-state closed">受付終了</span>
+        </div>
+        <div class="uta-date">7月4日（土）</div>
+        <div class="poem-body">久方の
+光のどけき
+春の日に
+しづ心なく
+花の散るらむ</div>
+        <div class="uta-meta">紀友則 ・ 百人一首・三十三番</div>
+        <p class="uta-note">このうたへの返し受付は終了しました。<br>届いた返しを読むことはできます。</p>
+        <div class="uta-actions">
+          <a class="btn btn-ghost" href="poem-detail.html">届いた返しを読む</a>
+          <button class="btn btn-ghost" type="button" data-goto-today>今日のうたへ戻る</button>
+        </div>
+      </article>
+
+      <!-- 今日のうた：返せる（投稿導線はスライダーの下） -->
+      <article class="uta-card is-today" data-today>
+        <div class="uta-card-head">
+          <span class="uta-label">今日のうた</span>
+          <span class="uta-state open">返せます</span>
+        </div>
+        <div class="uta-date">2026年7月5日（日）</div>
+        <div class="poem-body">春過ぎて
 夏来にけらし
 白妙の
 衣ほすてふ
 天の香具山</div>
-      <div class="poem-tags">
-        <span class="tag">夏</span>
-        <span class="tag">季節</span>
-      </div>
-      <div class="poem-meta">
-        <span class="author">持統天皇</span>
-        <span class="source">百人一首・二番／新古今和歌集</span>
-      </div>
-      <div class="poem-heat">
-        <span>このうた好き <b>42</b></span>
-        <span>返し <b>128</b></span>
-        <span>届いた反応 <b>935</b></span>
-      </div>
-    </section>
+        <div class="poem-tags">
+          <span class="tag">夏</span>
+          <span class="tag">季節</span>
+        </div>
+        <div class="uta-meta">持統天皇 ・ 百人一首・二番／新古今和歌集</div>
+        <div class="poem-heat">
+          <span>このうた好き <b>42</b></span>
+          <span>返し <b>128</b></span>
+          <span>届いた反応 <b>935</b></span>
+        </div>
+        <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+      </article>
 
-    <!-- 短歌リアクション -->
-    <div style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
-      <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
-      <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
+      <!-- 明日ひらくうた：まだ返せない・AI/返し/投稿は出さない -->
+      <article class="uta-card is-locked">
+        <div class="uta-card-head">
+          <span class="uta-label">明日ひらくうた</span>
+          <span class="uta-state locked">まだ返せません</span>
+        </div>
+        <div class="uta-date">7月6日（月）</div>
+        <div class="poem-body">田子の浦に
+うち出でて見れば
+白妙の
+富士の高嶺に
+雪は降りつつ</div>
+        <div class="uta-meta">山部赤人 ・ 百人一首・四番</div>
+        <p class="uta-note">🔒 このうたは明日ひらきます。<br>まだ返せません。</p>
+        <div class="uta-actions">
+          <button class="btn btn-ghost" type="button" data-goto-today>今日のうたへ戻る</button>
+        </div>
+      </article>
+
     </div>
 
-    <!-- 投稿導線（今日のお題カードの直下・タップで投稿モーダル。短歌を読んでから返す流れ） -->
+    <!-- 投稿導線（返せるのは今日のうただけ・タップで投稿モーダル） -->
     <button class="compose-bar" type="button" data-compose>
       <span class="avatar">＋</span>
       <span class="compose-placeholder">今の自分なら、どう返しますか？</span>
@@ -182,31 +217,6 @@
       みんなの返しタイムラインを読む
       <span class="chev">›</span>
     </a>
-
-    <!-- 明日ひらくうた（横スライド・先出ししすぎない予告） -->
-    <p class="section-label" style="margin-top:22px;">明日ひらくうた</p>
-    <div class="tomorrow-scroll">
-      <article class="tomorrow-card">
-        <div class="tomorrow-date">7月6日（月）</div>
-        <div class="tomorrow-poem">田子の浦に
-うち出でて見れば
-白妙の
-富士の高嶺に
-雪は降りつつ</div>
-        <div class="tomorrow-meta">山部赤人 ・ 百人一首・四番</div>
-        <p class="tomorrow-note">🔒 まだ返せません。<br>このうたは明日ひらきます。</p>
-      </article>
-      <article class="tomorrow-card">
-        <div class="tomorrow-date">7月7日（火）</div>
-        <div class="tomorrow-poem">かささぎの
-渡せる橋に
-置く霜の
-白きを見れば
-夜ぞ更けにける</div>
-        <div class="tomorrow-meta">中納言家持 ・ 百人一首・六番</div>
-        <p class="tomorrow-note">🔒 まだ返せません。<br>あさってひらきます。</p>
-      </article>
-    </div>
 
     <div class="spacer"></div>
 
