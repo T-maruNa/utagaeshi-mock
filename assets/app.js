@@ -25,19 +25,12 @@
     });
   });
 
-  /* --- 投稿フォームの文字数カウント + 送信可否 --- */
-  var ta = document.querySelector("[data-count]");
+  /* --- 投稿フォームの送信可否（空のときは押せない・文字数制限なし） --- */
+  var ta = document.querySelector(".textarea");
   if (ta) {
-    var max = parseInt(ta.getAttribute("data-count"), 10) || 140;
-    var wrap = document.querySelector(".count");
-    var cur = wrap && wrap.querySelector("b");
     var submit = document.querySelector("[data-submit]");
     var update = function () {
-      var len = ta.value.trim().length;
-      if (cur) cur.textContent = ta.value.length;
-      var over = ta.value.length > max;
-      if (wrap) wrap.classList.toggle("over", over);
-      if (submit) submit.disabled = over || len === 0;
+      if (submit) submit.disabled = ta.value.trim().length === 0;
     };
     ta.addEventListener("input", update);
     update();
