@@ -18,7 +18,13 @@
   <main class="page">
 
     <!-- 今日のお題 -->
-    <p class="section-label">今日のお題 ・ 2026年7月5日（日）</p>
+    <p class="section-label">今日のお題</p>
+    <!-- 別日への日付ナビ（poem-detail と揃える） -->
+    <div class="datenav">
+      <a href="poem-detail.html">← 昨日</a>
+      <span class="cur">2026年7月5日（日）</span>
+      <a href="#" class="disabled">明日 →</a>
+    </div>
     <section class="poem">
       <div class="poem-body">春過ぎて
 夏来にけらし
@@ -177,18 +183,30 @@
       <span class="chev">›</span>
     </a>
 
-    <!-- 明日ひらくうた（先出ししすぎない予告） -->
+    <!-- 明日ひらくうた（横スライド・先出ししすぎない予告） -->
     <p class="section-label" style="margin-top:22px;">明日ひらくうた</p>
-    <section class="tomorrow">
-      <div class="tomorrow-date">2026年7月6日（月）</div>
-      <div class="tomorrow-poem">田子の浦に
+    <div class="tomorrow-scroll">
+      <article class="tomorrow-card">
+        <div class="tomorrow-date">7月6日（月）</div>
+        <div class="tomorrow-poem">田子の浦に
 うち出でて見れば
 白妙の
 富士の高嶺に
 雪は降りつつ</div>
-      <div class="tomorrow-meta">山部赤人 ・ 百人一首・四番</div>
-      <p class="tomorrow-note">🔒 まだ返せません。明日になったら、このうたに返せます。</p>
-    </section>
+        <div class="tomorrow-meta">山部赤人 ・ 百人一首・四番</div>
+        <p class="tomorrow-note">🔒 まだ返せません。<br>このうたは明日ひらきます。</p>
+      </article>
+      <article class="tomorrow-card">
+        <div class="tomorrow-date">7月7日（火）</div>
+        <div class="tomorrow-poem">かささぎの
+渡せる橋に
+置く霜の
+白きを見れば
+夜ぞ更けにける</div>
+        <div class="tomorrow-meta">中納言家持 ・ 百人一首・六番</div>
+        <p class="tomorrow-note">🔒 まだ返せません。<br>あさってひらきます。</p>
+      </article>
+    </div>
 
     <div class="spacer"></div>
 
