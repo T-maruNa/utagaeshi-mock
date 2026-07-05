@@ -39,41 +39,48 @@
       </div>
     </section>
 
-    <!-- AI解説（控えめ） -->
-    <section class="ai">
-      <div class="ai-head">
-        <span class="ai-badge">AI</span>
-        <span>読み解きのヒント</span>
-        <span class="ai-note">※正解ではありません</span>
+    <!-- 読み解きのヒント（AI）：最初は閉じておき、クリックで開く -->
+    <details class="fold">
+      <summary>
+        <span class="ai-badge">AI</span> 読み解きのヒントを見る
+        <span class="chev">⌄</span>
+      </summary>
+      <div class="fold-body">
+        <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してあるのが見える——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
+        <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
+
+        <p class="section-label" style="margin-top:16px;">こんなふうに返せます</p>
+        <div class="examples">
+          <button class="example" type="button" data-text="気づいたら夏だった。今年もあの人と、海に行けるかな。">
+            <span class="n">1</span>
+            <span>気づいたら夏だった。今年もあの人と、海に行けるかな。</span>
+            <span class="use">下書きに ›</span>
+          </button>
+          <button class="example" type="button" data-text="ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。">
+            <span class="n">2</span>
+            <span>ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</span>
+            <span class="use">下書きに ›</span>
+          </button>
+          <button class="example" type="button" data-text="春の終わりって、いつも突然。もう半袖でいい気温になってた。">
+            <span class="n">3</span>
+            <span>春の終わりって、いつも突然。もう半袖でいい気温になってた。</span>
+            <span class="use">下書きに ›</span>
+          </button>
+        </div>
       </div>
-      <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してあるのが見える——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
-      <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
-    </section>
+    </details>
 
-    <!-- AI投稿例 -->
-    <p class="section-label">こんなふうに返せます</p>
-    <div class="examples">
-      <a class="example" href="post.html">
-        <span class="n">1</span>
-        <span>気づいたら夏だった。今年もあの人と、海に行けるかな。</span>
-        <span class="use">これで返す ›</span>
-      </a>
-      <a class="example" href="post.html">
-        <span class="n">2</span>
-        <span>ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</span>
-        <span class="use">これで返す ›</span>
-      </a>
-      <a class="example" href="post.html">
-        <span class="n">3</span>
-        <span>春の終わりって、いつも突然。もう半袖でいい気温になってた。</span>
-        <span class="use">これで返す ›</span>
-      </a>
+    <!-- 入力フォーム：この画面から直接返せる -->
+    <p class="section-label">あなたの言葉</p>
+    <div class="field">
+      <textarea class="textarea" data-count="140" maxlength="180"
+        placeholder="今の自分なら、どう返しますか？"></textarea>
+      <div class="count">
+        <span class="hint">1日1投稿・140字以内</span>
+        <span><b>0</b> / 140</span>
+      </div>
     </div>
-
-    <!-- 返すボタン -->
-    <div class="cta-inline">
-      <a class="btn btn-primary" href="post.html">自分の言葉で返す</a>
-    </div>
+    <button class="btn btn-primary" data-submit disabled>この言葉で返す</button>
 
     <!-- 今日のトップ投稿 -->
     <p class="section-label">今日のトップ投稿</p>
