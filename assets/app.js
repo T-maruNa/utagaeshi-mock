@@ -162,7 +162,6 @@
       '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">0</span></button>' +
       '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">0</span></button>' +
       '  <button class="react"><span class="emoji">🤍</span>好き<span class="count">0</span></button>' +
-      '  <button class="react"><span class="emoji">🔖</span>また読みたい<span class="count">0</span></button>' +
       '</div>';
     el.querySelector(".post-body").textContent = text;
     list.insertBefore(el, list.firstChild);
