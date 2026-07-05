@@ -212,21 +212,6 @@
 
   bindReactions(document);
 
-  /* ===== うたスライダー：今日のうたを中央に・「今日のうたへ戻る」 ===== */
-  var utaSlider = document.querySelector(".uta-slider");
-  var utaToday = utaSlider && utaSlider.querySelector("[data-today]");
-  if (utaSlider && utaToday) {
-    var centerToday = function (smooth) {
-      var left = utaToday.offsetLeft - (utaSlider.clientWidth - utaToday.offsetWidth) / 2;
-      utaSlider.scrollTo({ left: Math.max(0, left), behavior: smooth ? "smooth" : "auto" });
-    };
-    centerToday(false);
-    window.addEventListener("load", function () { centerToday(false); });
-    document.querySelectorAll("[data-goto-today]").forEach(function (b) {
-      b.addEventListener("click", function (e) { e.preventDefault(); centerToday(true); });
-    });
-  }
-
   /* 「AIに読んでもらう」ダミー感想（将来枠） */
   document.querySelectorAll("[data-ai-read]").forEach(function (btn) {
     btn.addEventListener("click", function () {
