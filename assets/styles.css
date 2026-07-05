@@ -697,20 +697,19 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .header.plain { position: static; }
 .logo small.copy { letter-spacing: .02em; text-transform: none; font-size: 11px; }
 
-/* Xのコンポーズ風・投稿バー（一覧の一番上に固定） */
+/* 投稿バー（お題カードの直下・タップで投稿モーダル。軽く返せる入口） */
 .compose-bar {
-  position: sticky; top: 0; z-index: 18;
   display: flex; align-items: center; gap: 12px;
-  width: calc(100% + 40px); margin-left: -20px; margin-right: -20px;
-  padding: 11px 20px 12px;
+  width: 100%;
+  padding: 10px 14px;
   cursor: pointer;
   font-family: var(--sans); text-align: left;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: saturate(1.2) blur(10px);
-  border: none; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
   -webkit-tap-highlight-color: transparent;
 }
-.compose-bar:active { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.compose-bar:active { background: var(--surface-2); }
 .compose-bar .avatar { width: 36px; height: 36px; flex: none; }
 .compose-placeholder { flex: 1; color: var(--ink-faint); font-size: 14.5px; }
 .compose-go {

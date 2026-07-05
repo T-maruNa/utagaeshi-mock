@@ -44,6 +44,13 @@
       <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
     </div>
 
+    <!-- 投稿導線（今日のお題カードの直下・タップで投稿モーダル。短歌を読んでから返す流れ） -->
+    <button class="compose-bar" type="button" data-compose>
+      <span class="avatar">＋</span>
+      <span class="compose-placeholder">今の自分なら、どう返しますか？</span>
+      <span class="compose-go">返す</span>
+    </button>
+
     <!-- AIによる読み解きのヒント（控えめ・折りたたみ） / 返しの例 -->
     <details class="fold">
       <summary>
@@ -72,13 +79,6 @@
         </div>
       </div>
     </details>
-
-    <!-- 投稿導線（一覧の一番上に固定・タップでモーダル） -->
-    <button class="compose-bar" type="button" data-compose>
-      <span class="avatar">＋</span>
-      <span class="compose-placeholder">今の自分なら、どう返しますか？</span>
-      <span class="compose-go">返す</span>
-    </button>
 
     <!-- 今日いちばん響いた返し -->
     <p class="section-label">今日いちばん響いた返し</p>
