@@ -893,8 +893,8 @@ details.fold .fold-body { padding: 0 18px 18px; }
 /* ---------- 返し帳：自分の返しが本の1ページのように残る（このページの主役） ---------- */
 .book { margin-top: 14px; }
 .book-card {
-  height: 300px;
-  padding: 22px 18px;
+  height: 460px;
+  padding: 26px 18px;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
   /* 縦方向はスクロールさせない。文字数が多い返し(最大200字)は列を増やして

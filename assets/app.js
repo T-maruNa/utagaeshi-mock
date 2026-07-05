@@ -254,11 +254,18 @@
     if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1) { pageIdx++; renderBook("next"); } });
     renderBook();
 
-    /* 左右スワイプでもスライドしながらページをめくれる */
+    /* 左右スワイプでもスライドしながら返しをめくれる。
+       ただし返し本文のカード上で始まったスワイプは、長い返しで列がはみ出す場合に
+       横スクロールで続きを読むためのものなので、返しの切り替えとは区別する */
     var touchStartX = null;
-    book.addEventListener("touchstart", function (e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+    var touchStartOnCard = false;
+    book.addEventListener("touchstart", function (e) {
+      touchStartX = e.touches[0].clientX;
+      touchStartOnCard = !!(e.target.closest && e.target.closest(".book-card"));
+    }, { passive: true });
     book.addEventListener("touchend", function (e) {
       if (touchStartX === null) return;
+      if (touchStartOnCard) { touchStartX = null; return; } /* カード内は横スクロールに任せる */
       var dx = e.changedTouches[0].clientX - touchStartX;
       if (dx < -40 && pageIdx < pages.length - 1) { pageIdx++; renderBook("next"); }
       else if (dx > 40 && pageIdx > 0) { pageIdx--; renderBook("prev"); }
