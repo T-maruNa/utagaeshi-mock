@@ -914,6 +914,8 @@ details.fold .fold-body { padding: 0 18px 18px; }
   height: 100%;
   width: max-content; /* auto(既定)だと親の見える幅に収まってしまい、
                           文字数が多いときに必要な列数ぶん広がらないため明示する */
+  margin: 0 auto; /* direction:rtlの既定だと右端に寄ってしまうため中央寄せを明示する。
+                     長い返し(幅が親を超える場合)は自然にオーバーフローし横スクロールで読める */
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
