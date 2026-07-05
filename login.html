@@ -17,10 +17,10 @@
     <div style="height:36px;"></div>
 
     <h1 class="lead">昔のうたに、<br>今の言葉で返す。</h1>
-    <p class="sub">毎日ひとつ届く古典短歌に、あなたの言葉で返す投稿サービス。まずはログインから。</p>
+    <p class="sub">読むだけならログインは要りません。返す・リアクション・返し帳を使うときにログインしてください。</p>
 
-    <!-- Googleログイン（おすすめ） -->
-    <button class="btn btn-google" type="button">
+    <!-- Googleログイン（おすすめ）※モックではタップでログイン状態になります -->
+    <button class="btn btn-google" type="button" data-do-login>
       <span aria-hidden="true" style="font-weight:700;">G</span>
       Googleではじめる
     </button>
@@ -30,10 +30,10 @@
     <input class="input" type="email" placeholder="メールアドレス" autocomplete="email">
     <input class="input" type="password" placeholder="パスワード" autocomplete="current-password">
 
-    <button class="btn btn-primary" type="button">ログイン / 新規登録</button>
+    <button class="btn btn-primary" type="button" data-do-login>ログイン / 新規登録</button>
 
     <p class="center" style="margin-top:16px;">
-      <a href="index.html" class="muted" style="font-size:13px;">まずは見てみる ›</a>
+      <a href="index.html" class="muted" style="font-size:13px;">ログインせずに読む ›</a>
     </p>
 
     <p class="legal">
@@ -46,5 +46,6 @@
   </main>
 
 </div>
+<script src="assets/app.js"></script>
 </body>
 </html>

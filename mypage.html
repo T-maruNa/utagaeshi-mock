@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>マイページ｜うたがえし</title>
+<title>返し帳｜うたがえし</title>
 <meta name="description" content="あなたの返しの記録。">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
@@ -12,79 +12,87 @@
 
   <header class="header">
     <a class="logo" href="index.html">うたがえし<small>UTAGAESHI</small></a>
-    <div class="header-date"><b>マイページ</b></div>
+    <div class="header-date"><b>返し帳</b></div>
   </header>
 
   <main class="page">
 
-    <!-- プロフィール -->
-    <section class="profile">
-      <span class="avatar-lg">こ</span>
-      <div>
-        <div class="name">言葉</div>
-        <div class="handle">@kotoba</div>
+    <!-- ===== 未ログイン：ログイン誘導 ===== -->
+    <div data-auth="out">
+      <div class="prompt-mini" style="margin-bottom:16px;">
+        <div class="label">今日のお題</div>
+        <div class="text">春過ぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山</div>
+        <div class="meta">持統天皇／百人一首・二番</div>
       </div>
-    </section>
-
-    <!-- 統計 -->
-    <div class="stats">
-      <div class="stat">
-        <div class="num">37</div>
-        <div class="lbl">返した数</div>
-      </div>
-      <div class="stat">
-        <div class="num">294</div>
-        <div class="lbl">もらった反応</div>
-      </div>
-      <div class="stat">
-        <div class="num">12</div>
-        <div class="lbl">連続日数</div>
+      <div class="reply-invite">
+        <p class="lead">あなたの返し帳</p>
+        <p class="sub">自分の返しを残すにはログインしてください。<br>返した言葉は、いつでもここで読み返せます。</p>
+        <a class="btn btn-primary" href="login.html">ログイン / 新規登録</a>
       </div>
     </div>
 
-    <!-- 投稿履歴 -->
-    <p class="section-label">これまでの返し</p>
-    <div class="history">
+    <!-- ===== ログイン済み：返し帳 ===== -->
+    <div data-auth="in" hidden>
 
-      <article class="hist">
-        <div class="d">7月5日 ・ お題「春過ぎて 夏来にけらし…」</div>
+      <section class="profile">
+        <span class="avatar-lg">こ</span>
+        <div>
+          <div class="name">言葉</div>
+          <div class="handle">@kotoba</div>
+        </div>
+      </section>
+
+      <div class="stats">
+        <div class="stat"><div class="num">37</div><div class="lbl">返した数</div></div>
+        <div class="stat"><div class="num">294</div><div class="lbl">もらった反応</div></div>
+        <div class="stat"><div class="num">12</div><div class="lbl">連続日数</div></div>
+      </div>
+
+      <!-- 今日の返し + AIに読んでもらう（将来枠・控えめ） -->
+      <p class="section-label">今日の返し</p>
+      <div class="myreply">
+        <div class="lbl">7月5日 ・ お題「春過ぎて 夏来にけらし…」</div>
         <p class="b">気づいたら夏。今年はちゃんと、行きたかった場所に行く。</p>
-        <div class="r"><span>🫧 わかる 8</span><span>🎯 刺さった 5</span><span>🤍 好き 6</span></div>
-      </article>
+      </div>
 
-      <article class="hist">
-        <div class="d">7月4日 ・ お題「久方の 光のどけき 春の日に…」</div>
-        <p class="b">急がなくてもいい日が、たまにはあってもいいよね。深呼吸してた。</p>
-        <div class="r"><span>🫧 わかる 12</span><span>🎯 刺さった 9</span><span>🤍 好き 7</span></div>
-      </article>
+      <div class="ai-read">
+        <div class="head"><span class="ai-badge">AI</span> AIに読んでもらう <span class="soon">近日</span></div>
+        <p class="desc">あなたの返しをAIが読み、どんな感情や表現が含まれているかを短くコメントします。</p>
+        <button class="btn btn-ghost" type="button" data-ai-read="#aiComment">AIに読んでもらう</button>
+        <div class="comment" id="aiComment" hidden>
+          <span class="lbl">AIの感想（サンプル）</span>
+          この返しは、原歌の季節の変化を、今の自分の記憶や未練に置き換えているように読めます。
+        </div>
+      </div>
 
-      <article class="hist">
-        <div class="d">7月3日 ・ お題「秋の田の かりほの庵の 苫をあらみ…」</div>
-        <p class="b">誰かのために黙って濡れている人が、きっと今もどこかにいる。</p>
-        <div class="r"><span>🫧 わかる 15</span><span>🎯 刺さった 21</span><span>🤍 好き 11</span></div>
-      </article>
+      <!-- 返し帳（これまでの返し） -->
+      <p class="section-label">これまでの返し</p>
+      <div class="history">
 
-      <article class="hist">
-        <div class="d">7月2日 ・ お題「花の色は うつりにけりな…」</div>
-        <p class="b">鏡を見て少し落ち込んだ日。でも、悩んでる時間も自分の一部だと思うことにした。</p>
-        <div class="r"><span>🫧 わかる 20</span><span>🎯 刺さった 14</span><span>🤍 好き 18</span></div>
-      </article>
+        <article class="hist">
+          <div class="d">7月4日 ・ お題「久方の 光のどけき 春の日に…」</div>
+          <p class="b">急がなくてもいい日が、たまにはあってもいいよね。深呼吸してた。</p>
+          <div class="r"><span>🫧 わかる 12</span><span>🎯 刺さった 9</span><span>🤍 好き 7</span></div>
+        </article>
+
+        <article class="hist">
+          <div class="d">7月3日 ・ お題「秋の田の かりほの庵の 苫をあらみ…」</div>
+          <p class="b">誰かのために黙って濡れている人が、きっと今もどこかにいる。</p>
+          <div class="r"><span>🫧 わかる 15</span><span>🎯 刺さった 21</span><span>🤍 好き 11</span></div>
+        </article>
+
+        <article class="hist">
+          <div class="d">7月2日 ・ お題「花の色は うつりにけりな…」</div>
+          <p class="b">鏡を見て少し落ち込んだ日。でも、悩んでる時間も自分の一部だと思うことにした。</p>
+          <div class="r"><span>🫧 わかる 20</span><span>🎯 刺さった 14</span><span>🤍 好き 18</span></div>
+        </article>
+
+      </div>
+
+      <a class="list-link" href="#">アカウント設定 <span class="chev">›</span></a>
+      <a class="list-link" href="#" data-do-logout style="margin-top:12px;">ログアウト <span class="chev">›</span></a>
 
     </div>
-
-    <!-- 設定への導線 -->
-    <a class="list-link" href="#">
-      アカウント設定
-      <span class="chev">›</span>
-    </a>
-    <a class="list-link" href="login.html">
-      ログアウト
-      <span class="chev">›</span>
-    </a>
-
-    <p class="center">
-      <button class="demo-reset" data-demo-reset type="button">（デモ）投稿前の状態に戻す</button>
-    </p>
 
     <div class="spacer"></div>
 
@@ -104,8 +112,8 @@
       ランキング
     </a>
     <a class="nav-item" href="mypage.html">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-      マイページ
+      <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
+      返し帳
     </a>
   </nav>
 
