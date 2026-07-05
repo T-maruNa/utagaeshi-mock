@@ -67,6 +67,17 @@
     (root || document).querySelectorAll(".react").forEach(bindReaction);
   }
 
+  /* ===== 短歌への「このうた好き」（1ユーザー1回・ログイン必須・返しreactionとは別） ===== */
+  document.querySelectorAll(".poem-like").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (!isLoggedIn()) { showLogin("このうたを好きにするにはログインしてください。"); return; }
+      var countEl = btn.querySelector(".count");
+      var n = parseInt(countEl.textContent, 10) || 0;
+      if (btn.classList.contains("on")) { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
+      else { btn.classList.add("on"); countEl.textContent = n + 1; }
+    });
+  });
+
   /* ===== 投稿モーダル（Xのコンポーズ風） ===== */
   var POEM = {
     text: "春過ぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山",

@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>うたがえし｜昔のうたに、今の言葉で返す</title>
-<meta name="description" content="今日の古典短歌に、みんなが今の言葉で返した「返し」を読む場所。読むだけでも楽しめます。">
+<meta name="description" content="古典短歌に、今の言葉で返す。毎日更新される言葉のアーカイブ。読むだけでも楽しめます。">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
 <div class="app">
 
-  <!-- 1. ヘッダー：サービス名＋サブコピー -->
+  <!-- ヘッダー：サービス名＋サブコピー -->
   <header class="header plain">
     <a class="logo" href="index.html">うたがえし<small class="copy">昔のうたに、今の言葉で返す。</small></a>
   </header>
 
   <main class="page">
 
-    <!-- 2. 今日のお題エリア -->
+    <!-- 今日のお題 -->
     <p class="section-label">今日のお題 ・ 7月5日（日）</p>
     <section class="poem">
       <div class="poem-body">春過ぎて
@@ -33,7 +33,16 @@
         <span class="author">持統天皇</span>
         <span class="source">百人一首・二番／新古今和歌集</span>
       </div>
+      <div class="poem-heat">
+        <span>返し <b>128</b></span>
+        <span>届いた反応 <b>935</b></span>
+      </div>
     </section>
+
+    <div style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
+      <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+      <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
+    </div>
 
     <!-- AIによる読み解きのヒント（控えめ・折りたたみ） / 返しの例 -->
     <details class="fold">
@@ -52,32 +61,26 @@
         <p class="section-label" style="margin-top:18px;">返しの例</p>
         <div class="examples">
           <button class="example" type="button" data-compose data-text="気づいたら夏だった。今年もあの人と、海に行けるかな。">
-            <span class="n">1</span>
-            <span>気づいたら夏だった。今年もあの人と、海に行けるかな。</span>
-            <span class="use">この例で返す ›</span>
+            <span class="n">1</span><span>気づいたら夏だった。今年もあの人と、海に行けるかな。</span><span class="use">この例で返す ›</span>
           </button>
           <button class="example" type="button" data-compose data-text="ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。">
-            <span class="n">2</span>
-            <span>ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</span>
-            <span class="use">この例で返す ›</span>
+            <span class="n">2</span><span>ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</span><span class="use">この例で返す ›</span>
           </button>
           <button class="example" type="button" data-compose data-text="春の終わりって、いつも突然。もう半袖でいい気温になってた。">
-            <span class="n">3</span>
-            <span>春の終わりって、いつも突然。もう半袖でいい気温になってた。</span>
-            <span class="use">この例で返す ›</span>
+            <span class="n">3</span><span>春の終わりって、いつも突然。もう半袖でいい気温になってた。</span><span class="use">この例で返す ›</span>
           </button>
         </div>
       </div>
     </details>
 
-    <!-- 3. 投稿導線（一覧の一番上に固定・タップでモーダル） -->
+    <!-- 投稿導線（一覧の一番上に固定・タップでモーダル） -->
     <button class="compose-bar" type="button" data-compose>
       <span class="avatar">＋</span>
       <span class="compose-placeholder">今の自分なら、どう返しますか？</span>
       <span class="compose-go">返す</span>
     </button>
 
-    <!-- 4. 今日いちばん響いた返し -->
+    <!-- 今日いちばん響いた返し -->
     <p class="section-label">今日いちばん響いた返し</p>
     <article class="toppost">
       <a class="post-main" href="post-detail.html">
@@ -85,8 +88,7 @@
         <p class="body">梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。</p>
         <div class="foot">
           <span class="avatar" style="width:24px;height:24px;font-size:11px;">ゆ</span>
-          <span>ゆき</span>
-          <span class="post-time">・ 3分前</span>
+          <span>ゆき</span><span class="post-time">・ 3分前</span>
         </div>
       </a>
       <div class="reactions" style="margin-top:12px;">
@@ -96,7 +98,7 @@
       </div>
     </article>
 
-    <!-- 5. みんなの返し一覧 -->
+    <!-- みんなの返しタイムライン（今日＋過去のお題が混ざる） -->
     <div style="display:flex; align-items:center; justify-content:space-between;">
       <p class="section-label" style="margin:0;">みんなの返し</p>
       <div class="tabs">
@@ -107,14 +109,16 @@
 
     <div data-list>
 
-      <article class="post" data-reactions="54" data-time="1690">
+      <article class="post" data-reactions="54" data-time="1720">
         <a class="post-main" href="post-detail.html">
-          <div class="post-head">
-            <span class="avatar">は</span>
-            <div><div class="post-user">はると</div><div class="post-time">12分前</div></div>
-          </div>
+          <div class="post-head"><span class="avatar">は</span><div><div class="post-user">はると</div><div class="post-time">12分前</div></div></div>
           <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
         </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：春過ぎて 夏来にけらし…</span>
+          <span class="src-meta">7月5日（日） / 持統天皇</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
         <div class="reactions">
           <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
           <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
@@ -122,14 +126,50 @@
         </div>
       </article>
 
+      <article class="post" data-reactions="40" data-time="1715">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head"><span class="avatar">あ</span><div><div class="post-user">あおい</div><div class="post-time">18分前</div></div></div>
+          <p class="post-body">鏡の中の自分と、ちょっとだけ仲直りできた気がする夜。</p>
+        </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：花の色は うつりにけりな…</span>
+          <span class="src-meta">7月2日（木） / 小野小町</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">18</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">12</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">10</span></button>
+        </div>
+      </article>
+
+      <article class="post" data-reactions="47" data-time="1710">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head"><span class="avatar">み</span><div><div class="post-user">みなと</div><div class="post-time">25分前</div></div></div>
+          <p class="post-body">誰にも言わずに、びしょ濡れで守ってる優しさって、きっとある。</p>
+        </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：秋の田の かりほの庵の…</span>
+          <span class="src-meta">7月3日（金） / 天智天皇</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">15</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">20</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">12</span></button>
+        </div>
+      </article>
+
       <article class="post" data-reactions="33" data-time="1705">
         <a class="post-main" href="post-detail.html">
-          <div class="post-head">
-            <span class="avatar">そ</span>
-            <div><div class="post-user">そら</div><div class="post-time">8分前</div></div>
-          </div>
+          <div class="post-head"><span class="avatar">そ</span><div><div class="post-user">そら</div><div class="post-time">8分前</div></div></div>
           <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
         </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：春過ぎて 夏来にけらし…</span>
+          <span class="src-meta">7月5日（日） / 持統天皇</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
         <div class="reactions">
           <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
           <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
@@ -137,14 +177,33 @@
         </div>
       </article>
 
-      <article class="post" data-reactions="27" data-time="1712">
+      <article class="post" data-reactions="35" data-time="1700">
         <a class="post-main" href="post-detail.html">
-          <div class="post-head">
-            <span class="avatar">み</span>
-            <div><div class="post-user">みお</div><div class="post-time">5分前</div></div>
-          </div>
+          <div class="post-head"><span class="avatar">か</span><div><div class="post-user">かな</div><div class="post-time">32分前</div></div></div>
+          <p class="post-body">こんなに穏やかな日なのに、心だけ気ぜわしい。困ったな、でも嫌いじゃない。</p>
+        </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：久方の 光のどけき…</span>
+          <span class="src-meta">7月4日（土） / 紀友則</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
+        <div class="reactions">
+          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">11</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">10</span></button>
+        </div>
+      </article>
+
+      <article class="post" data-reactions="27" data-time="1695">
+        <a class="post-main" href="post-detail.html">
+          <div class="post-head"><span class="avatar">み</span><div><div class="post-user">みお</div><div class="post-time">5分前</div></div></div>
           <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
         </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：春過ぎて 夏来にけらし…</span>
+          <span class="src-meta">7月5日（日） / 持統天皇</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
         <div class="reactions">
           <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
           <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
@@ -152,29 +211,33 @@
         </div>
       </article>
 
-      <article class="post" data-reactions="18" data-time="1698">
+      <article class="post" data-reactions="28" data-time="1685">
         <a class="post-main" href="post-detail.html">
-          <div class="post-head">
-            <span class="avatar">な</span>
-            <div><div class="post-user">なな</div><div class="post-time">10分前</div></div>
-          </div>
-          <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
+          <div class="post-head"><span class="avatar">り</span><div><div class="post-user">りく</div><div class="post-time">40分前</div></div></div>
+          <p class="post-body">赤って、こんなに感情の色だったっけ。竜田川、いつか見にいく。</p>
         </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：ちはやぶる 神代も聞かず…</span>
+          <span class="src-meta">7月1日（水） / 在原業平</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
         <div class="reactions">
           <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
+          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">9</span></button>
+          <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
         </div>
       </article>
 
-      <article class="post" data-reactions="9" data-time="1718">
+      <article class="post" data-reactions="9" data-time="1670">
         <a class="post-main" href="post-detail.html">
-          <div class="post-head">
-            <span class="avatar">れ</span>
-            <div><div class="post-user">れん</div><div class="post-time">1分前</div></div>
-          </div>
+          <div class="post-head"><span class="avatar">れ</span><div><div class="post-user">れん</div><div class="post-time">1時間前</div></div></div>
           <p class="post-body">気づけば夏。今年はちゃんと、やりたいことをやる。まず海。</p>
         </a>
+        <div class="post-source">
+          <span class="src-poem">元のうた：春過ぎて 夏来にけらし…</span>
+          <span class="src-meta">7月5日（日） / 持統天皇</span>
+          <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>
+        </div>
         <div class="reactions">
           <button class="react"><span class="emoji">🫧</span>わかる<span class="count">4</span></button>
           <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
@@ -184,6 +247,16 @@
 
     </div>
 
+    <!-- 別日・人気への回遊導線 -->
+    <a class="list-link" href="archive.html" style="margin-top:18px;">
+      過去のうたを見る
+      <span class="chev">›</span>
+    </a>
+    <a class="list-link" href="popular-poems.html" style="margin-top:12px;">
+      人気のうたを見る
+      <span class="chev">›</span>
+    </a>
+
     <div class="spacer"></div>
 
   </main>
@@ -192,6 +265,10 @@
     <a class="nav-item" href="index.html">
       <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
       ホーム
+    </a>
+    <a class="nav-item" href="archive.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+      うた
     </a>
     <a class="nav-item" href="ranking.html">
       <svg viewBox="0 0 24 24"><path d="M6 20v-6M12 20V8M18 20v-9M4 20h16"/></svg>

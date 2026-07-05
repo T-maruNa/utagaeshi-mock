@@ -767,6 +767,77 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .modal-body .textarea:focus { box-shadow: none; }
 .modal-body .count { padding: 0 2px; }
 
+/* ---------- 別日移動ナビ ---------- */
+.datenav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; margin-bottom: 2px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px;
+}
+.datenav a { font-size: 13px; color: var(--accent-ink); text-decoration: none; white-space: nowrap; }
+.datenav a.disabled { color: var(--ink-faint); pointer-events: none; }
+.datenav .cur { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+/* ---------- 短歌への「このうた好き」（返しreactionとは別） ---------- */
+.poem-like {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--surface); font-family: var(--sans); font-size: 13.5px;
+  color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.poem-like .heart { font-size: 15px; }
+.poem-like .count { font-variant-numeric: tabular-nums; font-weight: 600; }
+.poem-like:active { transform: scale(.98); }
+.poem-like.on { background: #f7e9ee; border-color: transparent; color: #a84f68; }
+.poem-like.on .heart { color: #c15a76; }
+@media (prefers-color-scheme: dark) {
+  .poem-like.on { background: #3a2830; color: #e8a7b8; }
+  .poem-like.on .heart { color: #e8a7b8; }
+}
+
+/* ---------- 短歌の熱量指標 ---------- */
+.poem-heat {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--ink-soft);
+}
+.poem-heat b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* ---------- 返しカードの「元になった短歌」 ---------- */
+.post-source {
+  margin: 12px 0 0; padding: 11px 13px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font-size: 11.5px; color: var(--ink-soft); line-height: 1.7;
+}
+.post-source .src-poem { font-family: var(--serif); color: var(--ink); font-size: 12.5px; }
+.post-source .src-meta { display: block; margin-top: 3px; color: var(--ink-faint); }
+.post-source .src-link {
+  display: inline-flex; align-items: center; margin-top: 8px;
+  color: var(--accent-ink); text-decoration: none; font-family: var(--sans); font-size: 12px;
+}
+
+/* ---------- アーカイブ／人気のうた カード ---------- */
+.poemcard {
+  display: block; padding: 16px 18px; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+.poemcard + .poemcard { margin-top: 12px; }
+.poemcard:active { background: var(--surface-2); }
+.poemcard .date { font-size: 11.5px; color: var(--ink-faint); letter-spacing: .02em; }
+.poemcard .head { font-family: var(--serif); font-size: 16px; line-height: 1.85; margin: 6px 0 4px; color: var(--ink); }
+.poemcard .who { font-size: 12px; color: var(--ink-soft); }
+.poemcard .stats {
+  display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; padding-top: 11px;
+  border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-soft);
+}
+.poemcard .stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.poemcard .rankno {
+  display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 8px;
+  border-radius: 50%; background: var(--surface-2); font-size: 12px; font-weight: 700; color: var(--ink-soft);
+  vertical-align: middle;
+}
+.poemcard .rankno.gold { color: #8a6d1f; background: #f4ead0; }
+
 /* ---------- トースト ---------- */
 .toast {
   position: fixed; left: 50%; bottom: calc(var(--nav-h) + 22px);
