@@ -25,9 +25,9 @@
     sheet.hidden = true;
     sheet.innerHTML =
       '<div class="sheet" role="dialog" aria-modal="true">' +
-      '  <p class="sheet-msg" data-sheet-msg>ログインが必要です。</p>' +
-      '  <a class="btn btn-primary" href="login.html">ログイン / 新規登録</a>' +
-      '  <button class="btn btn-ghost" type="button" data-sheet-close>とじる</button>' +
+      '  <p class="sheet-msg" data-sheet-msg>返すにはログインが必要です。</p>' +
+      '  <a class="btn btn-primary" href="login.html">ログインする</a>' +
+      '  <button class="btn btn-ghost" type="button" data-sheet-close>あとで</button>' +
       "</div>";
     document.body.appendChild(sheet);
     var close = function () { sheet.hidden = true; };
@@ -162,6 +162,7 @@
       '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">0</span></button>' +
       '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">0</span></button>' +
       '  <button class="react"><span class="emoji">🤍</span>好き<span class="count">0</span></button>' +
+      '  <button class="react"><span class="emoji">🔖</span>また読みたい<span class="count">0</span></button>' +
       '</div>';
     el.querySelector(".post-body").textContent = text;
     list.insertBefore(el, list.firstChild);
