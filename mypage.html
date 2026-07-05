@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>返し帳｜うたがえし</title>
-<meta name="description" content="あなたの返しの記録。">
+<meta name="description" content="自分の過去の返しを、本の1ページのように見返す。">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -17,39 +17,30 @@
 
   <main class="page">
 
-    <!-- ===== 未ログイン：ログイン誘導 ===== -->
+    <!-- ===== 未ログイン：ごく軽い誘導のみ（mockでは基本ログイン済み想定） ===== -->
     <div data-auth="out">
-      <div class="prompt-mini" style="margin-bottom:16px;">
-        <div class="label">今日のお題</div>
-        <div class="text">春過ぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山</div>
-        <div class="meta">持統天皇／百人一首・二番</div>
-      </div>
       <div class="reply-invite">
-        <p class="lead">あなたの返し帳</p>
-        <p class="sub">自分の返しを残すにはログインしてください。<br>返した言葉は、いつでもここで読み返せます。</p>
+        <p class="lead" style="font-size:15px;">自分の返し帳</p>
+        <p class="sub">ログインすると、これまでの返しを見返せます。</p>
         <a class="btn btn-primary" href="login.html">ログイン / 新規登録</a>
       </div>
     </div>
 
-    <!-- ===== ログイン済み：返し帳 ===== -->
+    <!-- ===== ログイン済み：返し帳（主役は返しカード） ===== -->
     <div data-auth="in" hidden>
 
-      <section class="profile">
-        <span class="avatar-lg">こ</span>
-        <div>
-          <div class="name">言葉</div>
-          <div class="handle">@kotoba</div>
-        </div>
-      </section>
-
-      <div class="stats">
-        <div class="stat"><div class="num">37</div><div class="lbl">返した数</div></div>
-        <div class="stat"><div class="num">294</div><div class="lbl">届いた反応</div></div>
-        <div class="stat"><div class="num">12</div><div class="lbl">連続返し日数</div></div>
+      <!-- プロフィールは小さく添えるだけ（主役にしない） -->
+      <div class="book-owner">
+        <span class="book-owner-name">言葉</span>
+        <span class="book-owner-sep">・</span>
+        <span>返した数 37</span>
+        <span class="book-owner-sep">・</span>
+        <span>連続 12日</span>
       </div>
 
+      <p class="muted" style="font-size:12px; margin:2px 2px 0;">これまでの返しを、1ページずつめくって読み返せます。</p>
+
       <!-- 返し帳：自分の返しが本の1ページのように残る。1カード=1件、縦書きは本文のみ -->
-      <p class="section-label">自分の返し</p>
       <div class="book" data-book>
 
         <article class="book-entry" data-book-entry>
@@ -119,19 +110,12 @@
         </div>
       </div>
 
-      <!-- AIに読んでもらう（今日の返しに対して・将来枠・控えめ） -->
-      <div class="ai-read">
-        <div class="head"><span class="ai-badge">AI</span> AIに読んでもらう <span class="soon">近日</span></div>
-        <p class="desc">あなたの返しをAIが読み、どんな感情や表現が含まれているかを短くコメントします。</p>
-        <button class="btn btn-ghost" type="button" data-ai-read="#aiComment">AIに読んでもらう</button>
-        <div class="comment" id="aiComment" hidden>
-          <span class="lbl">AIの感想（サンプル）</span>
-          この返しは、原歌の季節の変化を、今の自分の記憶や未練に置き換えているように読めます。
-        </div>
+      <!-- アカウント関連は主役にせず、下部に小さく -->
+      <div class="book-footer-links">
+        <a href="#">アカウント設定</a>
+        <span class="book-owner-sep">・</span>
+        <a href="#" data-do-logout>ログアウト</a>
       </div>
-
-      <a class="list-link" href="#">アカウント設定 <span class="chev">›</span></a>
-      <a class="list-link" href="#" data-do-logout style="margin-top:12px;">ログアウト <span class="chev">›</span></a>
 
     </div>
 
