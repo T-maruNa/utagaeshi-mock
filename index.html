@@ -34,13 +34,16 @@
         <span class="source">百人一首・二番／新古今和歌集</span>
       </div>
       <div class="poem-heat">
+        <span>このうた好き <b>42</b></span>
         <span>返し <b>128</b></span>
         <span>届いた反応 <b>935</b></span>
       </div>
     </section>
 
-    <div style="display:flex; justify-content:center;">
+    <!-- 短歌リアクション -->
+    <div style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
       <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+      <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
     </div>
 
     <!-- 投稿導線（今日のお題カードの直下・タップで投稿モーダル。短歌を読んでから返す流れ） -->
@@ -163,19 +166,24 @@
 
     </div>
 
-    <!-- 回遊：日付横断タイムライン・過去・人気 -->
-    <a class="list-link" href="timeline.html" style="margin-top:18px;">
-      みんなの返しタイムライン（日付をまたいで読む）
+    <!-- みんなの返しをもっと（日付横断タイムラインは posts.html 側） -->
+    <a class="list-link" href="posts.html" style="margin-top:18px;">
+      みんなの返しタイムラインを読む
       <span class="chev">›</span>
     </a>
-    <a class="list-link" href="archive.html" style="margin-top:12px;">
-      過去のうたを見る
-      <span class="chev">›</span>
-    </a>
-    <a class="list-link" href="popular-poems.html" style="margin-top:12px;">
-      人気のうたを見る
-      <span class="chev">›</span>
-    </a>
+
+    <!-- 明日ひらくうた（先出ししすぎない予告） -->
+    <p class="section-label" style="margin-top:22px;">明日ひらくうた</p>
+    <section class="tomorrow">
+      <div class="tomorrow-date">2026年7月6日（月）</div>
+      <div class="tomorrow-poem">田子の浦に
+うち出でて見れば
+白妙の
+富士の高嶺に
+雪は降りつつ</div>
+      <div class="tomorrow-meta">山部赤人 ・ 百人一首・四番</div>
+      <p class="tomorrow-note">🔒 まだ返せません。明日になったら、このうたに返せます。</p>
+    </section>
 
     <div class="spacer"></div>
 
