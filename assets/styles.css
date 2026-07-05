@@ -897,48 +897,49 @@ details.fold .fold-body { padding: 0 18px 18px; }
   padding: 26px 18px;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
-  /* 縦方向はスクロールさせない。文字数が多い返し(最大200字)は列を増やして
-     右→左に折り返すので、その分だけ横方向にスライドして読む。
-     スクロールの基準もdirection:rtlにして、初期表示が本文の先頭（右端）に
-     なるようにする（通常のltrスクロールのままだと初期表示が末尾になってしまう） */
+  /* 縦方向はスクロールさせない。文字数が多い返し(最大200字)は列が増えるので、
+     その分だけ横方向にスライドして読む */
   overflow-y: hidden; overflow-x: auto;
-  direction: rtl;
-  scroll-snap-type: x proximity;
 }
 /* 縦書きにするのは返し本文だけ。見出し・日付・導線・ボタン類は横書きのまま。
    CSSのwriting-mode:vertical-rlは環境によって一部の漢字の字送りが0になり
    文字が重なることがあるため（フォントの縦書きメトリクス欠落）、
-   1文字ずつ要素化し、flexの縦方向wrapで右→左に列を折り返す
-   （direction:rtlで折り返し方向を伝統的な縦書きと同じ向きにする）方式にする */
+   1文字ずつ要素化する方式にする。列の折り返し位置は句読点（。、）を優先して
+   JS側で決め（script.js参照）、各列を.book-colとして右→左に並べる。
+   direction:rtlのような文字方向トリックは使わず、flex-direction:row-reverseで
+   単純にDOM順(＝先頭の列)を右に配置するだけにしてある */
 .book-text {
   height: 100%;
-  width: max-content; /* auto(既定)だと親の見える幅に収まってしまい、
-                          文字数が多いときに必要な列数ぶん広がらないため明示する */
-  margin: 0 auto; /* direction:rtlの既定だと右端に寄ってしまうため中央寄せを明示する。
-                     長い返し(幅が親を超える場合)は自然にオーバーフローし横スクロールで読める */
+  width: max-content;
+  margin: 0 auto; /* 列数が少なく幅に余裕があるときはカード中央に来るようにする */
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  direction: rtl;
+  flex-direction: row-reverse;
+  align-items: flex-start;
   font-family: var(--serif);
   font-size: 17px;
   color: var(--ink);
+}
+.book-col {
+  display: flex;
+  flex-direction: column;
+  flex: none;
 }
 .book-text .ch {
   flex: none;
   width: 1.9em; height: 1.9em;
   line-height: 1.9em;
   text-align: center;
-  scroll-snap-align: start;
 }
 
-/* ページをめくった返しがふわっとスライドして現れる */
-.book-entry {
-  transition: transform .28s ease, opacity .28s ease;
-}
-.book-entry.enter-next { transform: translateX(18px); opacity: 0; }
-.book-entry.enter-prev { transform: translateX(-18px); opacity: 0; }
+/* ページをめくると、前後の返しが本当に横スライドして入れ替わる */
+.book-viewport { position: relative; overflow: hidden; }
+.book-entry { width: 100%; }
+.book-entry.is-sliding { position: absolute; top: 0; left: 0; transition: transform .32s ease; }
+.book-entry.slide-in-next { transform: translateX(100%); }
+.book-entry.slide-in-prev { transform: translateX(-100%); }
+.book-entry.slide-out-next { transform: translateX(-100%); }
+.book-entry.slide-out-prev { transform: translateX(100%); }
+.book-entry.slide-settle { transform: translateX(0); }
 .book-meta {
   margin-top: 12px; padding: 0 2px;
   font-size: 11.5px; color: var(--ink-faint); line-height: 1.8;

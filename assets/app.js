@@ -212,46 +212,113 @@
 
   bindReactions(document);
 
-  /* 縦書き本文：1文字ずつ要素化して積む（writing-modeのフォント依存を避け、確実にこの見た目にする） */
+  /* 縦書き本文：句読点(。、)を優先して列を折り返す。
+     1列あたりの文字数は.book-cardのCSS値(height:460px, padding:26px, font-size:17px,
+     セル高さ1.9em)から計算した固定値にしている。非表示(hidden)のエントリは
+     clientHeightが0になり測れないため、DOM測定ではなく定数で持つ */
+  var BOOK_COL_MAX_CHARS = 12;
   document.querySelectorAll(".book-text").forEach(function (el) {
-    var chars = Array.prototype.slice.call(el.textContent);
+    var text = el.textContent;
     el.textContent = "";
-    chars.forEach(function (ch) {
-      var span = document.createElement("span");
-      span.className = "ch";
-      span.textContent = ch;
-      el.appendChild(span);
+
+    /* 句読点の直後で区切ったかたまりに分割し、句読点で終わる形を保つ */
+    var chunks = text.match(/[^。、]*[。、]|[^。、]+$/g) || [text];
+
+    var columns = [];
+    var current = "";
+    chunks.forEach(function (chunk) {
+      if (current && current.length + chunk.length > BOOK_COL_MAX_CHARS) {
+        columns.push(current);
+        current = "";
+      }
+      current += chunk;
+      /* かたまり自体が1列に収まらないときだけ、やむを得ず途中で区切る */
+      while (current.length > BOOK_COL_MAX_CHARS) {
+        columns.push(current.slice(0, BOOK_COL_MAX_CHARS));
+        current = current.slice(BOOK_COL_MAX_CHARS);
+      }
+    });
+    if (current) columns.push(current);
+
+    columns.forEach(function (colText) {
+      var col = document.createElement("div");
+      col.className = "book-col";
+      Array.prototype.forEach.call(colText, function (ch) {
+        var span = document.createElement("span");
+        span.className = "ch";
+        span.textContent = ch;
+        col.appendChild(span);
+      });
+      el.appendChild(col);
     });
   });
 
-  /* ===== 返し帳：自分の返しを1ページずつめくる ===== */
+  /* ===== 返し帳：自分の返しを1ページずつめくる（前後の返しが本当に横スライドする） ===== */
   var book = document.querySelector("[data-book]");
   if (book) {
+    var viewport = book.querySelector(".book-viewport");
     var pages = Array.prototype.slice.call(book.querySelectorAll("[data-book-entry]"));
     var pageIdx = 0;
+    var renderedIdx = 0;
+    var isAnimating = false;
     var indicator = book.querySelector("[data-book-indicator]");
     var prevBtn = book.querySelector("[data-book-prev]");
     var nextBtn = book.querySelector("[data-book-next]");
-    /* direction: "next"/"prev" でスライドしながらページが切り替わる。省略時はアニメーションなし（初期表示用） */
-    var renderBook = function (direction) {
-      pages.forEach(function (el, i) {
-        el.hidden = i !== pageIdx;
-        el.classList.remove("enter-next", "enter-prev");
-      });
-      if (direction) {
-        var current = pages[pageIdx];
-        current.classList.add(direction === "next" ? "enter-next" : "enter-prev");
-        void current.offsetWidth; /* reflowを強制してから解除し、遷移アニメーションを発火させる */
-        requestAnimationFrame(function () {
-          current.classList.remove("enter-next", "enter-prev");
-        });
-      }
+
+    var updateNav = function () {
       if (indicator) indicator.textContent = (pageIdx + 1) + " / " + pages.length;
-      if (prevBtn) prevBtn.disabled = pageIdx === 0;
-      if (nextBtn) nextBtn.disabled = pageIdx === pages.length - 1;
+      if (prevBtn) prevBtn.disabled = pageIdx === 0 || isAnimating;
+      if (nextBtn) nextBtn.disabled = pageIdx === pages.length - 1 || isAnimating;
     };
-    if (prevBtn) prevBtn.addEventListener("click", function () { if (pageIdx > 0) { pageIdx--; renderBook("prev"); } });
-    if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1) { pageIdx++; renderBook("next"); } });
+
+    /* direction: "next"/"prev" で現在の返しと次の返しを同時にスライドさせて入れ替える。
+       省略時（初期表示）はアニメーションなし */
+    var renderBook = function (direction) {
+      if (!direction) {
+        pages.forEach(function (el, i) { el.hidden = i !== pageIdx; });
+        renderedIdx = pageIdx;
+        updateNav();
+        return;
+      }
+      if (renderedIdx === pageIdx || isAnimating) { updateNav(); return; }
+
+      var oldEl = pages[renderedIdx];
+      var newEl = pages[pageIdx];
+      isAnimating = true;
+      updateNav();
+
+      var startHeight = oldEl.getBoundingClientRect().height;
+      viewport.style.height = startHeight + "px";
+
+      newEl.hidden = false;
+      oldEl.classList.add("is-sliding");
+      newEl.classList.add("is-sliding", direction === "next" ? "slide-in-next" : "slide-in-prev");
+      void newEl.offsetWidth; /* 初期位置を確定させてから次のフレームで遷移させる */
+
+      var endHeight = newEl.getBoundingClientRect().height;
+      renderedIdx = pageIdx;
+
+      requestAnimationFrame(function () {
+        viewport.style.transition = "height .32s ease";
+        viewport.style.height = endHeight + "px";
+        oldEl.classList.add(direction === "next" ? "slide-out-next" : "slide-out-prev");
+        newEl.classList.remove("slide-in-next", "slide-in-prev");
+        newEl.classList.add("slide-settle");
+      });
+
+      setTimeout(function () {
+        oldEl.hidden = true;
+        oldEl.classList.remove("is-sliding", "slide-out-next", "slide-out-prev");
+        newEl.classList.remove("is-sliding", "slide-settle");
+        viewport.style.transition = "";
+        viewport.style.height = "";
+        isAnimating = false;
+        updateNav();
+      }, 340);
+    };
+
+    if (prevBtn) prevBtn.addEventListener("click", function () { if (pageIdx > 0 && !isAnimating) { pageIdx--; renderBook("prev"); } });
+    if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1 && !isAnimating) { pageIdx++; renderBook("next"); } });
     renderBook();
 
     /* 左右スワイプでもスライドしながら返しをめくれる。
@@ -267,8 +334,8 @@
       if (touchStartX === null) return;
       if (touchStartOnCard) { touchStartX = null; return; } /* カード内は横スクロールに任せる */
       var dx = e.changedTouches[0].clientX - touchStartX;
-      if (dx < -40 && pageIdx < pages.length - 1) { pageIdx++; renderBook("next"); }
-      else if (dx > 40 && pageIdx > 0) { pageIdx--; renderBook("prev"); }
+      if (dx < -40 && pageIdx < pages.length - 1 && !isAnimating) { pageIdx++; renderBook("next"); }
+      else if (dx > 40 && pageIdx > 0 && !isAnimating) { pageIdx--; renderBook("prev"); }
       touchStartX = null;
     }, { passive: true });
   }
