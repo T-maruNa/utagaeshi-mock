@@ -258,32 +258,32 @@
   if (book) {
     var viewport = book.querySelector(".book-viewport");
     var pages = Array.prototype.slice.call(book.querySelectorAll("[data-book-entry]"));
-    var pageIdx = 0;
-    var renderedIdx = 0;
+    var currentReplyIndex = pages.length - 1;
+    var renderedIdx = currentReplyIndex;
     var isAnimating = false;
     var indicator = book.querySelector("[data-book-indicator]");
     var prevBtn = book.querySelector("[data-book-prev]");
     var nextBtn = book.querySelector("[data-book-next]");
 
     var updateNav = function () {
-      if (indicator) indicator.textContent = (pageIdx + 1) + " / " + pages.length;
-      if (prevBtn) prevBtn.disabled = pageIdx === 0 || isAnimating;
-      if (nextBtn) nextBtn.disabled = pageIdx === pages.length - 1 || isAnimating;
+      if (indicator) indicator.textContent = (currentReplyIndex + 1) + " / " + pages.length;
+      if (prevBtn) prevBtn.disabled = currentReplyIndex === 0 || isAnimating;
+      if (nextBtn) nextBtn.disabled = currentReplyIndex === pages.length - 1 || isAnimating;
     };
 
     /* direction: "next"/"prev" で現在の返しと次の返しを同時にスライドさせて入れ替える。
        省略時（初期表示）はアニメーションなし */
     var renderBook = function (direction) {
       if (!direction) {
-        pages.forEach(function (el, i) { el.hidden = i !== pageIdx; });
-        renderedIdx = pageIdx;
+        pages.forEach(function (el, i) { el.hidden = i !== currentReplyIndex; });
+        renderedIdx = currentReplyIndex;
         updateNav();
         return;
       }
-      if (renderedIdx === pageIdx || isAnimating) { updateNav(); return; }
+      if (renderedIdx === currentReplyIndex || isAnimating) { updateNav(); return; }
 
       var oldEl = pages[renderedIdx];
-      var newEl = pages[pageIdx];
+      var newEl = pages[currentReplyIndex];
       isAnimating = true;
       updateNav();
 
@@ -296,7 +296,7 @@
       void newEl.offsetWidth; /* 初期位置を確定させてから次のフレームで遷移させる */
 
       var endHeight = newEl.getBoundingClientRect().height;
-      renderedIdx = pageIdx;
+      renderedIdx = currentReplyIndex;
 
       requestAnimationFrame(function () {
         viewport.style.transition = "height .32s ease";
@@ -317,8 +317,8 @@
       }, 340);
     };
 
-    if (prevBtn) prevBtn.addEventListener("click", function () { if (pageIdx > 0 && !isAnimating) { pageIdx--; renderBook("prev"); } });
-    if (nextBtn) nextBtn.addEventListener("click", function () { if (pageIdx < pages.length - 1 && !isAnimating) { pageIdx++; renderBook("next"); } });
+    if (prevBtn) prevBtn.addEventListener("click", function () { if (currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); } });
+    if (nextBtn) nextBtn.addEventListener("click", function () { if (currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); } });
     renderBook();
 
     /* 左右スワイプでもスライドしながら返しをめくれる。
@@ -334,8 +334,8 @@
       if (touchStartX === null) return;
       if (touchStartOnCard) { touchStartX = null; return; } /* カード内は横スクロールに任せる */
       var dx = e.changedTouches[0].clientX - touchStartX;
-      if (dx < -40 && pageIdx < pages.length - 1 && !isAnimating) { pageIdx++; renderBook("next"); }
-      else if (dx > 40 && pageIdx > 0 && !isAnimating) { pageIdx--; renderBook("prev"); }
+      if (dx < -40 && currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); }
+      else if (dx > 40 && currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); }
       touchStartX = null;
     }, { passive: true });
   }
