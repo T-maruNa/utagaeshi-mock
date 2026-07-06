@@ -995,6 +995,41 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .book-nav button:disabled { opacity: .35; cursor: default; }
 .book-indicator { font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 
+/* ---------- トップ：今日のうた→届いた返し→投稿導線を1枚ずつめくるカード体験 ---------- */
+.deck-viewport { position: relative; overflow: hidden; }
+.deck-card { width: 100%; }
+.deck-card.is-sliding { position: absolute; top: 0; left: 0; transition: transform .32s ease; }
+.deck-card.slide-in-next { transform: translateX(100%); }
+.deck-card.slide-in-prev { transform: translateX(-100%); }
+.deck-card.slide-out-next { transform: translateX(-100%); }
+.deck-card.slide-out-prev { transform: translateX(100%); }
+.deck-card.slide-settle { transform: translateX(0); }
+.deck-card-label { font-size: 11.5px; color: var(--ink-faint); margin: 0 0 8px; }
+.deck-edge {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 32px; height: 32px; border-radius: 999px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1; color: var(--ink-soft);
+  background: rgba(0, 0, 0, .1); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (prefers-color-scheme: dark) { .deck-edge { background: rgba(255, 255, 255, .16); } }
+.deck-edge-prev { left: 6px; }
+.deck-edge-next { right: 6px; }
+.deck-edge:disabled { opacity: .25; cursor: default; }
+.deck-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px;
+}
+.deck-nav button {
+  border: 1px solid var(--line-strong); background: var(--surface);
+  border-radius: 999px; padding: 8px 14px;
+  font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+  cursor: pointer;
+}
+.deck-nav button:disabled { opacity: .35; cursor: default; }
+.deck-indicator { font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+
 /* 返し帳・返しカードの元うた情報 */
 .hist { display: block; }
 .hist .b { margin: 0 0 8px; font-size: 14px; line-height: 1.75; color: var(--ink); }

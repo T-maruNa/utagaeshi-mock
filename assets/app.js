@@ -142,6 +142,7 @@
       toast("返しました");
       ta.value = ""; update();
     });
+    composeModal = m;
     return m;
   }
 
@@ -253,37 +254,41 @@
     });
   });
 
-  /* ===== 返し帳：自分の返しを1ページずつめくる（前後の返しが本当に横スライドする） ===== */
-  var book = document.querySelector("[data-book]");
-  if (book) {
-    var viewport = book.querySelector(".book-viewport");
-    var pages = Array.prototype.slice.call(book.querySelectorAll("[data-book-entry]"));
-    var currentReplyIndex = pages.length - 1;
-    var renderedIdx = currentReplyIndex;
+  /* ===== 1枚ずつめくるカード体験の共通実装（返し帳のbook / トップのdeckで共有） =====
+     スワイプ・トラックパッド横スクロール・マウスドラッグ・前後ボタンのどれでも
+     めくれるようにし、切り替え時は横スライド＋高さアニメーションで入れ替える。
+     opts.scrollConflictSelector を指定すると、その要素内で実際に横スクロールが
+     必要なとき（scrollWidth>clientWidth）だけスワイプ/ドラッグを内部スクロール優先にする */
+  function initCardCarousel(root, opts) {
+    var viewport = root.querySelector(opts.viewportSelector);
+    var pages = Array.prototype.slice.call(root.querySelectorAll(opts.entrySelector));
+    if (!pages.length) return;
+    var currentIndex = opts.initialIndex === "last" ? pages.length - 1 : 0;
+    var renderedIdx = currentIndex;
     var isAnimating = false;
-    var indicator = book.querySelector("[data-book-indicator]");
-    var prevBtns = Array.prototype.slice.call(book.querySelectorAll("[data-book-prev]"));
-    var nextBtns = Array.prototype.slice.call(book.querySelectorAll("[data-book-next]"));
+    var indicator = root.querySelector(opts.indicatorSelector);
+    var prevBtns = Array.prototype.slice.call(root.querySelectorAll(opts.prevSelector));
+    var nextBtns = Array.prototype.slice.call(root.querySelectorAll(opts.nextSelector));
 
     var updateNav = function () {
-      if (indicator) indicator.textContent = (currentReplyIndex + 1) + " / " + pages.length;
-      prevBtns.forEach(function (b) { b.disabled = currentReplyIndex === 0 || isAnimating; });
-      nextBtns.forEach(function (b) { b.disabled = currentReplyIndex === pages.length - 1 || isAnimating; });
+      if (indicator) indicator.textContent = (currentIndex + 1) + " / " + pages.length;
+      prevBtns.forEach(function (b) { b.disabled = currentIndex === 0 || isAnimating; });
+      nextBtns.forEach(function (b) { b.disabled = currentIndex === pages.length - 1 || isAnimating; });
     };
 
-    /* direction: "next"/"prev" で現在の返しと次の返しを同時にスライドさせて入れ替える。
+    /* direction: "next"/"prev" で現在のカードと次のカードを同時にスライドさせて入れ替える。
        省略時（初期表示）はアニメーションなし */
-    var renderBook = function (direction) {
+    var render = function (direction) {
       if (!direction) {
-        pages.forEach(function (el, i) { el.hidden = i !== currentReplyIndex; });
-        renderedIdx = currentReplyIndex;
+        pages.forEach(function (el, i) { el.hidden = i !== currentIndex; });
+        renderedIdx = currentIndex;
         updateNav();
         return;
       }
-      if (renderedIdx === currentReplyIndex || isAnimating) { updateNav(); return; }
+      if (renderedIdx === currentIndex || isAnimating) { updateNav(); return; }
 
       var oldEl = pages[renderedIdx];
-      var newEl = pages[currentReplyIndex];
+      var newEl = pages[currentIndex];
       isAnimating = true;
       updateNav();
 
@@ -296,7 +301,7 @@
       void newEl.offsetWidth; /* 初期位置を確定させてから次のフレームで遷移させる */
 
       var endHeight = newEl.getBoundingClientRect().height;
-      renderedIdx = currentReplyIndex;
+      renderedIdx = currentIndex;
 
       requestAnimationFrame(function () {
         viewport.style.transition = "height .32s ease";
@@ -317,57 +322,84 @@
       }, 340);
     };
 
-    prevBtns.forEach(function (b) { b.addEventListener("click", function () { if (currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); } }); });
-    nextBtns.forEach(function (b) { b.addEventListener("click", function () { if (currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); } }); });
-    renderBook();
+    var goNext = function () { if (currentIndex < pages.length - 1 && !isAnimating) { currentIndex++; render("next"); } };
+    var goPrev = function () { if (currentIndex > 0 && !isAnimating) { currentIndex--; render("prev"); } };
 
-    /* 左右スワイプでもスライドしながら返しをめくれる。
-       ただし返し本文のカード上で始まったスワイプは、長い返しで列がはみ出す場合に
-       横スクロールで続きを読むためのものなので、返しの切り替えとは区別する */
-    var touchStartX = null;
-    var touchStartOnCard = false;
-    book.addEventListener("touchstart", function (e) {
+    prevBtns.forEach(function (b) { b.addEventListener("click", goPrev); });
+    nextBtns.forEach(function (b) { b.addEventListener("click", goNext); });
+    render();
+
+    var conflictSel = opts.scrollConflictSelector;
+    var hasScrollConflict = function (target) {
+      if (!conflictSel) return false;
+      var el = target.closest && target.closest(conflictSel);
+      return !!(el && el.scrollWidth > el.clientWidth);
+    };
+
+    /* 左右スワイプ */
+    var touchStartX = null, touchStartOnConflict = false;
+    root.addEventListener("touchstart", function (e) {
       touchStartX = e.touches[0].clientX;
-      var cardEl = e.target.closest && e.target.closest(".book-card");
-      touchStartOnCard = !!(cardEl && cardEl.scrollWidth > cardEl.clientWidth);
+      touchStartOnConflict = hasScrollConflict(e.target);
     }, { passive: true });
-    book.addEventListener("touchend", function (e) {
+    root.addEventListener("touchend", function (e) {
       if (touchStartX === null) return;
-      if (touchStartOnCard) { touchStartX = null; return; } /* カード内は横スクロールに任せる */
+      if (touchStartOnConflict) { touchStartX = null; return; }
       var dx = e.changedTouches[0].clientX - touchStartX;
-      if (dx < -40 && currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); }
-      else if (dx > 40 && currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); }
+      if (dx < -40) goNext(); else if (dx > 40) goPrev();
       touchStartX = null;
     }, { passive: true });
 
     /* PCのトラックパッド2本指スワイプはtouch系イベントが発火せずwheelのdeltaXとして届くため、
        別途ここで拾う。縦スクロール（deltaY優勢）とは区別し、連続発火を1ジェスチャー1回に間引く */
     var wheelCooldown = false;
-    book.addEventListener("wheel", function (e) {
+    root.addEventListener("wheel", function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || wheelCooldown || isAnimating) return;
-      if (e.deltaX > 30 && currentReplyIndex < pages.length - 1) { currentReplyIndex++; renderBook("next"); }
-      else if (e.deltaX < -30 && currentReplyIndex > 0) { currentReplyIndex--; renderBook("prev"); }
-      else return;
+      if (e.deltaX > 30) goNext(); else if (e.deltaX < -30) goPrev(); else return;
       wheelCooldown = true;
       setTimeout(function () { wheelCooldown = false; }, 400);
     }, { passive: true });
 
     /* マウスのクリック&ドラッグでもスライダーのようにめくれるようにする */
-    var mouseStartX = null;
-    var mouseStartOnCard = false;
-    book.addEventListener("mousedown", function (e) {
+    var mouseStartX = null, mouseStartOnConflict = false;
+    root.addEventListener("mousedown", function (e) {
       mouseStartX = e.clientX;
-      var cardEl = e.target.closest && e.target.closest(".book-card");
-      mouseStartOnCard = !!(cardEl && cardEl.scrollWidth > cardEl.clientWidth);
-      if (!mouseStartOnCard) e.preventDefault(); /* ドラッグ中のテキスト選択を防ぐ */
+      mouseStartOnConflict = hasScrollConflict(e.target);
+      if (!mouseStartOnConflict) e.preventDefault(); /* ドラッグ中のテキスト選択を防ぐ */
     });
     document.addEventListener("mouseup", function (e) {
       if (mouseStartX === null) return;
-      if (mouseStartOnCard) { mouseStartX = null; return; }
+      if (mouseStartOnConflict) { mouseStartX = null; return; }
       var dx = e.clientX - mouseStartX;
-      if (dx < -40 && currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); }
-      else if (dx > 40 && currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); }
+      if (dx < -40) goNext(); else if (dx > 40) goPrev();
       mouseStartX = null;
+    });
+  }
+
+  /* ===== 返し帳：自分の返しを1ページずつめくる（初期表示は最新の返し） ===== */
+  var book = document.querySelector("[data-book]");
+  if (book) {
+    initCardCarousel(book, {
+      viewportSelector: ".book-viewport",
+      entrySelector: "[data-book-entry]",
+      indicatorSelector: "[data-book-indicator]",
+      prevSelector: "[data-book-prev]",
+      nextSelector: "[data-book-next]",
+      scrollConflictSelector: ".book-card",
+      initialIndex: "last",
+    });
+  }
+
+  /* ===== トップ：今日のうた→届いた返し→AI返し→投稿導線を1枚ずつめくる ===== */
+  var deck = document.querySelector("[data-deck]");
+  if (deck) {
+    initCardCarousel(deck, {
+      viewportSelector: ".deck-viewport",
+      entrySelector: "[data-deck-card]",
+      indicatorSelector: "[data-deck-indicator]",
+      prevSelector: "[data-deck-prev]",
+      nextSelector: "[data-deck-next]",
+      initialIndex: 0,
     });
   }
 

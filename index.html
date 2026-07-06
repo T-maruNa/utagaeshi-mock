@@ -17,148 +17,144 @@
 
   <main class="page">
 
-    <!-- 今日のうた（主役。返しを投稿できるのはこのうただけ） -->
-    <p class="section-label">今日のうた ・ 2026年7月5日（日）</p>
-    <section class="poem">
-      <div class="poem-body">春過ぎて
+    <!-- トップの主役：今日のうた→届いた返し→AI返し→投稿導線を1枚ずつめくる体験 -->
+    <div class="deck" data-deck>
+      <div class="deck-viewport">
+
+        <button class="deck-edge deck-edge-prev" type="button" data-deck-prev aria-label="前のページ">‹</button>
+        <button class="deck-edge deck-edge-next" type="button" data-deck-next aria-label="次のページ">›</button>
+
+        <!-- 1/6：今日のお題歌 -->
+        <article class="deck-card" data-deck-card>
+          <p class="section-label">今日のうた ・ 2026年7月5日（日）</p>
+          <section class="poem">
+            <div class="poem-body">春過ぎて
 夏来にけらし
 白妙の
 衣ほすてふ
 天の香具山</div>
-      <div class="poem-tags">
-        <span class="tag">夏</span>
-        <span class="tag">季節</span>
-      </div>
-      <div class="poem-meta">
-        <span class="author">持統天皇</span>
-        <span class="source">百人一首・二番／新古今和歌集</span>
-      </div>
-      <div class="poem-heat">
-        <span>このうた好き <b>42</b></span>
-        <span>返し <b>128</b></span>
-        <span>届いた反応 <b>935</b></span>
-      </div>
-    </section>
+            <div class="poem-tags">
+              <span class="tag">夏</span>
+              <span class="tag">季節</span>
+            </div>
+            <div class="poem-meta">
+              <span class="author">持統天皇</span>
+              <span class="source">百人一首・二番／新古今和歌集</span>
+            </div>
+            <div class="poem-heat">
+              <span>このうた好き <b>42</b></span>
+              <span>返し <b>128</b></span>
+              <span>届いた反応 <b>935</b></span>
+            </div>
+          </section>
 
-    <div style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
-      <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
-      <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
+          <div style="display:flex; align-items:center; gap:12px; justify-content:space-between; margin-top:14px;">
+            <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+            <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
+          </div>
+
+          <details class="fold" style="margin-top:14px;">
+            <summary>
+              <span class="ai-badge">AI</span> 読み解きのヒントを見る
+              <span class="chev">⌄</span>
+            </summary>
+            <div class="fold-body">
+              <div class="ai-head" style="margin-bottom:12px;">
+                <span>AIによる読み解きのヒント</span>
+                <span class="ai-note">※正解ではありません</span>
+              </div>
+              <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してある——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
+              <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
+            </div>
+          </details>
+        </article>
+
+        <!-- 2/6：このうたに届いた返し -->
+        <article class="deck-card" data-deck-card hidden>
+          <p class="deck-card-label">このうたへの返し</p>
+          <article class="post">
+            <div class="post-head"><span class="avatar">は</span><div><div class="post-user">はると</div><div class="post-time">12分前</div></div></div>
+            <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
+            <div class="reactions">
+              <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
+              <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
+              <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
+            </div>
+          </article>
+        </article>
+
+        <!-- 3/6：このうたに届いた返し -->
+        <article class="deck-card" data-deck-card hidden>
+          <p class="deck-card-label">このうたへの返し</p>
+          <article class="post">
+            <div class="post-head"><span class="avatar">そ</span><div><div class="post-user">そら</div><div class="post-time">8分前</div></div></div>
+            <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
+            <div class="reactions">
+              <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
+              <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
+              <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
+            </div>
+          </article>
+        </article>
+
+        <!-- 4/6：うたがえしAIの返し（模範解答ではなく、場を温めるための返し。AIであることを明示） -->
+        <article class="deck-card" data-deck-card hidden>
+          <p class="deck-card-label">このうたへの返し</p>
+          <article class="post post-ai">
+            <div class="post-head">
+              <span class="avatar avatar-ai">AI</span>
+              <div>
+                <div class="post-user">うたがえしAI <span class="ai-tag">AIによる返し</span></div>
+                <div class="post-time">場をあたためる一返し</div>
+              </div>
+            </div>
+            <p class="post-body">ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</p>
+            <p class="ai-disclaimer">※AIの返しです。正解や模範解答ではありません。</p>
+            <div class="reactions">
+              <button class="react"><span class="emoji">🫧</span>わかる<span class="count">6</span></button>
+              <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">3</span></button>
+              <button class="react"><span class="emoji">🤍</span>好き<span class="count">5</span></button>
+            </div>
+          </article>
+        </article>
+
+        <!-- 5/6：このうたに届いた返し -->
+        <article class="deck-card" data-deck-card hidden>
+          <p class="deck-card-label">このうたへの返し</p>
+          <article class="post">
+            <div class="post-head"><span class="avatar">み</span><div><div class="post-user">みお</div><div class="post-time">5分前</div></div></div>
+            <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
+            <div class="reactions">
+              <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
+              <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
+              <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
+            </div>
+          </article>
+        </article>
+
+        <!-- 6/6：投稿導線（主役） -->
+        <article class="deck-card" data-deck-card hidden>
+          <div class="reply-invite">
+            <p class="lead">あなたなら、どう返しますか？</p>
+            <p class="sub">正解じゃなくて大丈夫。今の自分ならどう言うかを書いてください。</p>
+            <button class="btn btn-primary" type="button" data-compose>このうたに返す</button>
+          </div>
+        </article>
+
+      </div>
+      <div class="deck-nav">
+        <button class="deck-prev" type="button" data-deck-prev>← 前のページ</button>
+        <span class="deck-indicator" data-deck-indicator>1 / 6</span>
+        <button class="deck-next" type="button" data-deck-next>次のページ →</button>
+      </div>
     </div>
 
-    <!-- 投稿導線（行動）：今日のうたに対して返すためのもの -->
+    <!-- 下部の控えめな投稿導線（補助。主役はめくった先の投稿導線カード） -->
     <button class="compose-bar" type="button" data-compose>
       <span class="avatar">＋</span>
       <span class="compose-placeholder">今の自分なら、どう返しますか？</span>
       <span class="compose-go">返す</span>
     </button>
-
-    <!-- AIによる読み解きのヒント（補助情報）：投稿導線とは別行・初期は閉じた状態 -->
-    <details class="fold">
-      <summary>
-        <span class="ai-badge">AI</span> 読み解きのヒントを見る
-        <span class="chev">⌄</span>
-      </summary>
-      <div class="fold-body">
-        <div class="ai-head" style="margin-bottom:12px;">
-          <span>AIによる読み解きのヒント</span>
-          <span class="ai-note">※正解ではありません</span>
-        </div>
-        <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してある——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
-        <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
-      </div>
-    </details>
-
-    <!-- このうたに届いた返し（今日のうたに対応。ランキング表現は避ける） -->
-    <div style="display:flex; align-items:center; justify-content:space-between;">
-      <p class="section-label" style="margin:0;">このうたに届いた返し</p>
-      <div class="tabs">
-        <button class="tab on" data-sort="new">新着</button>
-        <button class="tab" data-sort="popular">よく届いた</button>
-      </div>
-    </div>
-    <p class="muted" style="font-size:12px; margin:8px 2px 0;">このうたに、みんなはこう返しました。</p>
-
-    <div data-list>
-
-      <article class="post" data-reactions="54" data-time="1690">
-        <a class="post-main" href="post-detail.html">
-          <div class="post-head"><span class="avatar">は</span><div><div class="post-user">はると</div><div class="post-time">12分前</div></div></div>
-          <p class="post-body">白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。</p>
-        </a>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">19</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">22</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="33" data-time="1705">
-        <a class="post-main" href="post-detail.html">
-          <div class="post-head"><span class="avatar">そ</span><div><div class="post-user">そら</div><div class="post-time">8分前</div></div></div>
-          <p class="post-body">夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。</p>
-        </a>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">14</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">6</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">13</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="27" data-time="1695">
-        <a class="post-main" href="post-detail.html">
-          <div class="post-head"><span class="avatar">み</span><div><div class="post-user">みお</div><div class="post-time">5分前</div></div></div>
-          <p class="post-body">季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。</p>
-        </a>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">11</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">7</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">9</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="18" data-time="1698">
-        <a class="post-main" href="post-detail.html">
-          <div class="post-head"><span class="avatar">な</span><div><div class="post-user">なな</div><div class="post-time">10分前</div></div></div>
-          <p class="post-body">衣替えのタイミングをいつも逃す。でも今日は思い切って半袖にした。それだけで少し前向き。</p>
-        </a>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">10</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">6</span></button>
-        </div>
-      </article>
-
-      <article class="post" data-reactions="9" data-time="1670">
-        <a class="post-main" href="post-detail.html">
-          <div class="post-head"><span class="avatar">れ</span><div><div class="post-user">れん</div><div class="post-time">1時間前</div></div></div>
-          <p class="post-body">気づけば夏。今年はちゃんと、やりたいことをやる。まず海。</p>
-        </a>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">4</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">2</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">3</span></button>
-        </div>
-      </article>
-
-      <!-- AIによる返し：模範解答ではなく、場を温めるための返し。人間の返しと同じ一覧に自然に混ぜる。ランキング対象外 -->
-      <article class="post post-ai" data-reactions="14" data-time="1660">
-        <div class="post-head">
-          <span class="avatar avatar-ai">AI</span>
-          <div>
-            <div class="post-user">うたがえしAI <span class="ai-tag">AIによる返し</span></div>
-            <div class="post-time">場をあたためる一返し</div>
-          </div>
-        </div>
-        <p class="post-body">ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。</p>
-        <p class="ai-disclaimer">※AIの返しです。正解や模範解答ではありません。</p>
-        <div class="reactions">
-          <button class="react"><span class="emoji">🫧</span>わかる<span class="count">6</span></button>
-          <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">3</span></button>
-          <button class="react"><span class="emoji">🤍</span>好き<span class="count">5</span></button>
-        </div>
-      </article>
-
-    </div>
 
     <!-- 昨日・明日は軽い導線として（今日のうたと同じ重さにしない） -->
     <a href="poem-detail.html" class="uta-nav-link">← 昨日のうたを見る</a>
