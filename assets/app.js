@@ -262,13 +262,13 @@
     var renderedIdx = currentReplyIndex;
     var isAnimating = false;
     var indicator = book.querySelector("[data-book-indicator]");
-    var prevBtn = book.querySelector("[data-book-prev]");
-    var nextBtn = book.querySelector("[data-book-next]");
+    var prevBtns = Array.prototype.slice.call(book.querySelectorAll("[data-book-prev]"));
+    var nextBtns = Array.prototype.slice.call(book.querySelectorAll("[data-book-next]"));
 
     var updateNav = function () {
       if (indicator) indicator.textContent = (currentReplyIndex + 1) + " / " + pages.length;
-      if (prevBtn) prevBtn.disabled = currentReplyIndex === 0 || isAnimating;
-      if (nextBtn) nextBtn.disabled = currentReplyIndex === pages.length - 1 || isAnimating;
+      prevBtns.forEach(function (b) { b.disabled = currentReplyIndex === 0 || isAnimating; });
+      nextBtns.forEach(function (b) { b.disabled = currentReplyIndex === pages.length - 1 || isAnimating; });
     };
 
     /* direction: "next"/"prev" で現在の返しと次の返しを同時にスライドさせて入れ替える。
@@ -317,8 +317,8 @@
       }, 340);
     };
 
-    if (prevBtn) prevBtn.addEventListener("click", function () { if (currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); } });
-    if (nextBtn) nextBtn.addEventListener("click", function () { if (currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); } });
+    prevBtns.forEach(function (b) { b.addEventListener("click", function () { if (currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); } }); });
+    nextBtns.forEach(function (b) { b.addEventListener("click", function () { if (currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); } }); });
     renderBook();
 
     /* 左右スワイプでもスライドしながら返しをめくれる。

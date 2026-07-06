@@ -940,6 +940,20 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .book-entry.slide-out-next { transform: translateX(-100%); }
 .book-entry.slide-out-prev { transform: translateX(100%); }
 .book-entry.slide-settle { transform: translateX(0); }
+
+/* カードをめくれることが一目でわかる左右の矢印（クリックでも前後移動） */
+.book-edge {
+  position: absolute; top: 230px; transform: translateY(-50%);
+  width: 32px; height: 32px; border-radius: 999px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1; color: var(--ink-soft);
+  background: rgba(0, 0, 0, .1); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (prefers-color-scheme: dark) { .book-edge { background: rgba(255, 255, 255, .16); } }
+.book-edge-prev { left: 6px; }
+.book-edge-next { right: 6px; }
+.book-edge:disabled { opacity: .25; cursor: default; }
 .book-meta {
   margin-top: 12px; padding: 0 2px;
   font-size: 11.5px; color: var(--ink-faint); line-height: 1.8;
