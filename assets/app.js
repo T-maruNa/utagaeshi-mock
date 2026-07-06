@@ -328,7 +328,8 @@
     var touchStartOnCard = false;
     book.addEventListener("touchstart", function (e) {
       touchStartX = e.touches[0].clientX;
-      touchStartOnCard = !!(e.target.closest && e.target.closest(".book-card"));
+      var cardEl = e.target.closest && e.target.closest(".book-card");
+      touchStartOnCard = !!(cardEl && cardEl.scrollWidth > cardEl.clientWidth);
     }, { passive: true });
     book.addEventListener("touchend", function (e) {
       if (touchStartX === null) return;
