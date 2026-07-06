@@ -711,7 +711,10 @@ details.fold .fold-body { padding: 0 18px 18px; }
 }
 .compose-bar:active { background: var(--surface-2); }
 .compose-bar .avatar { width: 36px; height: 36px; flex: none; }
-.compose-placeholder { flex: 1; color: var(--ink-faint); font-size: 14.5px; }
+.compose-placeholder {
+  flex: 1; min-width: 0; color: var(--ink-faint); font-size: 14.5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .compose-go {
   flex: none; font-size: 13px; font-weight: 600; color: #fff;
   background: var(--accent); padding: 8px 16px; border-radius: 999px;
@@ -1013,9 +1016,9 @@ details.fold .fold-body { padding: 0 18px 18px; }
   text-align: center;
 }
 .deck-post-text { font-family: var(--sans); font-size: 16px; line-height: 1.9; color: var(--ink); }
-/* お題カード・投稿導線カードもデッキ内では返しカードと同じ460pxに揃える
-   （他ページの.poem/.reply-invite表示には影響させないためデッキ内限定でスコープ） */
-.deck-card .poem, .deck-card .reply-invite {
+/* 投稿導線カードもデッキ内では返しカードと同じ460pxに揃える
+   （他ページの.reply-invite表示には影響させないためデッキ内限定でスコープ） */
+.deck-card .reply-invite {
   height: 460px;
   display: flex; flex-direction: column; justify-content: center;
 }
