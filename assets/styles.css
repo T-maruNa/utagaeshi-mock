@@ -1005,12 +1005,20 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .deck-card.slide-out-prev { transform: translateX(100%); }
 .deck-card.slide-settle { transform: translateX(0); }
 .deck-post-card {
+  height: 460px;
+  display: flex; flex-direction: column; justify-content: center;
   padding: 30px 26px;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
   text-align: center;
 }
 .deck-post-text { font-family: var(--sans); font-size: 16px; line-height: 1.9; color: var(--ink); }
+/* お題カード・投稿導線カードもデッキ内では返しカードと同じ460pxに揃える
+   （他ページの.poem/.reply-invite表示には影響させないためデッキ内限定でスコープ） */
+.deck-card .poem, .deck-card .reply-invite {
+  height: 460px;
+  display: flex; flex-direction: column; justify-content: center;
+}
 .deck-edge {
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
   width: 32px; height: 32px; border-radius: 999px; border: none;
