@@ -351,6 +351,24 @@
       wheelCooldown = true;
       setTimeout(function () { wheelCooldown = false; }, 400);
     }, { passive: true });
+
+    /* マウスのクリック&ドラッグでもスライダーのようにめくれるようにする */
+    var mouseStartX = null;
+    var mouseStartOnCard = false;
+    book.addEventListener("mousedown", function (e) {
+      mouseStartX = e.clientX;
+      var cardEl = e.target.closest && e.target.closest(".book-card");
+      mouseStartOnCard = !!(cardEl && cardEl.scrollWidth > cardEl.clientWidth);
+      if (!mouseStartOnCard) e.preventDefault(); /* ドラッグ中のテキスト選択を防ぐ */
+    });
+    document.addEventListener("mouseup", function (e) {
+      if (mouseStartX === null) return;
+      if (mouseStartOnCard) { mouseStartX = null; return; }
+      var dx = e.clientX - mouseStartX;
+      if (dx < -40 && currentReplyIndex < pages.length - 1 && !isAnimating) { currentReplyIndex++; renderBook("next"); }
+      else if (dx > 40 && currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); }
+      mouseStartX = null;
+    });
   }
 
   /* 「AIに読んでもらう」ダミー感想（将来枠） */
