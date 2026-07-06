@@ -339,6 +339,18 @@
       else if (dx > 40 && currentReplyIndex > 0 && !isAnimating) { currentReplyIndex--; renderBook("prev"); }
       touchStartX = null;
     }, { passive: true });
+
+    /* PCのトラックパッド2本指スワイプはtouch系イベントが発火せずwheelのdeltaXとして届くため、
+       別途ここで拾う。縦スクロール（deltaY優勢）とは区別し、連続発火を1ジェスチャー1回に間引く */
+    var wheelCooldown = false;
+    book.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || wheelCooldown || isAnimating) return;
+      if (e.deltaX > 30 && currentReplyIndex < pages.length - 1) { currentReplyIndex++; renderBook("next"); }
+      else if (e.deltaX < -30 && currentReplyIndex > 0) { currentReplyIndex--; renderBook("prev"); }
+      else return;
+      wheelCooldown = true;
+      setTimeout(function () { wheelCooldown = false; }, 400);
+    }, { passive: true });
   }
 
   /* 「AIに読んでもらう」ダミー感想（将来枠） */
