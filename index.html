@@ -17,58 +17,62 @@
 
   <main class="page">
 
-    <!-- 今日のお題歌（固定表示・スライドしない） -->
+    <!-- 今日のうた：ラベルはデッキの外に1回だけ（スライドしない）。
+         お題歌自体はデッキの1枚目としてスワイプ対象に含める -->
     <p class="section-label">今日のうた ・ 2026年7月5日（日）</p>
-    <section class="poem">
-      <div class="poem-body">春過ぎて
-夏来にけらし
-白妙の
-衣ほすてふ
-天の香具山</div>
-      <div class="poem-tags">
-        <span class="tag">夏</span>
-        <span class="tag">季節</span>
-      </div>
-      <div class="poem-meta">
-        <span class="author">持統天皇</span>
-        <span class="source">百人一首・二番／新古今和歌集</span>
-      </div>
-      <div class="poem-heat">
-        <span>このうた好き <b>42</b></span>
-        <span>返し <b>128</b></span>
-        <span>届いた反応 <b>935</b></span>
-      </div>
-    </section>
 
-    <div style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
-      <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
-      <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
-    </div>
-
-    <details class="fold">
-      <summary>
-        <span class="ai-badge">AI</span> 読み解きのヒントを見る
-        <span class="chev">⌄</span>
-      </summary>
-      <div class="fold-body">
-        <div class="ai-head" style="margin-bottom:12px;">
-          <span>AIによる読み解きのヒント</span>
-          <span class="ai-note">※正解ではありません</span>
-        </div>
-        <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してある——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
-        <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
-      </div>
-    </details>
-
-    <!-- ここから：このうたに届いた返し→AI返し→投稿導線を1枚ずつめくる体験 -->
     <div class="deck" data-deck>
       <div class="deck-viewport">
 
         <button class="deck-edge deck-edge-prev" type="button" data-deck-prev aria-label="前のページ">‹</button>
         <button class="deck-edge deck-edge-next" type="button" data-deck-next aria-label="次のページ">›</button>
 
-        <!-- 1/5：このうたに届いた返し -->
+        <!-- 1/6：今日のお題歌 -->
         <article class="deck-card" data-deck-card>
+          <section class="poem">
+            <div class="poem-body">春過ぎて
+夏来にけらし
+白妙の
+衣ほすてふ
+天の香具山</div>
+            <div class="poem-tags">
+              <span class="tag">夏</span>
+              <span class="tag">季節</span>
+            </div>
+            <div class="poem-meta">
+              <span class="author">持統天皇</span>
+              <span class="source">百人一首・二番／新古今和歌集</span>
+            </div>
+            <div class="poem-heat">
+              <span>このうた好き <b>42</b></span>
+              <span>返し <b>128</b></span>
+              <span>届いた反応 <b>935</b></span>
+            </div>
+          </section>
+
+          <div style="display:flex; align-items:center; gap:12px; justify-content:space-between; margin-top:14px;">
+            <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+            <a href="poem-detail.html" style="font-size:12.5px; color:var(--accent-ink); text-decoration:none; white-space:nowrap;">返しを全部見る ›</a>
+          </div>
+
+          <details class="fold" style="margin-top:14px;">
+            <summary>
+              <span class="ai-badge">AI</span> 読み解きのヒントを見る
+              <span class="chev">⌄</span>
+            </summary>
+            <div class="fold-body">
+              <div class="ai-head" style="margin-bottom:12px;">
+                <span>AIによる読み解きのヒント</span>
+                <span class="ai-note">※正解ではありません</span>
+              </div>
+              <p class="ai-body">春がいつのまにか過ぎて、夏が来たみたいですね。天の香具山に、真っ白な衣が干してある——そんな景色から季節の移り変わりを感じている一首に読めます。</p>
+              <p class="ai-nuance">「気づいたら夏だった」という小さな驚きと、目にまぶしい白へのやわらかな安心感がありそうです。</p>
+            </div>
+          </details>
+        </article>
+
+        <!-- 2/6：このうたに届いた返し -->
+        <article class="deck-card" data-deck-card hidden>
           <div class="deck-post-card">
             <p class="deck-post-text">白いシャツを干すたびに、<br>去年の夏を思い出す。<br>もう戻れないけど、<br>きらいじゃない。</p>
           </div>
@@ -83,7 +87,7 @@
           </div>
         </article>
 
-        <!-- 2/5：このうたに届いた返し -->
+        <!-- 3/6：このうたに届いた返し -->
         <article class="deck-card" data-deck-card hidden>
           <div class="deck-post-card">
             <p class="deck-post-text">夏が来たって、<br>香具山じゃなくてスーパーの<br>店頭で知った。<br>桃がきれいに並んでた。</p>
@@ -99,7 +103,7 @@
           </div>
         </article>
 
-        <!-- 3/5：うたがえしAIの返し（模範解答ではなく、場を温めるための返し。AIであることを明示） -->
+        <!-- 4/6：うたがえしAIの返し（模範解答ではなく、場を温めるための返し。AIであることを明示） -->
         <article class="deck-card" data-deck-card hidden>
           <div class="deck-post-card">
             <p class="deck-post-text">ベランダの白いシャツが<br>まぶしい。<br>季節はちゃんと進んでる。</p>
@@ -119,7 +123,7 @@
           </div>
         </article>
 
-        <!-- 4/5：このうたに届いた返し -->
+        <!-- 5/6：このうたに届いた返し -->
         <article class="deck-card" data-deck-card hidden>
           <div class="deck-post-card">
             <p class="deck-post-text">季節が変わるのは<br>さびしい。<br>でも、新しい服を<br>出すのはちょっとうれしい。</p>
@@ -135,7 +139,7 @@
           </div>
         </article>
 
-        <!-- 5/5：投稿導線（主役） -->
+        <!-- 6/6：投稿導線（主役） -->
         <article class="deck-card" data-deck-card hidden>
           <div class="reply-invite">
             <p class="lead">あなたなら、どう返しますか？</p>
@@ -147,7 +151,7 @@
       </div>
       <div class="deck-nav">
         <button class="deck-prev" type="button" data-deck-prev>← 前のページ</button>
-        <span class="deck-indicator" data-deck-indicator>1 / 5</span>
+        <span class="deck-indicator" data-deck-indicator>1 / 6</span>
         <button class="deck-next" type="button" data-deck-next>次のページ →</button>
       </div>
     </div>

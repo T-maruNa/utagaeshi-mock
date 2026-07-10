@@ -1016,9 +1016,9 @@ details.fold .fold-body { padding: 0 18px 18px; }
   text-align: center;
 }
 .deck-post-text { font-family: var(--sans); font-size: 16px; line-height: 1.9; color: var(--ink); }
-/* 投稿導線カードもデッキ内では返しカードと同じ460pxに揃える
-   （他ページの.reply-invite表示には影響させないためデッキ内限定でスコープ） */
-.deck-card .reply-invite {
+/* お題カード・投稿導線カードもデッキ内では返しカードと同じ460pxに揃える
+   （他ページの.poem/.reply-invite表示には影響させないためデッキ内限定でスコープ） */
+.deck-card .poem, .deck-card .reply-invite {
   height: 460px;
   display: flex; flex-direction: column; justify-content: center;
 }
