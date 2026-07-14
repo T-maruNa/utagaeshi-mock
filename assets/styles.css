@@ -469,13 +469,38 @@ details.fold .fold-body { padding: 0 18px 18px; }
 
 /* ---------- マイページ ---------- */
 .profile { display: flex; align-items: center; gap: 16px; padding: 6px 2px; }
-.profile .avatar-lg {
+.avatar-lg {
   width: 60px; height: 60px; border-radius: 50%;
   display: grid; place-items: center; font-size: 22px; font-weight: 700;
   color: var(--accent-ink); background: var(--accent-soft); flex: none;
 }
 .profile .name { font-size: 18px; font-weight: 700; }
 .profile .handle { font-size: 13px; color: var(--ink-faint); }
+
+/* ---------- プロフィールのアイコンカラー（.avatar / .avatar-lg / .color-swatch と併用） ---------- */
+.avatar-indigo { background: var(--accent-soft); color: var(--accent-ink); }
+.avatar-brown  { background: #f1e4da; color: #8a5a45; }
+.avatar-green  { background: #e6ecdf; color: #55703f; }
+.avatar-red    { background: #f7e9ee; color: #a84f68; }
+.avatar-gold   { background: #f4ead0; color: #8a6d1f; }
+.avatar-gray   { background: #eceae5; color: #6b6459; }
+@media (prefers-color-scheme: dark) {
+  .avatar-brown { background: #3a2a22; color: #d9a98c; }
+  .avatar-green { background: #26301f; color: #a9c294; }
+  .avatar-red   { background: #3a2830; color: #e8a7b8; }
+  .avatar-gold  { background: #332a12; color: #e0c069; }
+  .avatar-gray  { background: #2c2820; color: #b3ab9c; }
+}
+
+.color-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.color-swatch {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  padding: 0; -webkit-tap-highlight-color: transparent;
+}
+.color-swatch.on { border-color: var(--ink-soft); }
+
+.book-owner-handle { color: var(--ink-faint); }
 
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .stat {

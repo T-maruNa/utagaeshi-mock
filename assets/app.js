@@ -16,6 +16,83 @@
     });
   }
 
+  /* ===== プロフィール（表示名・ハンドル・アイコンカラー） ===== */
+  var PROFILE_KEY = "utagaeshi_profile";
+  var PROFILE_DEFAULT = { name: "言葉", handle: "", color: "indigo" };
+  var AVATAR_COLORS = ["indigo", "brown", "green", "red", "gold", "gray"];
+  function getProfile() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(PROFILE_KEY));
+      if (raw && raw.name) {
+        return {
+          name: raw.name,
+          handle: raw.handle || "",
+          color: AVATAR_COLORS.indexOf(raw.color) >= 0 ? raw.color : PROFILE_DEFAULT.color,
+        };
+      }
+    } catch (e) { /* 破損データは既定値にフォールバック */ }
+    return { name: PROFILE_DEFAULT.name, handle: PROFILE_DEFAULT.handle, color: PROFILE_DEFAULT.color };
+  }
+  function setProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
+  function avatarColorClass(color) { return "avatar-" + (AVATAR_COLORS.indexOf(color) >= 0 ? color : PROFILE_DEFAULT.color); }
+  function setAvatarColor(el, color) {
+    AVATAR_COLORS.forEach(function (c) { el.classList.remove("avatar-" + c); });
+    el.classList.add(avatarColorClass(color));
+  }
+  function applyProfileDisplay() {
+    var p = getProfile();
+    document.querySelectorAll("[data-profile-name]").forEach(function (el) { el.textContent = p.name; });
+    document.querySelectorAll("[data-profile-handle]").forEach(function (el) {
+      el.textContent = p.handle ? "@" + p.handle : "";
+      el.hidden = !p.handle;
+    });
+    document.querySelectorAll("[data-profile-avatar]").forEach(function (el) {
+      el.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
+      setAvatarColor(el, p.color);
+    });
+  }
+  applyProfileDisplay();
+
+  /* アカウント設定フォーム（account.html） */
+  var accountForm = document.querySelector("[data-account-form]");
+  if (accountForm) {
+    var acctProfile = getProfile();
+    var nameInput = accountForm.querySelector("[data-profile-name-input]");
+    var handleInput = accountForm.querySelector("[data-profile-handle-input]");
+    var preview = document.querySelector("[data-profile-preview]");
+    var swatches = Array.prototype.slice.call(accountForm.querySelectorAll("[data-color-swatch]"));
+    var selectedColor = acctProfile.color;
+
+    nameInput.value = acctProfile.name;
+    handleInput.value = acctProfile.handle;
+
+    var updatePreview = function () {
+      if (!preview) return;
+      preview.textContent = nameInput.value.trim().charAt(0) || PROFILE_DEFAULT.name;
+      setAvatarColor(preview, selectedColor);
+    };
+    swatches.forEach(function (sw) {
+      var c = sw.getAttribute("data-color-swatch");
+      sw.classList.toggle("on", c === selectedColor);
+      sw.addEventListener("click", function () {
+        selectedColor = c;
+        swatches.forEach(function (s) { s.classList.toggle("on", s === sw); });
+        updatePreview();
+      });
+    });
+    nameInput.addEventListener("input", updatePreview);
+    updatePreview();
+
+    accountForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = nameInput.value.trim() || PROFILE_DEFAULT.name;
+      var handle = handleInput.value.trim().replace(/^@/, "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20);
+      setProfile({ name: name.slice(0, 20), handle: handle, color: selectedColor });
+      toast("プロフィールを保存しました");
+      setTimeout(function () { location.href = "mypage.html"; }, 700);
+    });
+  }
+
   /* ===== ログイン誘導シート ===== */
   var sheet;
   function ensureSheet() {
@@ -101,12 +178,17 @@
     submit.addEventListener("click", function () {
       if (submit.disabled) return;
       var val = ta.value.trim();
+      var p = getProfile();
       var item = document.createElement("div");
       item.className = "comment-item";
       item.innerHTML =
-        '<span class="avatar">こ</span>' +
-        '<div><span class="comment-user">言葉</span><span class="comment-time">たった今</span>' +
+        '<span class="avatar"></span>' +
+        '<div><span class="comment-user"></span><span class="comment-time">たった今</span>' +
         '<p class="comment-body"></p></div>';
+      var itemAvatar = item.querySelector(".avatar");
+      itemAvatar.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
+      setAvatarColor(itemAvatar, p.color);
+      item.querySelector(".comment-user").textContent = p.name;
       item.querySelector(".comment-body").textContent = val;
       if (list) list.insertBefore(item, list.firstChild);
       if (totalEl) totalEl.textContent = (parseInt(totalEl.textContent, 10) || 0) + 1;
@@ -199,14 +281,15 @@
   function prependMyReply(text) {
     var list = document.querySelector("[data-list]");
     if (!list) return;
+    var p = getProfile();
     var el = document.createElement("article");
     el.className = "post";
     el.setAttribute("data-reactions", "0");
     el.setAttribute("data-time", "9999");
     el.innerHTML =
       '<a class="post-main" href="post-detail.html">' +
-      '  <div class="post-head"><span class="avatar">こ</span>' +
-      '    <div><div class="post-user">言葉</div><div class="post-time">たった今</div></div></div>' +
+      '  <div class="post-head"><span class="avatar"></span>' +
+      '    <div><div class="post-user"></div><div class="post-time">たった今</div></div></div>' +
       '  <p class="post-body"></p>' +
       '</a>' +
       '<div class="reactions">' +
@@ -214,6 +297,10 @@
       '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">0</span></button>' +
       '  <button class="react"><span class="emoji">🤍</span>好き<span class="count">0</span></button>' +
       '</div>';
+    var elAvatar = el.querySelector(".avatar");
+    elAvatar.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
+    setAvatarColor(elAvatar, p.color);
+    el.querySelector(".post-user").textContent = p.name;
     el.querySelector(".post-body").textContent = text;
     list.insertBefore(el, list.firstChild);
     bindReactions(el);
