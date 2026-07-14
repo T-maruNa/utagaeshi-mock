@@ -78,6 +78,45 @@
     });
   });
 
+  /* ===== コメント（返し詳細・ログイン必須・1〜200字） ===== */
+  var COMMENT_MAX = 200;
+  function initComments(section) {
+    var ta = section.querySelector("[data-comment-input]");
+    var submit = section.querySelector("[data-comment-submit]");
+    var hint = section.querySelector("[data-comment-hint]");
+    var list = section.querySelector("[data-comment-list]");
+    var totalEl = section.querySelector("[data-comment-total]");
+    if (!ta || !submit) return;
+
+    var update = function () {
+      var len = ta.value.trim().length;
+      var over = ta.value.length > COMMENT_MAX;
+      if (over) { hint.textContent = (ta.value.length - COMMENT_MAX) + "字オーバー"; hint.className = "comment-form-hint count-status danger"; }
+      else { hint.textContent = "1〜200字"; hint.className = "comment-form-hint"; }
+      submit.disabled = over || len < 1;
+    };
+    ta.addEventListener("input", update);
+    update();
+
+    submit.addEventListener("click", function () {
+      if (submit.disabled) return;
+      var val = ta.value.trim();
+      var item = document.createElement("div");
+      item.className = "comment-item";
+      item.innerHTML =
+        '<span class="avatar">こ</span>' +
+        '<div><span class="comment-user">言葉</span><span class="comment-time">たった今</span>' +
+        '<p class="comment-body"></p></div>';
+      item.querySelector(".comment-body").textContent = val;
+      if (list) list.insertBefore(item, list.firstChild);
+      if (totalEl) totalEl.textContent = (parseInt(totalEl.textContent, 10) || 0) + 1;
+      ta.value = "";
+      update();
+      toast("コメントしました");
+    });
+  }
+  document.querySelectorAll(".comments").forEach(initComments);
+
   /* ===== 投稿モーダル（Xのコンポーズ風） ===== */
   var POEM = {
     text: "春過ぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山",
