@@ -128,16 +128,39 @@
     setTimeout(function () { t.remove(); }, 2600);
   }
 
+  /* ===== 好きした返し（他ユーザーの返しへの「好き」を返し帳から見返せるように） ===== */
+  var LIKES_KEY = "utagaeshi_liked_posts";
+  function getLikedPostIds() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(LIKES_KEY));
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function isPostLiked(id) { return getLikedPostIds().indexOf(id) >= 0; }
+  function togglePostLiked(id, on) {
+    var arr = getLikedPostIds();
+    var i = arr.indexOf(id);
+    if (on && i < 0) arr.push(id);
+    else if (!on && i >= 0) arr.splice(i, 1);
+    localStorage.setItem(LIKES_KEY, JSON.stringify(arr));
+  }
+
   /* ===== リアクション（ログイン必須） ===== */
   function bindReaction(btn) {
     if (btn.classList.contains("disabled") || btn.__bound) return;
     btn.__bound = true;
+    var postEl = btn.closest("[data-post-id]");
+    var postId = postEl && postEl.getAttribute("data-post-id");
+    var isSuki = btn.getAttribute("data-kind") === "suki";
+    if (isSuki && postId && isPostLiked(postId)) btn.classList.add("on");
     btn.addEventListener("click", function () {
       if (!isLoggedIn()) { showLogin("リアクションするにはログインしてください。"); return; }
       var countEl = btn.querySelector(".count");
       var n = parseInt(countEl.textContent, 10) || 0;
-      if (btn.classList.contains("on")) { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
-      else { btn.classList.add("on"); countEl.textContent = n + 1; }
+      var turningOn = !btn.classList.contains("on");
+      if (turningOn) { btn.classList.add("on"); countEl.textContent = n + 1; }
+      else { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
+      if (isSuki && postId) togglePostLiked(postId, turningOn);
     });
   }
   function bindReactions(root) {
@@ -500,6 +523,70 @@
       if (dx < -40) goNext(); else if (dx > 40) goPrev();
       mouseStartX = null;
     });
+  }
+
+  /* ===== 好きな返し一覧（liked.html）：デモ用の固定データから、好きした返しだけ描画する ===== */
+  var POSTS_CATALOG = {
+    "post-yuki":   { avatar: "ゆ", user: "ゆき", time: "3分前", body: "梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。", reactions: { wakaru: 42, sasatta: 31, suki: 28 }, comments: 3, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-haruto": { avatar: "は", user: "はると", time: "12分前", body: "白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。", reactions: { wakaru: 19, sasatta: 22, suki: 13 }, comments: 3, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-aoi":    { avatar: "あ", user: "あおい", time: "18分前", body: "鏡の中の自分と、ちょっとだけ仲直りできた気がする夜。", reactions: { wakaru: 18, sasatta: 12, suki: 10 }, comments: 2, source: "元のうた：花の色は うつりにけりな…", sourceMeta: "7月2日（木） / 小野小町" },
+    "post-minato": { avatar: "み", user: "みなと", time: "25分前", body: "誰にも言わずに、びしょ濡れで守ってる優しさって、きっとある。", reactions: { wakaru: 15, sasatta: 20, suki: 12 }, comments: 4, source: "元のうた：秋の田の かりほの庵の…", sourceMeta: "7月3日（金） / 天智天皇" },
+    "post-sora":   { avatar: "そ", user: "そら", time: "8分前", body: "夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。", reactions: { wakaru: 14, sasatta: 6, suki: 13 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-kana":   { avatar: "か", user: "かな", time: "32分前", body: "こんなに穏やかな日なのに、心だけ気ぜわしい。困ったな、でも嫌いじゃない。", reactions: { wakaru: 14, sasatta: 11, suki: 10 }, comments: 2, source: "元のうた：久方の 光のどけき…", sourceMeta: "7月4日（土） / 紀友則" },
+    "post-mio":    { avatar: "み", user: "みお", time: "5分前", body: "季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。", reactions: { wakaru: 11, sasatta: 7, suki: 9 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-riku":   { avatar: "り", user: "りく", time: "40分前", body: "赤って、こんなに感情の色だったっけ。竜田川、いつか見にいく。", reactions: { wakaru: 10, sasatta: 9, suki: 9 }, comments: 2, source: "元のうた：ちはやぶる 神代も聞かず…", sourceMeta: "7月1日（水） / 在原業平" },
+    "post-ren":    { avatar: "れ", user: "れん", time: "1時間前", body: "気づけば夏。今年はちゃんと、やりたいことをやる。まず海。", reactions: { wakaru: 4, sasatta: 2, suki: 3 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-ai-1":   { avatar: "AI", user: "うたがえしAI", isAi: true, time: "場をあたためる一返し", body: "ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。", reactions: { wakaru: 6, sasatta: 3, suki: 5 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+  };
+  var likedList = document.querySelector("[data-liked-list]");
+  if (likedList) {
+    var likedEmpty = document.querySelector("[data-liked-empty]");
+    var likedEntries = getLikedPostIds()
+      .map(function (id) { return POSTS_CATALOG[id] ? [id, POSTS_CATALOG[id]] : null; })
+      .filter(Boolean);
+
+    if (!likedEntries.length) {
+      if (likedEmpty) likedEmpty.hidden = false;
+    } else {
+      likedEntries.forEach(function (entry) {
+        var id = entry[0], d = entry[1];
+        var el = document.createElement("article");
+        el.className = "post" + (d.isAi ? " post-ai" : "");
+        el.setAttribute("data-post-id", id);
+        el.innerHTML =
+          '<a class="post-main" href="post-detail.html">' +
+          '  <div class="post-head"><span class="avatar' + (d.isAi ? " avatar-ai" : "") + '"></span>' +
+          '    <div><div class="post-user"></div><div class="post-time"></div></div></div>' +
+          '  <p class="post-body"></p>' +
+          '</a>' +
+          '<div class="post-source">' +
+          '  <span class="src-poem"></span>' +
+          '  <span class="src-meta"></span>' +
+          '  <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>' +
+          '</div>' +
+          '<div class="reactions">' +
+          '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">' + d.reactions.wakaru + '</span></button>' +
+          '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">' + d.reactions.sasatta + '</span></button>' +
+          '  <button class="react" data-kind="suki"><span class="emoji">🤍</span>好き<span class="count">' + d.reactions.suki + '</span></button>' +
+          '  <a class="comment-btn" href="post-detail.html#comments"><span class="emoji">💬</span>コメント<span class="count">' + d.comments + '</span></a>' +
+          '</div>';
+        el.querySelector(".avatar").textContent = d.avatar;
+        el.querySelector(".post-time").textContent = d.time;
+        el.querySelector(".post-body").textContent = d.body;
+        el.querySelector(".src-poem").textContent = d.source;
+        el.querySelector(".src-meta").textContent = d.sourceMeta;
+        var userEl = el.querySelector(".post-user");
+        userEl.textContent = d.user;
+        if (d.isAi) {
+          var tag = document.createElement("span");
+          tag.className = "ai-tag";
+          tag.textContent = "AIによる返し";
+          userEl.appendChild(tag);
+        }
+        likedList.appendChild(el);
+      });
+      bindReactions(likedList);
+    }
   }
 
   /* ===== 返し帳：自分の返しを1ページずつめくる（初期表示は最新の返し） ===== */
