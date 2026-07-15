@@ -16,6 +16,83 @@
     });
   }
 
+  /* ===== プロフィール（表示名・ハンドル・アイコンカラー） ===== */
+  var PROFILE_KEY = "utagaeshi_profile";
+  var PROFILE_DEFAULT = { name: "言葉", handle: "", color: "indigo" };
+  var AVATAR_COLORS = ["indigo", "brown", "green", "red", "gold", "gray"];
+  function getProfile() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(PROFILE_KEY));
+      if (raw && raw.name) {
+        return {
+          name: raw.name,
+          handle: raw.handle || "",
+          color: AVATAR_COLORS.indexOf(raw.color) >= 0 ? raw.color : PROFILE_DEFAULT.color,
+        };
+      }
+    } catch (e) { /* 破損データは既定値にフォールバック */ }
+    return { name: PROFILE_DEFAULT.name, handle: PROFILE_DEFAULT.handle, color: PROFILE_DEFAULT.color };
+  }
+  function setProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
+  function avatarColorClass(color) { return "avatar-" + (AVATAR_COLORS.indexOf(color) >= 0 ? color : PROFILE_DEFAULT.color); }
+  function setAvatarColor(el, color) {
+    AVATAR_COLORS.forEach(function (c) { el.classList.remove("avatar-" + c); });
+    el.classList.add(avatarColorClass(color));
+  }
+  function applyProfileDisplay() {
+    var p = getProfile();
+    document.querySelectorAll("[data-profile-name]").forEach(function (el) { el.textContent = p.name; });
+    document.querySelectorAll("[data-profile-handle]").forEach(function (el) {
+      el.textContent = p.handle ? "@" + p.handle : "";
+      el.hidden = !p.handle;
+    });
+    document.querySelectorAll("[data-profile-avatar]").forEach(function (el) {
+      el.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
+      setAvatarColor(el, p.color);
+    });
+  }
+  applyProfileDisplay();
+
+  /* アカウント設定フォーム（account.html） */
+  var accountForm = document.querySelector("[data-account-form]");
+  if (accountForm) {
+    var acctProfile = getProfile();
+    var nameInput = accountForm.querySelector("[data-profile-name-input]");
+    var handleInput = accountForm.querySelector("[data-profile-handle-input]");
+    var preview = document.querySelector("[data-profile-preview]");
+    var swatches = Array.prototype.slice.call(accountForm.querySelectorAll("[data-color-swatch]"));
+    var selectedColor = acctProfile.color;
+
+    nameInput.value = acctProfile.name;
+    handleInput.value = acctProfile.handle;
+
+    var updatePreview = function () {
+      if (!preview) return;
+      preview.textContent = nameInput.value.trim().charAt(0) || PROFILE_DEFAULT.name;
+      setAvatarColor(preview, selectedColor);
+    };
+    swatches.forEach(function (sw) {
+      var c = sw.getAttribute("data-color-swatch");
+      sw.classList.toggle("on", c === selectedColor);
+      sw.addEventListener("click", function () {
+        selectedColor = c;
+        swatches.forEach(function (s) { s.classList.toggle("on", s === sw); });
+        updatePreview();
+      });
+    });
+    nameInput.addEventListener("input", updatePreview);
+    updatePreview();
+
+    accountForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = nameInput.value.trim() || PROFILE_DEFAULT.name;
+      var handle = handleInput.value.trim().replace(/^@/, "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20);
+      setProfile({ name: name.slice(0, 20), handle: handle, color: selectedColor });
+      toast("プロフィールを保存しました");
+      setTimeout(function () { location.href = "mypage.html"; }, 700);
+    });
+  }
+
   /* ===== ログイン誘導シート ===== */
   var sheet;
   function ensureSheet() {
@@ -51,16 +128,39 @@
     setTimeout(function () { t.remove(); }, 2600);
   }
 
+  /* ===== 好きした返し（他ユーザーの返しへの「好き」を返し帳から見返せるように） ===== */
+  var LIKES_KEY = "utagaeshi_liked_posts";
+  function getLikedPostIds() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(LIKES_KEY));
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function isPostLiked(id) { return getLikedPostIds().indexOf(id) >= 0; }
+  function togglePostLiked(id, on) {
+    var arr = getLikedPostIds();
+    var i = arr.indexOf(id);
+    if (on && i < 0) arr.push(id);
+    else if (!on && i >= 0) arr.splice(i, 1);
+    localStorage.setItem(LIKES_KEY, JSON.stringify(arr));
+  }
+
   /* ===== リアクション（ログイン必須） ===== */
   function bindReaction(btn) {
     if (btn.classList.contains("disabled") || btn.__bound) return;
     btn.__bound = true;
+    var postEl = btn.closest("[data-post-id]");
+    var postId = postEl && postEl.getAttribute("data-post-id");
+    var isSuki = btn.getAttribute("data-kind") === "suki";
+    if (isSuki && postId && isPostLiked(postId)) btn.classList.add("on");
     btn.addEventListener("click", function () {
       if (!isLoggedIn()) { showLogin("リアクションするにはログインしてください。"); return; }
       var countEl = btn.querySelector(".count");
       var n = parseInt(countEl.textContent, 10) || 0;
-      if (btn.classList.contains("on")) { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
-      else { btn.classList.add("on"); countEl.textContent = n + 1; }
+      var turningOn = !btn.classList.contains("on");
+      if (turningOn) { btn.classList.add("on"); countEl.textContent = n + 1; }
+      else { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
+      if (isSuki && postId) togglePostLiked(postId, turningOn);
     });
   }
   function bindReactions(root) {
@@ -77,6 +177,50 @@
       else { btn.classList.add("on"); countEl.textContent = n + 1; }
     });
   });
+
+  /* ===== コメント（返し詳細・ログイン必須・1〜200字） ===== */
+  var COMMENT_MAX = 200;
+  function initComments(section) {
+    var ta = section.querySelector("[data-comment-input]");
+    var submit = section.querySelector("[data-comment-submit]");
+    var hint = section.querySelector("[data-comment-hint]");
+    var list = section.querySelector("[data-comment-list]");
+    var totalEl = section.querySelector("[data-comment-total]");
+    if (!ta || !submit) return;
+
+    var update = function () {
+      var len = ta.value.trim().length;
+      var over = ta.value.length > COMMENT_MAX;
+      if (over) { hint.textContent = (ta.value.length - COMMENT_MAX) + "字オーバー"; hint.className = "comment-form-hint count-status danger"; }
+      else { hint.textContent = "1〜200字"; hint.className = "comment-form-hint"; }
+      submit.disabled = over || len < 1;
+    };
+    ta.addEventListener("input", update);
+    update();
+
+    submit.addEventListener("click", function () {
+      if (submit.disabled) return;
+      var val = ta.value.trim();
+      var p = getProfile();
+      var item = document.createElement("div");
+      item.className = "comment-item";
+      item.innerHTML =
+        '<span class="avatar"></span>' +
+        '<div><span class="comment-user"></span><span class="comment-time">たった今</span>' +
+        '<p class="comment-body"></p></div>';
+      var itemAvatar = item.querySelector(".avatar");
+      itemAvatar.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
+      setAvatarColor(itemAvatar, p.color);
+      item.querySelector(".comment-user").textContent = p.name;
+      item.querySelector(".comment-body").textContent = val;
+      if (list) list.insertBefore(item, list.firstChild);
+      if (totalEl) totalEl.textContent = (parseInt(totalEl.textContent, 10) || 0) + 1;
+      ta.value = "";
+      update();
+      toast("コメントしました");
+    });
+  }
+  document.querySelectorAll(".comments").forEach(initComments);
 
   /* ===== 投稿モーダル（Xのコンポーズ風） ===== */
   var POEM = {
@@ -160,14 +304,15 @@
   function prependMyReply(text) {
     var list = document.querySelector("[data-list]");
     if (!list) return;
+    var p = getProfile();
     var el = document.createElement("article");
     el.className = "post";
     el.setAttribute("data-reactions", "0");
     el.setAttribute("data-time", "9999");
     el.innerHTML =
       '<a class="post-main" href="post-detail.html">' +
-      '  <div class="post-head"><span class="avatar">こ</span>' +
-      '    <div><div class="post-user">言葉</div><div class="post-time">たった今</div></div></div>' +
+      '  <div class="post-head"><span class="avatar"></span>' +
+      '    <div><div class="post-user"></div><div class="post-time">たった今</div></div></div>' +
       '  <p class="post-body"></p>' +
       '</a>' +
       '<div class="reactions">' +
@@ -175,6 +320,10 @@
       '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">0</span></button>' +
       '  <button class="react"><span class="emoji">🤍</span>好き<span class="count">0</span></button>' +
       '</div>';
+    var elAvatar = el.querySelector(".avatar");
+    elAvatar.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
+    setAvatarColor(elAvatar, p.color);
+    el.querySelector(".post-user").textContent = p.name;
     el.querySelector(".post-body").textContent = text;
     list.insertBefore(el, list.firstChild);
     bindReactions(el);
@@ -374,6 +523,70 @@
       if (dx < -40) goNext(); else if (dx > 40) goPrev();
       mouseStartX = null;
     });
+  }
+
+  /* ===== 好きな返し一覧（liked.html）：デモ用の固定データから、好きした返しだけ描画する ===== */
+  var POSTS_CATALOG = {
+    "post-yuki":   { avatar: "ゆ", user: "ゆき", time: "3分前", body: "梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。", reactions: { wakaru: 42, sasatta: 31, suki: 28 }, comments: 3, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-haruto": { avatar: "は", user: "はると", time: "12分前", body: "白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。", reactions: { wakaru: 19, sasatta: 22, suki: 13 }, comments: 3, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-aoi":    { avatar: "あ", user: "あおい", time: "18分前", body: "鏡の中の自分と、ちょっとだけ仲直りできた気がする夜。", reactions: { wakaru: 18, sasatta: 12, suki: 10 }, comments: 2, source: "元のうた：花の色は うつりにけりな…", sourceMeta: "7月2日（木） / 小野小町" },
+    "post-minato": { avatar: "み", user: "みなと", time: "25分前", body: "誰にも言わずに、びしょ濡れで守ってる優しさって、きっとある。", reactions: { wakaru: 15, sasatta: 20, suki: 12 }, comments: 4, source: "元のうた：秋の田の かりほの庵の…", sourceMeta: "7月3日（金） / 天智天皇" },
+    "post-sora":   { avatar: "そ", user: "そら", time: "8分前", body: "夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。", reactions: { wakaru: 14, sasatta: 6, suki: 13 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-kana":   { avatar: "か", user: "かな", time: "32分前", body: "こんなに穏やかな日なのに、心だけ気ぜわしい。困ったな、でも嫌いじゃない。", reactions: { wakaru: 14, sasatta: 11, suki: 10 }, comments: 2, source: "元のうた：久方の 光のどけき…", sourceMeta: "7月4日（土） / 紀友則" },
+    "post-mio":    { avatar: "み", user: "みお", time: "5分前", body: "季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。", reactions: { wakaru: 11, sasatta: 7, suki: 9 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-riku":   { avatar: "り", user: "りく", time: "40分前", body: "赤って、こんなに感情の色だったっけ。竜田川、いつか見にいく。", reactions: { wakaru: 10, sasatta: 9, suki: 9 }, comments: 2, source: "元のうた：ちはやぶる 神代も聞かず…", sourceMeta: "7月1日（水） / 在原業平" },
+    "post-ren":    { avatar: "れ", user: "れん", time: "1時間前", body: "気づけば夏。今年はちゃんと、やりたいことをやる。まず海。", reactions: { wakaru: 4, sasatta: 2, suki: 3 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-ai-1":   { avatar: "AI", user: "うたがえしAI", isAi: true, time: "場をあたためる一返し", body: "ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。", reactions: { wakaru: 6, sasatta: 3, suki: 5 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+  };
+  var likedList = document.querySelector("[data-liked-list]");
+  if (likedList) {
+    var likedEmpty = document.querySelector("[data-liked-empty]");
+    var likedEntries = getLikedPostIds()
+      .map(function (id) { return POSTS_CATALOG[id] ? [id, POSTS_CATALOG[id]] : null; })
+      .filter(Boolean);
+
+    if (!likedEntries.length) {
+      if (likedEmpty) likedEmpty.hidden = false;
+    } else {
+      likedEntries.forEach(function (entry) {
+        var id = entry[0], d = entry[1];
+        var el = document.createElement("article");
+        el.className = "post" + (d.isAi ? " post-ai" : "");
+        el.setAttribute("data-post-id", id);
+        el.innerHTML =
+          '<a class="post-main" href="post-detail.html">' +
+          '  <div class="post-head"><span class="avatar' + (d.isAi ? " avatar-ai" : "") + '"></span>' +
+          '    <div><div class="post-user"></div><div class="post-time"></div></div></div>' +
+          '  <p class="post-body"></p>' +
+          '</a>' +
+          '<div class="post-source">' +
+          '  <span class="src-poem"></span>' +
+          '  <span class="src-meta"></span>' +
+          '  <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>' +
+          '</div>' +
+          '<div class="reactions">' +
+          '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">' + d.reactions.wakaru + '</span></button>' +
+          '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">' + d.reactions.sasatta + '</span></button>' +
+          '  <button class="react" data-kind="suki"><span class="emoji">🤍</span>好き<span class="count">' + d.reactions.suki + '</span></button>' +
+          '  <a class="comment-btn" href="post-detail.html#comments"><span class="emoji">💬</span>コメント<span class="count">' + d.comments + '</span></a>' +
+          '</div>';
+        el.querySelector(".avatar").textContent = d.avatar;
+        el.querySelector(".post-time").textContent = d.time;
+        el.querySelector(".post-body").textContent = d.body;
+        el.querySelector(".src-poem").textContent = d.source;
+        el.querySelector(".src-meta").textContent = d.sourceMeta;
+        var userEl = el.querySelector(".post-user");
+        userEl.textContent = d.user;
+        if (d.isAi) {
+          var tag = document.createElement("span");
+          tag.className = "ai-tag";
+          tag.textContent = "AIによる返し";
+          userEl.appendChild(tag);
+        }
+        likedList.appendChild(el);
+      });
+      bindReactions(likedList);
+    }
   }
 
   /* ===== 返し帳：自分の返しを1ページずつめくる（初期表示は最新の返し） ===== */

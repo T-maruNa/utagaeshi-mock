@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>好きな返し｜うたがえし</title>
+<meta name="description" content="「好き」を送った、ほかの人の返しを見返す。">
+<link rel="stylesheet" href="assets/styles.css?v=fb95b7a">
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <a class="header-back" href="mypage.html">‹ 返し帳へ</a>
+    <div class="header-date"><b>好きな返し</b></div>
+  </header>
+
+  <main class="page">
+
+    <!-- ===== 未ログイン ===== -->
+    <div data-auth="out">
+      <div class="reply-invite">
+        <p class="lead" style="font-size:15px;">好きな返し</p>
+        <p class="sub">ログインすると、「好き」を送った返しを見返せます。</p>
+        <a class="btn btn-primary" href="login.html">ログイン / 新規登録</a>
+      </div>
+    </div>
+
+    <!-- ===== ログイン済み ===== -->
+    <div data-auth="in" hidden>
+
+      <p class="muted" style="font-size:12.5px; line-height:1.8;">
+        「好き」を送った、ほかの人の返しをまとめて読み返せます。
+      </p>
+
+      <p class="empty" data-liked-empty hidden>
+        まだ「好き」を送った返しがありません。<br>
+        気になる返しに🤍好きを送ると、ここに集まります。
+      </p>
+
+      <div data-liked-list></div>
+
+      <a class="list-link" href="posts.html" style="margin-top:18px;">
+        返しタイムラインを読む
+        <span class="chev">›</span>
+      </a>
+
+    </div>
+
+    <div class="spacer"></div>
+
+  </main>
+
+  <nav class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+      ホーム
+    </a>
+    <a class="nav-item" href="archive.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+      うた
+    </a>
+    <a class="nav-item" href="mypage.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
+      返し帳
+    </a>
+  </nav>
+
+</div>
+<script src="assets/app.js?v=fb95b7a"></script>
+</body>
+</html>

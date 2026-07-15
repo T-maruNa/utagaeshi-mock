@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>返し帳｜うたがえし</title>
 <meta name="description" content="自分の過去の返しを、本の1ページのように見返す。">
-<link rel="stylesheet" href="assets/styles.css?v=4ac40b8">
+<link rel="stylesheet" href="assets/styles.css?v=fb95b7a">
 </head>
 <body>
 <div class="app">
@@ -31,7 +31,8 @@
 
       <!-- プロフィールは小さく添えるだけ（主役にしない） -->
       <div class="book-owner">
-        <span class="book-owner-name">言葉</span>
+        <span class="book-owner-name" data-profile-name>言葉</span>
+        <span class="book-owner-handle" data-profile-handle hidden></span>
         <span class="book-owner-sep">・</span>
         <span>返した数 37</span>
         <span class="book-owner-sep">・</span>
@@ -39,6 +40,11 @@
       </div>
 
       <p class="muted" style="font-size:12px; margin:2px 2px 0;">これまでの返しを、1ページずつめくって読み返せます。</p>
+
+      <a class="list-link" href="liked.html" style="margin-top:10px;">
+        好きな返しを見る
+        <span class="chev">›</span>
+      </a>
 
       <!-- 返し帳：自分の返しが本の1ページのように残る。1カード=1件、縦書きは本文のみ -->
       <div class="book" data-book>
@@ -141,7 +147,7 @@
 
       <!-- アカウント関連は主役にせず、下部に小さく -->
       <div class="book-footer-links">
-        <a href="#">アカウント設定</a>
+        <a href="account.html">アカウント設定</a>
         <span class="book-owner-sep">・</span>
         <a href="#" data-do-logout>ログアウト</a>
       </div>
@@ -168,6 +174,6 @@
   </nav>
 
 </div>
-<script src="assets/app.js?v=4ac40b8"></script>
+<script src="assets/app.js?v=fb95b7a"></script>
 </body>
 </html>

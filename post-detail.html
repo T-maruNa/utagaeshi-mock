@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ゆきさんの返し｜うたがえし</title>
 <meta name="description" content="この古典短歌に、この人はどう返したのか。">
-<link rel="stylesheet" href="assets/styles.css?v=4ac40b8">
+<link rel="stylesheet" href="assets/styles.css?v=fb95b7a">
 </head>
 <body>
 <div class="app">
@@ -19,7 +19,7 @@
 
     <!-- 返し本体（この人がどう返したか） -->
     <p class="section-label">この返し</p>
-    <article class="post" style="box-shadow:var(--shadow);">
+    <article class="post" data-post-id="post-yuki" style="box-shadow:var(--shadow);">
       <div class="post-head">
         <span class="avatar">ゆ</span>
         <div>
@@ -32,9 +32,48 @@
       <div class="reactions">
         <button class="react"><span class="emoji">🫧</span>わかる<span class="count">42</span></button>
         <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">31</span></button>
-        <button class="react"><span class="emoji">🤍</span>好き<span class="count">28</span></button>
+        <button class="react" data-kind="suki"><span class="emoji">🤍</span>好き<span class="count">28</span></button>
       </div>
     </article>
+
+    <!-- コメント -->
+    <section class="card comments" id="comments" style="padding:18px 20px 20px;">
+      <p class="section-label" style="margin-top:0;">コメント <span data-comment-total>3</span>件</p>
+      <div class="comment-list" data-comment-list>
+        <div class="comment-item">
+          <span class="avatar">そ</span>
+          <div>
+            <span class="comment-user">そら</span><span class="comment-time">8分前</span>
+            <p class="comment-body">わかりすぎる…毎年思う。</p>
+          </div>
+        </div>
+        <div class="comment-item">
+          <span class="avatar">な</span>
+          <div>
+            <span class="comment-user">なな</span><span class="comment-time">20分前</span>
+            <p class="comment-body">「夏はそのためにある」がいいですね。</p>
+          </div>
+        </div>
+        <div class="comment-item">
+          <span class="avatar">み</span>
+          <div>
+            <span class="comment-user">みお</span><span class="comment-time">1時間前</span>
+            <p class="comment-body">梅雨明け、待ち遠しい。</p>
+          </div>
+        </div>
+      </div>
+      <div class="comment-form" data-auth="in">
+        <span class="avatar" data-profile-avatar></span>
+        <div class="comment-form-body">
+          <textarea class="comment-textarea" data-comment-input placeholder="この返しにコメントする"></textarea>
+          <div class="comment-form-foot">
+            <span class="comment-form-hint" data-comment-hint>1〜200字</span>
+            <button class="btn-comment-submit" type="button" data-comment-submit disabled>コメントする</button>
+          </div>
+        </div>
+      </div>
+      <a class="btn btn-ghost" href="login.html" data-auth="out" style="margin-top:14px;">コメントするにはログイン</a>
+    </section>
 
     <!-- この返しの元になったお題 -->
     <p class="section-label">この返しの元になったお題</p>
@@ -99,6 +138,6 @@
   </nav>
 
 </div>
-<script src="assets/app.js?v=4ac40b8"></script>
+<script src="assets/app.js?v=fb95b7a"></script>
 </body>
 </html>

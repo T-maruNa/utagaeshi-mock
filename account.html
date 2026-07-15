@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>アカウント設定｜うたがえし</title>
+<meta name="description" content="表示名・ハンドル・アイコンの色を設定する。">
+<link rel="stylesheet" href="assets/styles.css?v=fb95b7a">
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <a class="header-back" href="mypage.html">‹ 返し帳へ</a>
+    <div class="header-date"><b>アカウント設定</b></div>
+  </header>
+
+  <main class="page">
+
+    <!-- ===== 未ログイン ===== -->
+    <div data-auth="out">
+      <div class="reply-invite">
+        <p class="lead" style="font-size:15px;">アカウント設定</p>
+        <p class="sub">プロフィールを設定するには、ログインしてください。</p>
+        <a class="btn btn-primary" href="login.html">ログイン / 新規登録</a>
+      </div>
+    </div>
+
+    <!-- ===== ログイン済み：プロフィール編集 ===== -->
+    <div data-auth="in" hidden>
+
+      <p class="section-label" style="margin-top:0;">プロフィール</p>
+
+      <div class="card" style="padding:24px 20px 26px;">
+
+        <div style="display:flex; justify-content:center; margin-bottom:20px;">
+          <span class="avatar-lg" data-profile-preview>言</span>
+        </div>
+
+        <form data-account-form>
+          <label class="hint" style="display:block; margin-bottom:6px;">表示名</label>
+          <input class="input" type="text" data-profile-name-input maxlength="20" placeholder="表示名">
+
+          <label class="hint" style="display:block; margin:14px 0 6px;">ハンドル（任意）</label>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="muted" style="font-size:15px;">@</span>
+            <input class="input" style="margin-bottom:0;" type="text" data-profile-handle-input maxlength="20" placeholder="handle">
+          </div>
+          <p class="hint" style="margin-top:6px;">半角英数字と _ のみ。他の人の返し帳にも表示されます。</p>
+
+          <label class="hint" style="display:block; margin:18px 0 8px;">アイコンの色</label>
+          <div class="color-swatches">
+            <button type="button" class="color-swatch avatar-indigo" data-color-swatch="indigo" aria-label="藍"></button>
+            <button type="button" class="color-swatch avatar-brown" data-color-swatch="brown" aria-label="檜皮"></button>
+            <button type="button" class="color-swatch avatar-green" data-color-swatch="green" aria-label="若草"></button>
+            <button type="button" class="color-swatch avatar-red" data-color-swatch="red" aria-label="朱"></button>
+            <button type="button" class="color-swatch avatar-gold" data-color-swatch="gold" aria-label="山吹"></button>
+            <button type="button" class="color-swatch avatar-gray" data-color-swatch="gray" aria-label="鼠"></button>
+          </div>
+
+          <button class="btn btn-primary" type="submit" style="margin-top:24px;">保存する</button>
+        </form>
+      </div>
+
+      <div class="book-footer-links">
+        <a href="mypage.html">返し帳へ戻る</a>
+        <span class="book-owner-sep">・</span>
+        <a href="#" data-do-logout>ログアウト</a>
+      </div>
+
+    </div>
+
+    <div class="spacer"></div>
+
+  </main>
+
+  <nav class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+      ホーム
+    </a>
+    <a class="nav-item" href="archive.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+      うた
+    </a>
+    <a class="nav-item" href="mypage.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
+      返し帳
+    </a>
+  </nav>
+
+</div>
+<script src="assets/app.js?v=fb95b7a"></script>
+</body>
+</html>

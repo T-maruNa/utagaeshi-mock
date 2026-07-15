@@ -10,7 +10,7 @@
   --surface-2: #f1ede3;
   --ink: #2a2621;
   --ink-soft: #6b6459;
-  --ink-faint: #9c9488;
+  --ink-faint: #766f5f;
   --line: #e7e1d4;
   --line-strong: #d9d1c0;
   /* 藍を思わせる控えめなアクセント（金箔・筆文字は使わない） */
@@ -392,6 +392,23 @@ details.fold .fold-body { padding: 0 18px 18px; }
 }
 .react.disabled { opacity: .5; cursor: default; }
 
+/* ---------- コメント数バッジ（返しカードから返し詳細のコメントへ） ---------- */
+.comment-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-family: var(--sans);
+  color: var(--ink-soft);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.comment-btn .emoji { font-size: 14px; }
+.comment-btn .count { font-variant-numeric: tabular-nums; font-weight: 600; }
+.comment-btn:active { transform: scale(.97); }
+
 /* ---------- 投稿フォーム ---------- */
 .field { position: relative; }
 .textarea {
@@ -452,13 +469,38 @@ details.fold .fold-body { padding: 0 18px 18px; }
 
 /* ---------- マイページ ---------- */
 .profile { display: flex; align-items: center; gap: 16px; padding: 6px 2px; }
-.profile .avatar-lg {
+.avatar-lg {
   width: 60px; height: 60px; border-radius: 50%;
   display: grid; place-items: center; font-size: 22px; font-weight: 700;
   color: var(--accent-ink); background: var(--accent-soft); flex: none;
 }
 .profile .name { font-size: 18px; font-weight: 700; }
 .profile .handle { font-size: 13px; color: var(--ink-faint); }
+
+/* ---------- プロフィールのアイコンカラー（.avatar / .avatar-lg / .color-swatch と併用） ---------- */
+.avatar-indigo { background: var(--accent-soft); color: var(--accent-ink); }
+.avatar-brown  { background: #f1e4da; color: #8a5a45; }
+.avatar-green  { background: #e6ecdf; color: #55703f; }
+.avatar-red    { background: #f7e9ee; color: #a84f68; }
+.avatar-gold   { background: #f4ead0; color: #8a6d1f; }
+.avatar-gray   { background: #eceae5; color: #6b6459; }
+@media (prefers-color-scheme: dark) {
+  .avatar-brown { background: #3a2a22; color: #d9a98c; }
+  .avatar-green { background: #26301f; color: #a9c294; }
+  .avatar-red   { background: #3a2830; color: #e8a7b8; }
+  .avatar-gold  { background: #332a12; color: #e0c069; }
+  .avatar-gray  { background: #2c2820; color: #b3ab9c; }
+}
+
+.color-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.color-swatch {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid transparent; cursor: pointer;
+  padding: 0; -webkit-tap-highlight-color: transparent;
+}
+.color-swatch.on { border-color: var(--ink-soft); }
+
+.book-owner-handle { color: var(--ink-faint); }
 
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .stat {
@@ -1060,6 +1102,36 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .hist .src .op { font-family: var(--serif); color: var(--ink-soft); }
 .hist .r { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11.5px; color: var(--ink-soft); }
 .hist .r span:first-child { color: var(--ink-faint); }
+
+/* ---------- コメント（返し詳細） ---------- */
+.comments { margin-top: 4px; }
+.comment-list { display: flex; flex-direction: column; }
+.comment-item { display: flex; gap: 10px; padding: 14px 2px; border-bottom: 1px solid var(--line); }
+.comment-item:last-child { border-bottom: none; }
+.comment-item .avatar { width: 30px; height: 30px; font-size: 12px; flex: none; }
+.comment-user { font-size: 13px; font-weight: 600; color: var(--ink); }
+.comment-time { font-size: 11px; color: var(--ink-faint); margin-left: 6px; }
+.comment-body { font-size: 14px; line-height: 1.75; margin: 4px 0 0; color: var(--ink); }
+.comment-empty { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 18px 0; }
+.comment-form { display: flex; gap: 10px; align-items: flex-start; margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
+.comment-form .avatar { width: 30px; height: 30px; font-size: 12px; flex: none; margin-top: 2px; }
+.comment-form-body { flex: 1; min-width: 0; }
+.comment-textarea {
+  width: 100%; min-height: 44px; resize: vertical;
+  padding: 10px 12px; font-family: var(--sans); font-size: 14px; line-height: 1.7;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm); outline: none;
+}
+.comment-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.comment-form-foot { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 8px; }
+.comment-form-hint { font-size: 11.5px; color: var(--ink-faint); margin-right: auto; }
+.btn-comment-submit {
+  border: none; cursor: pointer; background: var(--accent); color: #fff;
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  padding: 8px 18px; border-radius: 999px;
+}
+@media (prefers-color-scheme: dark) { .btn-comment-submit { color: #14140f; } }
+.btn-comment-submit[disabled] { opacity: .45; cursor: not-allowed; }
 
 /* ---------- トースト ---------- */
 .toast {
