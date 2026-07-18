@@ -222,6 +222,145 @@
   }
   document.querySelectorAll(".comments").forEach(initComments);
 
+  /* ===== シェア画像（返し・今日のうたをカード画像にして保存／Xでポスト） ===== */
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+    var line = "", lines = [];
+    Array.prototype.forEach.call(text, function (ch) {
+      var test = line + ch;
+      if (line && ctx.measureText(test).width > maxWidth) { lines.push(line); line = ch; }
+      else { line = test; }
+    });
+    if (line) lines.push(line);
+    lines.forEach(function (l, i) { ctx.fillText(l, x, y + i * lineHeight); });
+    return lines.length;
+  }
+  function drawShareCard(canvas, data) {
+    var ctx = canvas.getContext("2d");
+    var W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#f6f3ec";
+    ctx.fillRect(0, 0, W, H);
+
+    var pad = 40, cardX = pad, cardY = pad, cardW = W - pad * 2, cardH = H - pad * 2;
+    ctx.fillStyle = "#fffdf8";
+    ctx.strokeStyle = "#e7e1d4";
+    ctx.lineWidth = 1;
+    roundRect(ctx, cardX, cardY, cardW, cardH, 20);
+    ctx.fill();
+    ctx.stroke();
+
+    var cx = W / 2;
+    var y = cardY + 68;
+
+    ctx.fillStyle = "#2a2621";
+    ctx.font = "600 22px serif";
+    ctx.textAlign = "center";
+    ctx.fillText("うたがえし", cx, y);
+    y += 50;
+
+    ctx.font = "17px serif";
+    ctx.fillStyle = "#6b6459";
+    data.poemLines.forEach(function (line) { ctx.fillText(line, cx, y); y += 27; });
+    y += 8;
+    if (data.poemMeta) {
+      ctx.font = "13px sans-serif";
+      ctx.fillStyle = "#9c9488";
+      ctx.fillText(data.poemMeta, cx, y);
+      y += 20;
+    }
+
+    if (data.replyText) {
+      y += 24;
+      ctx.strokeStyle = "#e7e1d4";
+      ctx.beginPath();
+      ctx.moveTo(cardX + 40, y);
+      ctx.lineTo(cardX + cardW - 40, y);
+      ctx.stroke();
+      y += 46;
+
+      ctx.font = "22px sans-serif";
+      ctx.fillStyle = "#2a2621";
+      ctx.textAlign = "left";
+      var lineCount = wrapCanvasText(ctx, data.replyText, cardX + 40, y, cardW - 80, 34);
+      y += lineCount * 34 + 22;
+
+      if (data.replyUser) {
+        ctx.textAlign = "right";
+        ctx.font = "600 15px sans-serif";
+        ctx.fillStyle = "#6b6459";
+        ctx.fillText(data.replyUser + " の返し", cardX + cardW - 40, y);
+      }
+    }
+
+    ctx.textAlign = "center";
+    ctx.font = "12px sans-serif";
+    ctx.fillStyle = "#9c9488";
+    ctx.fillText("utagaeshi", cx, cardY + cardH - 30);
+  }
+
+  var shareModal;
+  function ensureShareModal() {
+    if (shareModal) return shareModal;
+    var m = document.createElement("div");
+    m.className = "modal-overlay";
+    m.hidden = true;
+    m.innerHTML =
+      '<div class="modal share-modal" role="dialog" aria-modal="true">' +
+      '  <div class="modal-head">' +
+      '    <button class="modal-close" type="button" data-modal-close aria-label="とじる">✕</button>' +
+      '    <span class="modal-title">シェア</span>' +
+      '    <span style="width:34px;"></span>' +
+      '  </div>' +
+      '  <div class="modal-body share-modal-body">' +
+      '    <div class="share-canvas-wrap"><canvas data-share-canvas width="640" height="800"></canvas></div>' +
+      '    <div class="share-actions">' +
+      '      <button class="btn btn-primary" type="button" data-share-download>画像を保存する</button>' +
+      '      <a class="btn btn-ghost" data-share-x target="_blank" rel="noopener">Xでポストする</a>' +
+      '    </div>' +
+      '  </div>' +
+      "</div>";
+    document.body.appendChild(m);
+    var close = function () { m.hidden = true; };
+    m.querySelector("[data-modal-close]").addEventListener("click", close);
+    m.addEventListener("click", function (e) { if (e.target === m) close(); });
+    shareModal = m;
+    return m;
+  }
+  function openShareCard(data) {
+    var m = ensureShareModal();
+    var canvas = m.querySelector("[data-share-canvas]");
+    canvas.height = data.replyText ? 800 : 520;
+    drawShareCard(canvas, data);
+    m.querySelector("[data-share-download]").onclick = function () {
+      var a = document.createElement("a");
+      a.download = "utagaeshi.png";
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    var tweetText = (data.replyText || data.poemLines.join(" ")).slice(0, 60) + "\n#うたがえし";
+    m.querySelector("[data-share-x]").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText);
+    m.hidden = false;
+  }
+  document.querySelectorAll("[data-share]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      openShareCard({
+        poemLines: (btn.getAttribute("data-share-poem") || "").split("|").filter(Boolean),
+        poemMeta: btn.getAttribute("data-share-poem-meta") || "",
+        replyText: btn.getAttribute("data-share-reply") || "",
+        replyUser: btn.getAttribute("data-share-user") || "",
+      });
+    });
+  });
+
   /* ===== 投稿モーダル（Xのコンポーズ風） ===== */
   var POEM = {
     text: "春過ぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山",

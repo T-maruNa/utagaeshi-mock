@@ -49,8 +49,15 @@
       </div>
     </section>
 
-    <!-- 4. このうた好きボタン -->
-    <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+    <!-- 4. このうた好きボタン / シェア -->
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
+      <button class="share-btn" type="button" data-share
+        data-share-poem="春過ぎて|夏来にけらし|白妙の|衣ほすてふ|天の香具山"
+        data-share-poem-meta="持統天皇 ・ 百人一首・二番">
+        <span aria-hidden="true">📤</span> シェア
+      </button>
+    </div>
 
     <!-- 5. 投稿導線 -->
     <button class="compose-bar" type="button" data-compose>

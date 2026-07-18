@@ -392,6 +392,25 @@ details.fold .fold-body { padding: 0 18px 18px; }
 }
 .react.disabled { opacity: .5; cursor: default; }
 
+/* ---------- シェア ---------- */
+.share-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.share-btn:active { transform: scale(.98); }
+.share-modal-body { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 18px 26px; }
+.share-canvas-wrap { width: 100%; max-width: 320px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.share-canvas-wrap canvas { width: 100%; height: auto; display: block; }
+.share-actions { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; }
+
 /* ---------- コメント数バッジ（返しカードから返し詳細のコメントへ） ---------- */
 .comment-btn {
   display: inline-flex; align-items: center; gap: 6px;
