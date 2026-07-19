@@ -1043,7 +1043,9 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .book-indicator { font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 
 /* ---------- intro.html：うたがえしという小さな本をめくる導入ページ ---------- */
-.deck-viewport { position: relative; overflow: hidden; }
+.deck-viewport { position: relative; overflow: hidden; cursor: grab; }
+.deck-viewport:active { cursor: grabbing; }
+.intro-swipe-hint { margin-top: 6px; text-align: center; font-size: 11px; color: var(--ink-faint); }
 .deck-card { width: 100%; }
 .deck-card.is-sliding { position: absolute; top: 0; left: 0; transition: transform .38s ease; }
 .deck-card.slide-in-next { transform: translateX(100%); }
