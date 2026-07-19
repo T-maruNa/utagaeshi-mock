@@ -141,6 +141,7 @@ body {
 /* ---------- ページ本体 ---------- */
 .page { padding: 20px 20px 8px; }
 .page > * + * { margin-top: 18px; }
+.page > .poem + .fold { margin-top: 0; }
 
 .section-label {
   font-size: 12px;
