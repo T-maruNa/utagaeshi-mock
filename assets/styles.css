@@ -862,6 +862,23 @@ details.fold .fold-body { padding: 0 18px 18px; }
 }
 .poem-heat b { color: var(--ink); font-variant-numeric: tabular-nums; }
 
+/* poem-heat内の「このうた好き」は好きボタンを兼ねる。他の指標と同じ見た目のまま押せる */
+.poem-heat .poem-like {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 0; border: none; border-radius: 0;
+  background: transparent; font-family: inherit; font-size: inherit;
+  color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.poem-heat .poem-like .heart { font-size: 13px; }
+.poem-heat .poem-like.on,
+.poem-heat .poem-like.on .heart,
+.poem-heat .poem-like.on b { color: #c15a76; }
+@media (prefers-color-scheme: dark) {
+  .poem-heat .poem-like.on,
+  .poem-heat .poem-like.on .heart,
+  .poem-heat .poem-like.on b { color: #e8a7b8; }
+}
+
 /* ---------- 返しカードの「元になった短歌」 ---------- */
 .post-source {
   margin: 12px 0 0; padding: 11px 13px;

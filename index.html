@@ -41,9 +41,9 @@
         <span class="author">持統天皇</span>
         <span class="source">百人一首・二番／新古今和歌集</span>
       </div>
-      <!-- 3. このうた好き / 返し数 / 届いた反応数 -->
+      <!-- 3. このうた好き（ここが好きボタンを兼ねる） / 返し数 / 届いた反応数 -->
       <div class="poem-heat">
-        <span>このうた好き <b>42</b></span>
+        <button class="poem-like" type="button"><span class="heart" aria-hidden="true">♡</span> このうた好き <b class="count">42</b></button>
         <span>返し <b>128</b></span>
         <span>届いた反応 <b>935</b></span>
       </div>
@@ -72,10 +72,7 @@
       <span class="compose-go">返す</span>
     </button>
 
-    <!-- 6. このうた好きボタン -->
-    <button class="poem-like" type="button"><span class="heart">♡</span> このうた好き <span class="count">42</span></button>
-
-    <!-- 7-8. このうたに届いた返し ・ 新着/よく届いた -->
+    <!-- 6-7. このうたに届いた返し ・ 新着/よく届いた -->
     <div style="display:flex; align-items:center; justify-content:space-between;">
       <p class="section-label" style="margin:0;">このうたに届いた返し</p>
       <div class="tabs">
@@ -85,7 +82,7 @@
     </div>
     <p class="muted" style="font-size:12px; margin:8px 2px 0;">このうたに、みんなはこう返しました。</p>
 
-    <!-- 9. うたがえしAIの返しを含む返しカード一覧 -->
+    <!-- 8. うたがえしAIの返しを含む返しカード一覧 -->
     <div data-list>
 
       <article class="post" data-reactions="54" data-time="1690">
@@ -168,13 +165,13 @@
 
     </div>
 
-    <!-- 10. このうたへの返しを全部見る導線 -->
+    <!-- 9. このうたへの返しを全部見る導線 -->
     <a href="poem-detail.html" class="list-link" style="margin-top:18px;">
       このうたへの返しを全部見る
       <span class="chev">›</span>
     </a>
 
-    <!-- 11. 明日ひらくうたの予告カード -->
+    <!-- 10. 明日ひらくうたの予告カード -->
     <article class="tomorrow-preview">
       <div class="tomorrow-preview-label">明日ひらくうた</div>
       <div class="tomorrow-preview-poem">田子の浦に うち出でて見れば 白妙の 富士の高嶺に 雪は降りつつ</div>
@@ -182,7 +179,7 @@
       <p class="tomorrow-preview-note">🔒 このうたは明日ひらきます。まだ返せません。</p>
     </article>
 
-    <!-- 12. 昨日のうた / 過去のうた / 返しタイムラインへの軽い導線 -->
+    <!-- 11. 昨日のうた / 過去のうた / 返しタイムラインへの軽い導線 -->
     <a href="poem-detail.html" class="uta-nav-link">← 昨日のうたを見る</a>
     <a class="list-link" href="archive.html" style="margin-top:12px;">
       過去のうたを見る
