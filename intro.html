@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>はじめての方へ｜うたがえし</title>
-<meta name="description" content="昔のうたに、今の言葉で返す。うたがえしの体験を、ページをめくるように紹介します。">
+<meta name="description" content="昔のうたに、今の言葉で返す。うたがえしという小さな本をめくる導入ページ。">
 <script>localStorage.setItem("utagaeshi_seen_intro", "1");</script>
-<link rel="stylesheet" href="assets/styles.css?v=ce1ac41">
+<link rel="stylesheet" href="assets/styles.css?v=227cfa4">
 </head>
 <body>
 <div class="app">
 
   <header class="header plain">
-    <a class="logo" href="index.html">うたがえし<small class="copy">昔のうたに、今の言葉で返す。</small></a>
+    <a class="logo" href="index.html">うたがえし</a>
   </header>
 
   <main class="page">
@@ -20,62 +20,75 @@
     <div class="deck" data-deck>
       <div class="deck-viewport">
 
-        <button class="deck-edge deck-edge-prev" type="button" data-deck-prev aria-label="前のページ">‹</button>
-        <button class="deck-edge deck-edge-next" type="button" data-deck-next aria-label="次のページ">›</button>
-
-        <!-- 1/6 -->
+        <!-- 1/7 -->
         <article class="deck-card" data-deck-card>
-          <div class="deck-post-card">
+          <div class="intro-page">
             <p class="intro-title">昔のうたに、<br>今の言葉で返す。</p>
+            <p class="intro-sub">読むだけでも、大丈夫。</p>
           </div>
         </article>
 
-        <!-- 2/6 -->
+        <!-- 2/7 -->
         <article class="deck-card" data-deck-card hidden>
-          <div class="deck-post-card">
+          <div class="intro-page">
             <p class="intro-eyebrow">今日のうた</p>
-            <p class="intro-poem">春過ぎて<br>夏来にけらし…</p>
+            <p class="intro-poem">春過ぎて
+夏来にけらし
+白妙の
+衣ほすてふ
+天の香具山</p>
+            <p class="intro-poem-meta">持統天皇 / 百人一首 二番</p>
           </div>
         </article>
 
-        <!-- 3/6 -->
+        <!-- 3/7 -->
         <article class="deck-card" data-deck-card hidden>
-          <div class="deck-post-card">
+          <div class="intro-page">
+            <p class="intro-text">昔の人も、<br>季節の変わり目に<br>はっとしていた。</p>
+          </div>
+        </article>
+
+        <!-- 4/7 -->
+        <article class="deck-card" data-deck-card hidden>
+          <div class="intro-page">
             <p class="intro-eyebrow">誰かの返し</p>
             <p class="intro-text">洗濯物がまぶしいだけで、<br>季節が変わった気がした。</p>
           </div>
         </article>
 
-        <!-- 4/6 -->
+        <!-- 5/7 -->
         <article class="deck-card" data-deck-card hidden>
-          <div class="deck-post-card">
+          <div class="intro-page">
             <p class="intro-eyebrow">うたがえしAIの返し</p>
             <p class="intro-text">季節の匂いが、<br>ふっと言葉になる瞬間がある。</p>
-            <p class="ai-disclaimer">※AIの返しです。正解や模範解答ではありません。</p>
+            <p class="intro-note">※AIの返しです。<br>正解や模範解答ではありません。</p>
           </div>
         </article>
 
-        <!-- 5/6 -->
+        <!-- 6/7 -->
         <article class="deck-card" data-deck-card hidden>
-          <div class="deck-post-card">
-            <p class="intro-title">あなたなら、<br>どう返しますか？</p>
-          </div>
-        </article>
-
-        <!-- 6/6 -->
-        <article class="deck-card" data-deck-card hidden>
-          <div class="deck-post-card">
+          <div class="intro-page">
             <p class="intro-text">返した言葉は、<br>返し帳に残ります。</p>
-            <a class="btn btn-primary" href="index.html" style="margin-top:20px; max-width:240px;">今日のうたを見てみる</a>
+            <p class="intro-text">あとで読み返すと、<br>その日の自分が少し残っている。</p>
+          </div>
+        </article>
+
+        <!-- 7/7 -->
+        <article class="deck-card" data-deck-card hidden>
+          <div class="intro-page">
+            <p class="intro-title">今日のうたを、<br>ひらいてみる。</p>
+            <p class="intro-text">昔のうたに、<br>今のあなたの言葉で返す。</p>
+            <a class="btn btn-primary intro-cta" href="index.html">今日のうたへ</a>
           </div>
         </article>
 
       </div>
       <div class="deck-nav">
         <button class="deck-prev" type="button" data-deck-prev>← 前のページ</button>
-        <span class="deck-indicator" data-deck-indicator>1 / 6</span>
+        <span class="deck-indicator" data-deck-indicator>1 / 7</span>
         <button class="deck-next" type="button" data-deck-next>次のページ →</button>
       </div>
+      <p class="intro-swipe-hint">← スワイプでもめくれます →</p>
     </div>
 
     <div class="spacer"></div>
@@ -83,6 +96,6 @@
   </main>
 
 </div>
-<script src="assets/app.js?v=ce1ac41"></script>
+<script src="assets/app.js?v=227cfa4"></script>
 </body>
 </html>

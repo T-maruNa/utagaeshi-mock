@@ -178,50 +178,6 @@
     });
   });
 
-  /* ===== コメント（返し詳細・ログイン必須・1〜200字） ===== */
-  var COMMENT_MAX = 200;
-  function initComments(section) {
-    var ta = section.querySelector("[data-comment-input]");
-    var submit = section.querySelector("[data-comment-submit]");
-    var hint = section.querySelector("[data-comment-hint]");
-    var list = section.querySelector("[data-comment-list]");
-    var totalEl = section.querySelector("[data-comment-total]");
-    if (!ta || !submit) return;
-
-    var update = function () {
-      var len = ta.value.trim().length;
-      var over = ta.value.length > COMMENT_MAX;
-      if (over) { hint.textContent = (ta.value.length - COMMENT_MAX) + "字オーバー"; hint.className = "comment-form-hint count-status danger"; }
-      else { hint.textContent = "1〜200字"; hint.className = "comment-form-hint"; }
-      submit.disabled = over || len < 1;
-    };
-    ta.addEventListener("input", update);
-    update();
-
-    submit.addEventListener("click", function () {
-      if (submit.disabled) return;
-      var val = ta.value.trim();
-      var p = getProfile();
-      var item = document.createElement("div");
-      item.className = "comment-item";
-      item.innerHTML =
-        '<span class="avatar"></span>' +
-        '<div><span class="comment-user"></span><span class="comment-time">たった今</span>' +
-        '<p class="comment-body"></p></div>';
-      var itemAvatar = item.querySelector(".avatar");
-      itemAvatar.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
-      setAvatarColor(itemAvatar, p.color);
-      item.querySelector(".comment-user").textContent = p.name;
-      item.querySelector(".comment-body").textContent = val;
-      if (list) list.insertBefore(item, list.firstChild);
-      if (totalEl) totalEl.textContent = (parseInt(totalEl.textContent, 10) || 0) + 1;
-      ta.value = "";
-      update();
-      toast("コメントしました");
-    });
-  }
-  document.querySelectorAll(".comments").forEach(initComments);
-
   /* ===== シェア画像（返し・今日のうたをカード画像にして保存／Xでポスト） ===== */
   function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
@@ -666,16 +622,16 @@
 
   /* ===== 好きな返し一覧（liked.html）：デモ用の固定データから、好きした返しだけ描画する ===== */
   var POSTS_CATALOG = {
-    "post-yuki":   { avatar: "ゆ", user: "ゆき", time: "3分前", body: "梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。", reactions: { wakaru: 42, sasatta: 31, suki: 28 }, comments: 3, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-haruto": { avatar: "は", user: "はると", time: "12分前", body: "白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。", reactions: { wakaru: 19, sasatta: 22, suki: 13 }, comments: 3, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-aoi":    { avatar: "あ", user: "あおい", time: "18分前", body: "鏡の中の自分と、ちょっとだけ仲直りできた気がする夜。", reactions: { wakaru: 18, sasatta: 12, suki: 10 }, comments: 2, source: "元のうた：花の色は うつりにけりな…", sourceMeta: "7月2日（木） / 小野小町" },
-    "post-minato": { avatar: "み", user: "みなと", time: "25分前", body: "誰にも言わずに、びしょ濡れで守ってる優しさって、きっとある。", reactions: { wakaru: 15, sasatta: 20, suki: 12 }, comments: 4, source: "元のうた：秋の田の かりほの庵の…", sourceMeta: "7月3日（金） / 天智天皇" },
-    "post-sora":   { avatar: "そ", user: "そら", time: "8分前", body: "夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。", reactions: { wakaru: 14, sasatta: 6, suki: 13 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-kana":   { avatar: "か", user: "かな", time: "32分前", body: "こんなに穏やかな日なのに、心だけ気ぜわしい。困ったな、でも嫌いじゃない。", reactions: { wakaru: 14, sasatta: 11, suki: 10 }, comments: 2, source: "元のうた：久方の 光のどけき…", sourceMeta: "7月4日（土） / 紀友則" },
-    "post-mio":    { avatar: "み", user: "みお", time: "5分前", body: "季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。", reactions: { wakaru: 11, sasatta: 7, suki: 9 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-riku":   { avatar: "り", user: "りく", time: "40分前", body: "赤って、こんなに感情の色だったっけ。竜田川、いつか見にいく。", reactions: { wakaru: 10, sasatta: 9, suki: 9 }, comments: 2, source: "元のうた：ちはやぶる 神代も聞かず…", sourceMeta: "7月1日（水） / 在原業平" },
-    "post-ren":    { avatar: "れ", user: "れん", time: "1時間前", body: "気づけば夏。今年はちゃんと、やりたいことをやる。まず海。", reactions: { wakaru: 4, sasatta: 2, suki: 3 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-ai-1":   { avatar: "AI", user: "うたがえしAI", isAi: true, time: "場をあたためる一返し", body: "ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。", reactions: { wakaru: 6, sasatta: 3, suki: 5 }, comments: 1, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-yuki":   { avatar: "ゆ", user: "ゆき", time: "3分前", body: "梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。", reactions: { wakaru: 42, sasatta: 31, suki: 28 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-haruto": { avatar: "は", user: "はると", time: "12分前", body: "白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。", reactions: { wakaru: 19, sasatta: 22, suki: 13 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-aoi":    { avatar: "あ", user: "あおい", time: "18分前", body: "鏡の中の自分と、ちょっとだけ仲直りできた気がする夜。", reactions: { wakaru: 18, sasatta: 12, suki: 10 }, source: "元のうた：花の色は うつりにけりな…", sourceMeta: "7月2日（木） / 小野小町" },
+    "post-minato": { avatar: "み", user: "みなと", time: "25分前", body: "誰にも言わずに、びしょ濡れで守ってる優しさって、きっとある。", reactions: { wakaru: 15, sasatta: 20, suki: 12 }, source: "元のうた：秋の田の かりほの庵の…", sourceMeta: "7月3日（金） / 天智天皇" },
+    "post-sora":   { avatar: "そ", user: "そら", time: "8分前", body: "夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。", reactions: { wakaru: 14, sasatta: 6, suki: 13 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-kana":   { avatar: "か", user: "かな", time: "32分前", body: "こんなに穏やかな日なのに、心だけ気ぜわしい。困ったな、でも嫌いじゃない。", reactions: { wakaru: 14, sasatta: 11, suki: 10 }, source: "元のうた：久方の 光のどけき…", sourceMeta: "7月4日（土） / 紀友則" },
+    "post-mio":    { avatar: "み", user: "みお", time: "5分前", body: "季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。", reactions: { wakaru: 11, sasatta: 7, suki: 9 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-riku":   { avatar: "り", user: "りく", time: "40分前", body: "赤って、こんなに感情の色だったっけ。竜田川、いつか見にいく。", reactions: { wakaru: 10, sasatta: 9, suki: 9 }, source: "元のうた：ちはやぶる 神代も聞かず…", sourceMeta: "7月1日（水） / 在原業平" },
+    "post-ren":    { avatar: "れ", user: "れん", time: "1時間前", body: "気づけば夏。今年はちゃんと、やりたいことをやる。まず海。", reactions: { wakaru: 4, sasatta: 2, suki: 3 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
+    "post-ai-1":   { avatar: "AI", user: "うたがえしAI", isAi: true, time: "場をあたためる一返し", body: "ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。", reactions: { wakaru: 6, sasatta: 3, suki: 5 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
   };
   var likedList = document.querySelector("[data-liked-list]");
   if (likedList) {
@@ -707,7 +663,6 @@
           '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">' + d.reactions.wakaru + '</span></button>' +
           '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">' + d.reactions.sasatta + '</span></button>' +
           '  <button class="react" data-kind="suki"><span class="emoji">🤍</span>好き<span class="count">' + d.reactions.suki + '</span></button>' +
-          '  <a class="comment-btn" href="post-detail.html#comments"><span class="emoji">💬</span>コメント<span class="count">' + d.comments + '</span></a>' +
           '</div>';
         el.querySelector(".avatar").textContent = d.avatar;
         el.querySelector(".post-time").textContent = d.time;

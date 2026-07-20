@@ -270,6 +270,20 @@ details.fold > summary .chev { margin-left: auto; transition: transform .2s ease
 details.fold[open] > summary .chev { transform: rotate(180deg); }
 details.fold .fold-body { padding: 0 18px 18px; }
 
+/* 短歌カード内の折りたたみ（参考として見る場所。カードの中に別カードを作らない） */
+.poem details.fold {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.poem details.fold > summary { padding: 0; }
+.poem details.fold .fold-body { padding: 12px 0 0; }
+
 /* ---------- AI投稿例 ---------- */
 .examples { display: flex; flex-direction: column; gap: 10px; }
 .example {
@@ -410,23 +424,6 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .share-canvas-wrap { width: 100%; max-width: 320px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .share-canvas-wrap canvas { width: 100%; height: auto; display: block; }
 .share-actions { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px; }
-
-/* ---------- コメント数バッジ（返しカードから返し詳細のコメントへ） ---------- */
-.comment-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 12px;
-  border: 1px solid var(--line-strong);
-  background: var(--surface);
-  border-radius: 999px;
-  font-size: 12.5px;
-  font-family: var(--sans);
-  color: var(--ink-soft);
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.comment-btn .emoji { font-size: 14px; }
-.comment-btn .count { font-variant-numeric: tabular-nums; font-weight: 600; }
-.comment-btn:active { transform: scale(.97); }
 
 /* ---------- 投稿フォーム ---------- */
 .field { position: relative; }
@@ -865,6 +862,23 @@ details.fold .fold-body { padding: 0 18px 18px; }
 }
 .poem-heat b { color: var(--ink); font-variant-numeric: tabular-nums; }
 
+/* poem-heat内の「このうた好き」は好きボタンを兼ねる。他の指標と同じ見た目のまま押せる */
+.poem-heat .poem-like {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 0; border: none; border-radius: 0;
+  background: transparent; font-family: inherit; font-size: inherit;
+  color: var(--ink-soft); cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.poem-heat .poem-like .heart { font-size: 13px; }
+.poem-heat .poem-like.on,
+.poem-heat .poem-like.on .heart,
+.poem-heat .poem-like.on b { color: #c15a76; }
+@media (prefers-color-scheme: dark) {
+  .poem-heat .poem-like.on,
+  .poem-heat .poem-like.on .heart,
+  .poem-heat .poem-like.on b { color: #e8a7b8; }
+}
+
 /* ---------- 返しカードの「元になった短歌」 ---------- */
 .post-source {
   margin: 12px 0 0; padding: 11px 13px;
@@ -1059,60 +1073,48 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .book-nav button:disabled { opacity: .35; cursor: default; }
 .book-indicator { font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 
-/* ---------- トップ：今日のうた→届いた返し→投稿導線を1枚ずつめくるカード体験 ---------- */
-.deck-viewport { position: relative; overflow: hidden; }
+/* ---------- intro.html：うたがえしという小さな本をめくる導入ページ ---------- */
+.deck-viewport { position: relative; overflow: hidden; cursor: grab; }
+.deck-viewport:active { cursor: grabbing; }
+.intro-swipe-hint { margin-top: 6px; text-align: center; font-size: 11px; color: var(--ink-faint); }
 .deck-card { width: 100%; }
-.deck-card.is-sliding { position: absolute; top: 0; left: 0; transition: transform .32s ease; }
+.deck-card.is-sliding { position: absolute; top: 0; left: 0; transition: transform .38s ease; }
 .deck-card.slide-in-next { transform: translateX(100%); }
 .deck-card.slide-in-prev { transform: translateX(-100%); }
 .deck-card.slide-out-next { transform: translateX(-100%); }
 .deck-card.slide-out-prev { transform: translateX(100%); }
 .deck-card.slide-settle { transform: translateX(0); }
-.deck-post-card {
-  height: 460px;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 30px 26px;
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); box-shadow: var(--shadow);
+
+/* 各ページは「本の1ページ」。カードの中にカードを作らず、余白を主役にする */
+.intro-page {
+  min-height: 64vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center;
+  padding: 48px 18px;
 }
-.deck-post-text { font-family: var(--sans); font-size: 16px; line-height: 1.9; color: var(--ink); }
-/* お題カード・投稿導線カードもデッキ内では返しカードと同じ460pxに揃える
-   （他ページの.poem/.reply-invite表示には影響させないためデッキ内限定でスコープ） */
-.deck-card .poem, .deck-card .reply-invite {
-  height: 460px;
-  display: flex; flex-direction: column; justify-content: center;
-}
-.deck-edge {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
-  width: 32px; height: 32px; border-radius: 999px; border: none;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; line-height: 1; color: var(--ink-soft);
-  background: rgba(0, 0, 0, .1); cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-@media (prefers-color-scheme: dark) { .deck-edge { background: rgba(255, 255, 255, .16); } }
-.deck-edge-prev { left: 6px; }
-.deck-edge-next { right: 6px; }
-.deck-edge:disabled { opacity: .25; cursor: default; }
+
 .deck-nav {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 26px;
+  margin-top: 4px;
 }
 .deck-nav button {
-  border: 1px solid var(--line-strong); background: var(--surface);
-  border-radius: 999px; padding: 8px 14px;
-  font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+  border: none; background: none; padding: 10px 4px;
+  font-family: var(--sans); font-size: 12.5px; color: var(--ink-faint);
   cursor: pointer;
 }
-.deck-nav button:disabled { opacity: .35; cursor: default; }
-.deck-indicator { font-size: 11.5px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.deck-nav button:disabled { opacity: .3; cursor: default; }
+.deck-indicator { font-size: 11px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 
-/* ---------- intro.html：初見向けスライドLP ---------- */
-.intro-eyebrow { font-size: 12px; color: var(--ink-faint); letter-spacing: .06em; margin: 0 0 14px; }
-.intro-title { font-family: var(--serif); font-size: 24px; line-height: 1.7; color: var(--ink); letter-spacing: .04em; }
-.intro-poem { font-family: var(--serif); font-size: 22px; line-height: 1.9; color: var(--ink); letter-spacing: .04em; }
-.intro-text { font-family: var(--serif); font-size: 17px; line-height: 1.9; color: var(--ink); }
+/* intro.htmlの文章まわり */
+.intro-eyebrow { font-size: 12px; color: var(--ink-faint); letter-spacing: .06em; margin: 0 0 16px; }
+.intro-title { font-family: var(--serif); font-size: 25px; line-height: 1.75; color: var(--ink); letter-spacing: .04em; }
+.intro-sub { margin-top: 18px; font-size: 13.5px; color: var(--ink-soft); line-height: 1.8; }
+.intro-poem { font-family: var(--serif); font-size: 21px; line-height: 1.95; color: var(--ink); letter-spacing: .04em; white-space: pre-line; }
+.intro-poem-meta { margin-top: 18px; font-size: 12px; color: var(--ink-faint); }
+.intro-text { font-family: var(--serif); font-size: 17px; line-height: 1.95; color: var(--ink); }
+.intro-text + .intro-text { margin-top: 22px; }
+.intro-note { margin-top: 16px; font-size: 11.5px; color: var(--ink-faint); line-height: 1.75; }
+.intro-cta { margin-top: 32px; max-width: 220px; }
 
 /* 返し帳・返しカードの元うた情報 */
 .hist { display: block; }
@@ -1121,36 +1123,6 @@ details.fold .fold-body { padding: 0 18px 18px; }
 .hist .src .op { font-family: var(--serif); color: var(--ink-soft); }
 .hist .r { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11.5px; color: var(--ink-soft); }
 .hist .r span:first-child { color: var(--ink-faint); }
-
-/* ---------- コメント（返し詳細） ---------- */
-.comments { margin-top: 4px; }
-.comment-list { display: flex; flex-direction: column; }
-.comment-item { display: flex; gap: 10px; padding: 14px 2px; border-bottom: 1px solid var(--line); }
-.comment-item:last-child { border-bottom: none; }
-.comment-item .avatar { width: 30px; height: 30px; font-size: 12px; flex: none; }
-.comment-user { font-size: 13px; font-weight: 600; color: var(--ink); }
-.comment-time { font-size: 11px; color: var(--ink-faint); margin-left: 6px; }
-.comment-body { font-size: 14px; line-height: 1.75; margin: 4px 0 0; color: var(--ink); }
-.comment-empty { text-align: center; color: var(--ink-faint); font-size: 13px; padding: 18px 0; }
-.comment-form { display: flex; gap: 10px; align-items: flex-start; margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
-.comment-form .avatar { width: 30px; height: 30px; font-size: 12px; flex: none; margin-top: 2px; }
-.comment-form-body { flex: 1; min-width: 0; }
-.comment-textarea {
-  width: 100%; min-height: 44px; resize: vertical;
-  padding: 10px 12px; font-family: var(--sans); font-size: 14px; line-height: 1.7;
-  color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm); outline: none;
-}
-.comment-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.comment-form-foot { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 8px; }
-.comment-form-hint { font-size: 11.5px; color: var(--ink-faint); margin-right: auto; }
-.btn-comment-submit {
-  border: none; cursor: pointer; background: var(--accent); color: #fff;
-  font-family: var(--sans); font-size: 13px; font-weight: 600;
-  padding: 8px 18px; border-radius: 999px;
-}
-@media (prefers-color-scheme: dark) { .btn-comment-submit { color: #14140f; } }
-.btn-comment-submit[disabled] { opacity: .45; cursor: not-allowed; }
 
 /* ---------- トースト ---------- */
 .toast {
