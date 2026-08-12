@@ -12,6 +12,9 @@ const P = {
   fresh: { bg:'linear-gradient(150deg,#fbfdf8 0%,#f4f9ef 36%,#e9f1e2 70%,#dbe7d2 100%)',
            glow:'rgba(253,255,249,.96)', glow2:'rgba(216,234,206,.52)',
            ink:'#2b332a', sub:'#7e8c78', askc:'#5f7059', rule:'#d6e2cd', mark:'#8b9a85', spark:'rgba(232,248,222,.95)', night:false },
+  sky:   { bg:'linear-gradient(150deg,#fdfefc 0%,#f2f9f7 34%,#e6f1f3 68%,#d5e7ee 100%)',
+           glow:'rgba(255,253,242,.94)', glow2:'rgba(206,231,238,.52)',
+           ink:'#28323a', sub:'#778993', askc:'#546a78', rule:'#d0e0e8', mark:'#87979f', spark:'rgba(236,250,255,.95)', night:false },
   cool:  { bg:'linear-gradient(150deg,#f7f9fa 0%,#eef2f4 36%,#e3e9ed 70%,#d6dee4 100%)',
            glow:'rgba(252,254,255,.95)', glow2:'rgba(214,228,238,.50)',
            ink:'#2c3238', sub:'#7d8a94', askc:'#5c6c78', rule:'#d3dde4', mark:'#8b97a1', spark:'rgba(226,240,250,.95)', night:false },
@@ -76,19 +79,10 @@ const WIDE = { gx:'72%', gy:'24%', gw:1100, pad:180, lbl:23, lblGap:40, scene:46
                sp:[[11,1188,206,.85],[7,1330,430,.65],[13,1084,612,.5],[8,1436,250,.55],[9,196,150,.55],[12,1256,790,.4]] };
 
 const DAYS = [
-{ file:'00_小道の風', palette:'fresh',
-  scene:'風の吹く小道を歩きながら、<br>ふと目に留まった美しい景色を<br>心に刻む。' },
-{ file:'01_雨やどり', palette:'cool',
-  scene:'急に雨が降ってきて、<br>軒下で止むのを待っている。' },
-{ file:'02_朝の風', palette:'warm',
-  scene:'朝、窓を開けたら<br>風が少しだけ涼しかった。' },
-{ file:'03_夜の窓', palette:'night',
-  scene:'洗い物をしながら、<br>窓に自分が映っている。' },
-{ file:'04_静かな街', palette:'quiet',
-  scene:'帰省の車が多い。<br>いつもより街が静かだ。' },
-{ file:'05_日が短い', palette:'warm',
-  scene:'日が落ちるのが、<br>少し早くなった気がする。' },
+{ file:'06_高台の小川', palette:'sky',
+  scene:'高台に座り、友人と語らう。<br>公園の小川が穏やかに流れる。' },
 ];
+
 
 (async () => {
   fs.mkdirSync('out', { recursive: true });
