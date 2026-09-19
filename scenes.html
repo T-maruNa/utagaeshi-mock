@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>これまでの景色｜うたがえし</title>
+<meta name="description" content="これまでにひらいた景色の一覧。">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/ui-next.css">
+<link rel="stylesheet" href="assets/mock.css">
+</head>
+<body>
+<div class="app">
+
+  <!--
+    これまでの景色 `/poems`。
+    「百人一首一覧」ではなく「過去の景色一覧」。歌番号・作者は出さない。
+    主役はその日の景色の文で、写真は56pxのサムネイルに留める
+    （画像は1か月8枚なので、大きく並べると同じ絵が月に4回ずつ出る）。
+    日付の移動（date nav）の役割はこの画面に集約する。
+  -->
+  <main class="scenes-mock">
+
+    <header class="home-mock-top">
+      <div class="brand-wrap">
+        <a class="brand" href="index.html">うたがえし</a>
+        <span class="book-name">これまでの景色</span>
+      </div>
+      <div class="header-tools">
+        <a class="header-avatar-link" href="profile.html" aria-label="プロフィール">
+          <span class="header-avatar is-blank">ゆ</span>
+        </a>
+        <button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="book-title">
+      <h1>これまでの景色</h1>
+      <span>ひらいた日が、ここに並びます。</span>
+    </div>
+
+    <!--
+      過ぎた日の行き先は、モックでは day.html（10月5日の景色）ひとつだけ。
+      実装では /poems/[id] で日ごとに分かれる
+    -->
+    <div class="toc-list grouped-toc">
+      <div>
+        <!-- 今月は開いたまま（閉じられない） -->
+        <section class="toc-month current-month expanded">
+          <div class="toc-month-head static">
+            <span class="toc-month-name">10月</span>
+            <span class="toc-month-count">5の景色</span>
+          </div>
+          <div class="toc-month-body open">
+            <a class="index-row" href="index.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/10/10_street_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">今日<span class="index-row-sub">・6の言葉</span></span>
+                <span class="index-row-text">金木犀のにおい 駅までの道で ふいに足がとまる</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/10/10_room_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">10月7日<span class="index-row-sub">・5の言葉</span></span>
+                <span class="index-row-text">窓をしめる音が 部屋のどこかで ひとつ増えた</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/10/10_night_sky_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">10月5日<span class="index-row-sub">・7の言葉</span></span>
+                <span class="index-row-text">月がやけに白い 上着を取りに 一度だけ戻る</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/10/10_park_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">10月3日<span class="index-row-sub">・4の言葉</span></span>
+                <span class="index-row-text">ベンチの上に どんぐりがひとつ 誰も座らない</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/10/10_transit_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">10月1日<span class="index-row-sub">・5の言葉</span></span>
+                <span class="index-row-text">乗り換えのホーム 上着の人が 少しだけ増えた</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 過去の月は折りたたみ -->
+        <section class="toc-month">
+          <button class="toc-month-head" type="button" aria-expanded="false">
+            <span class="toc-month-name">9月</span>
+            <span class="toc-month-count">6の景色</span>
+            <span class="toc-month-arrow">›</span>
+          </button>
+          <div class="toc-month-body">
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/09/09_evening_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">9月28日<span class="index-row-sub">・6の言葉</span></span>
+                <span class="index-row-text">帰る時間なのに まだ明るくて 少し遠回りした</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/09/09_room_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">9月26日<span class="index-row-sub">・3の言葉</span></span>
+                <span class="index-row-text">畳んだ半袖を 引き出しの奥へ まだ迷いながら</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/09/09_park_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">9月21日<span class="index-row-sub">・5の言葉</span></span>
+                <span class="index-row-text">木かげのベンチが ぬるくなっている 座ってしまう</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/09/09_transit_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">9月17日<span class="index-row-sub">・4の言葉</span></span>
+                <span class="index-row-text">窓の日ざしが 席のはしにだけ 残っている</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/09/09_night_sky_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">9月12日<span class="index-row-sub">・6の言葉</span></span>
+                <span class="index-row-text">ゴミを出しに出て 空を見てから 部屋へ戻った</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+            <a class="index-row" href="day.html">
+              <span class="index-row-thumb" aria-hidden="true">
+                <img class="scene-thumb-img" src="assets/scenes/09/09_street_01.webp" alt="">
+              </span>
+              <span class="index-row-body">
+                <span class="index-row-lead">9月5日<span class="index-row-sub">・2の言葉</span></span>
+                <span class="index-row-text">日なたを避けて 道の左ばかり 歩いてしまう</span>
+              </span>
+              <span class="index-row-arrow">›</span>
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+      ホーム
+    </a>
+    <a class="nav-item on" href="scenes.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+      これまで
+    </a>
+    <a class="nav-item" href="mypage.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
+      返し帳
+    </a>
+  </nav>
+</div>
+
+<div class="header-menu-panel" role="menu" hidden>
+  <a class="header-menu-item" href="profile.html" role="menuitem">プロフィール</a>
+  <a class="header-menu-item" href="account.html" role="menuitem">アカウント設定</a>
+  <a class="header-menu-item" href="mypage-list.html" role="menuitem">言葉を整える・削除する</a>
+  <a class="header-menu-item" href="intro.html" role="menuitem">はじめての方へ</a>
+  <button class="header-menu-item header-menu-item-button" type="button" role="menuitem">ログアウト</button>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

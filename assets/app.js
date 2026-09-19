@@ -1,740 +1,584 @@
-/* うたがえし UIモック — 画面挙動のデモ用スクリプト（バックエンドなし） */
+/* =========================================================
+   うたがえし — UIモックの画面挙動（バックエンドなし）
+
+   実装（utagaeshi）の React 部品と同じ触り心地になることだけを目的にする。
+   状態は画面の中だけに持ち、保存も通信もしない。
+
+   実装との対応
+     デッキ          CardDeck / PersonDeck
+     返し帳          ReplyBookView
+     月の折りたたみ  MonthAccordion
+     投稿欄          SceneComposer
+     メニュー        HomeMenu
+     文字サイズ      lib/visual-card-text.ts
+   ========================================================= */
 (function () {
   "use strict";
 
-  /* ===== ログイン状態 ===== */
-  var LOGIN_KEY = "utagaeshi_loggedin";
-  function isLoggedIn() { return localStorage.getItem(LOGIN_KEY) === "1"; }
-  function setLoggedIn(v) {
-    if (v) localStorage.setItem(LOGIN_KEY, "1");
-    else localStorage.removeItem(LOGIN_KEY);
-  }
-  function applyAuth() {
-    var loggedIn = isLoggedIn();
-    document.querySelectorAll("[data-auth]").forEach(function (el) {
-      el.hidden = (el.getAttribute("data-auth") === "in") !== loggedIn;
-    });
-  }
+  /* ---------------------------------------------------------
+     visual-card の本文サイズ（lib/visual-card-text.ts の移植）
 
-  /* ===== プロフィール（表示名・ハンドル・アイコンカラー） ===== */
-  var PROFILE_KEY = "utagaeshi_profile";
-  var PROFILE_DEFAULT = { name: "言葉", handle: "", color: "indigo" };
-  var AVATAR_COLORS = ["indigo", "brown", "green", "red", "gold", "gray"];
-  function getProfile() {
-    try {
-      var raw = JSON.parse(localStorage.getItem(PROFILE_KEY));
-      if (raw && raw.name) {
-        return {
-          name: raw.name,
-          handle: raw.handle || "",
-          color: AVATAR_COLORS.indexOf(raw.color) >= 0 ? raw.color : PROFILE_DEFAULT.color,
-        };
-      }
-    } catch (e) { /* 破損データは既定値にフォールバック */ }
-    return { name: PROFILE_DEFAULT.name, handle: PROFILE_DEFAULT.handle, color: PROFILE_DEFAULT.color };
-  }
-  function setProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
-  function avatarColorClass(color) { return "avatar-" + (AVATAR_COLORS.indexOf(color) >= 0 ? color : PROFILE_DEFAULT.color); }
-  function setAvatarColor(el, color) {
-    AVATAR_COLORS.forEach(function (c) { el.classList.remove("avatar-" + c); });
-    el.classList.add(avatarColorClass(color));
-  }
-  function applyProfileDisplay() {
-    var p = getProfile();
-    document.querySelectorAll("[data-profile-name]").forEach(function (el) { el.textContent = p.name; });
-    document.querySelectorAll("[data-profile-handle]").forEach(function (el) {
-      el.textContent = p.handle ? "@" + p.handle : "";
-      el.hidden = !p.handle;
-    });
-    document.querySelectorAll("[data-profile-avatar]").forEach(function (el) {
-      el.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
-      setAvatarColor(el, p.color);
-    });
-  }
-  applyProfileDisplay();
-
-  /* アカウント設定フォーム（account.html） */
-  var accountForm = document.querySelector("[data-account-form]");
-  if (accountForm) {
-    var acctProfile = getProfile();
-    var nameInput = accountForm.querySelector("[data-profile-name-input]");
-    var handleInput = accountForm.querySelector("[data-profile-handle-input]");
-    var preview = document.querySelector("[data-profile-preview]");
-    var swatches = Array.prototype.slice.call(accountForm.querySelectorAll("[data-color-swatch]"));
-    var selectedColor = acctProfile.color;
-
-    nameInput.value = acctProfile.name;
-    handleInput.value = acctProfile.handle;
-
-    var updatePreview = function () {
-      if (!preview) return;
-      preview.textContent = nameInput.value.trim().charAt(0) || PROFILE_DEFAULT.name;
-      setAvatarColor(preview, selectedColor);
-    };
-    swatches.forEach(function (sw) {
-      var c = sw.getAttribute("data-color-swatch");
-      sw.classList.toggle("on", c === selectedColor);
-      sw.addEventListener("click", function () {
-        selectedColor = c;
-        swatches.forEach(function (s) { s.classList.toggle("on", s === sw); });
-        updatePreview();
-      });
-    });
-    nameInput.addEventListener("input", updatePreview);
-    updatePreview();
-
-    accountForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var name = nameInput.value.trim() || PROFILE_DEFAULT.name;
-      var handle = handleInput.value.trim().replace(/^@/, "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20);
-      setProfile({ name: name.slice(0, 20), handle: handle, color: selectedColor });
-      toast("プロフィールを保存しました");
-      setTimeout(function () { location.href = "mypage.html"; }, 700);
-    });
-  }
-
-  /* ===== ログイン誘導シート ===== */
-  var sheet;
-  function ensureSheet() {
-    if (sheet) return sheet;
-    sheet = document.createElement("div");
-    sheet.className = "sheet-overlay";
-    sheet.hidden = true;
-    sheet.innerHTML =
-      '<div class="sheet" role="dialog" aria-modal="true">' +
-      '  <p class="sheet-msg" data-sheet-msg>返すにはログインが必要です。</p>' +
-      '  <a class="btn btn-primary" href="login.html">ログインする</a>' +
-      '  <button class="btn btn-ghost" type="button" data-sheet-close>あとで</button>' +
-      "</div>";
-    document.body.appendChild(sheet);
-    var close = function () { sheet.hidden = true; };
-    sheet.addEventListener("click", function (e) { if (e.target === sheet) close(); });
-    sheet.querySelector("[data-sheet-close]").addEventListener("click", close);
-    return sheet;
-  }
-  function showLogin(msg) {
-    var s = ensureSheet();
-    s.querySelector("[data-sheet-msg]").textContent = msg || "この操作にはログインが必要です。";
-    s.hidden = false;
-  }
-
-  /* ===== トースト ===== */
-  function toast(msg) {
-    var t = document.createElement("div");
-    t.className = "toast";
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(function () { t.classList.add("out"); }, 2200);
-    setTimeout(function () { t.remove(); }, 2600);
-  }
-
-  /* ===== 好きした返し（他ユーザーの返しへの「好き」を返し帳から見返せるように） ===== */
-  var LIKES_KEY = "utagaeshi_liked_posts";
-  function getLikedPostIds() {
-    try {
-      var arr = JSON.parse(localStorage.getItem(LIKES_KEY));
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) { return []; }
-  }
-  function isPostLiked(id) { return getLikedPostIds().indexOf(id) >= 0; }
-  function togglePostLiked(id, on) {
-    var arr = getLikedPostIds();
-    var i = arr.indexOf(id);
-    if (on && i < 0) arr.push(id);
-    else if (!on && i >= 0) arr.splice(i, 1);
-    localStorage.setItem(LIKES_KEY, JSON.stringify(arr));
-  }
-
-  /* ===== リアクション（ログイン必須） ===== */
-  function bindReaction(btn) {
-    if (btn.classList.contains("disabled") || btn.__bound) return;
-    btn.__bound = true;
-    var postEl = btn.closest("[data-post-id]");
-    var postId = postEl && postEl.getAttribute("data-post-id");
-    var isSuki = btn.getAttribute("data-kind") === "suki";
-    if (isSuki && postId && isPostLiked(postId)) btn.classList.add("on");
-    btn.addEventListener("click", function () {
-      if (!isLoggedIn()) { showLogin("リアクションするにはログインしてください。"); return; }
-      var countEl = btn.querySelector(".count");
-      var n = parseInt(countEl.textContent, 10) || 0;
-      var turningOn = !btn.classList.contains("on");
-      if (turningOn) { btn.classList.add("on"); countEl.textContent = n + 1; }
-      else { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
-      if (isSuki && postId) togglePostLiked(postId, turningOn);
-    });
-  }
-  function bindReactions(root) {
-    (root || document).querySelectorAll(".react").forEach(bindReaction);
-  }
-
-  /* ===== 短歌への「このうた好き」（1ユーザー1回・ログイン必須・返しreactionとは別） ===== */
-  document.querySelectorAll(".poem-like").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      if (!isLoggedIn()) { showLogin("このうたを好きにするにはログインしてください。"); return; }
-      var countEl = btn.querySelector(".count");
-      var n = parseInt(countEl.textContent, 10) || 0;
-      if (btn.classList.contains("on")) { btn.classList.remove("on"); countEl.textContent = Math.max(0, n - 1); }
-      else { btn.classList.add("on"); countEl.textContent = n + 1; }
-    });
-  });
-
-  /* ===== シェア画像（返し・今日のうたをカード画像にして保存／Xでポスト） ===== */
-  function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y, x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x, y + h, r);
-    ctx.arcTo(x, y + h, x, y, r);
-    ctx.arcTo(x, y, x + w, y, r);
-    ctx.closePath();
-  }
-  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
-    var line = "", lines = [];
-    Array.prototype.forEach.call(text, function (ch) {
-      var test = line + ch;
-      if (line && ctx.measureText(test).width > maxWidth) { lines.push(line); line = ch; }
-      else { line = test; }
-    });
-    if (line) lines.push(line);
-    lines.forEach(function (l, i) { ctx.fillText(l, x, y + i * lineHeight); });
-    return lines.length;
-  }
-  function drawShareCard(canvas, data) {
-    var ctx = canvas.getContext("2d");
-    var W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "#f6f3ec";
-    ctx.fillRect(0, 0, W, H);
-
-    var pad = 40, cardX = pad, cardY = pad, cardW = W - pad * 2, cardH = H - pad * 2;
-    ctx.fillStyle = "#fffdf8";
-    ctx.strokeStyle = "#e7e1d4";
-    ctx.lineWidth = 1;
-    roundRect(ctx, cardX, cardY, cardW, cardH, 20);
-    ctx.fill();
-    ctx.stroke();
-
-    var cx = W / 2;
-    var y = cardY + 68;
-
-    ctx.fillStyle = "#2a2621";
-    ctx.font = "600 22px serif";
-    ctx.textAlign = "center";
-    ctx.fillText("うたがえし", cx, y);
-    y += 50;
-
-    ctx.font = "17px serif";
-    ctx.fillStyle = "#6b6459";
-    data.poemLines.forEach(function (line) { ctx.fillText(line, cx, y); y += 27; });
-    y += 8;
-    if (data.poemMeta) {
-      ctx.font = "13px sans-serif";
-      ctx.fillStyle = "#9c9488";
-      ctx.fillText(data.poemMeta, cx, y);
-      y += 20;
-    }
-
-    if (data.replyText) {
-      y += 24;
-      ctx.strokeStyle = "#e7e1d4";
-      ctx.beginPath();
-      ctx.moveTo(cardX + 40, y);
-      ctx.lineTo(cardX + cardW - 40, y);
-      ctx.stroke();
-      y += 46;
-
-      ctx.font = "22px sans-serif";
-      ctx.fillStyle = "#2a2621";
-      ctx.textAlign = "left";
-      var lineCount = wrapCanvasText(ctx, data.replyText, cardX + 40, y, cardW - 80, 34);
-      y += lineCount * 34 + 22;
-
-      if (data.replyUser) {
-        ctx.textAlign = "right";
-        ctx.font = "600 15px sans-serif";
-        ctx.fillStyle = "#6b6459";
-        ctx.fillText(data.replyUser + " の返し", cardX + cardW - 40, y);
-      }
-    }
-
-    ctx.textAlign = "center";
-    ctx.font = "12px sans-serif";
-    ctx.fillStyle = "#9c9488";
-    ctx.fillText("utagaeshi", cx, cardY + cardH - 30);
-  }
-
-  var shareModal;
-  function ensureShareModal() {
-    if (shareModal) return shareModal;
-    var m = document.createElement("div");
-    m.className = "modal-overlay";
-    m.hidden = true;
-    m.innerHTML =
-      '<div class="modal share-modal" role="dialog" aria-modal="true">' +
-      '  <div class="modal-head">' +
-      '    <button class="modal-close" type="button" data-modal-close aria-label="とじる">✕</button>' +
-      '    <span class="modal-title">シェア</span>' +
-      '    <span style="width:34px;"></span>' +
-      '  </div>' +
-      '  <div class="modal-body share-modal-body">' +
-      '    <div class="share-canvas-wrap"><canvas data-share-canvas width="640" height="800"></canvas></div>' +
-      '    <div class="share-actions">' +
-      '      <button class="btn btn-primary" type="button" data-share-download>画像を保存する</button>' +
-      '      <a class="btn btn-ghost" data-share-x target="_blank" rel="noopener">Xでポストする</a>' +
-      '    </div>' +
-      '  </div>' +
-      "</div>";
-    document.body.appendChild(m);
-    var close = function () { m.hidden = true; };
-    m.querySelector("[data-modal-close]").addEventListener("click", close);
-    m.addEventListener("click", function (e) { if (e.target === m) close(); });
-    shareModal = m;
-    return m;
-  }
-  function openShareCard(data) {
-    var m = ensureShareModal();
-    var canvas = m.querySelector("[data-share-canvas]");
-    canvas.height = data.replyText ? 800 : 520;
-    drawShareCard(canvas, data);
-    m.querySelector("[data-share-download]").onclick = function () {
-      var a = document.createElement("a");
-      a.download = "utagaeshi.png";
-      a.href = canvas.toDataURL("image/png");
-      a.click();
-    };
-    var tweetText = (data.replyText || data.poemLines.join(" ")).slice(0, 60) + "\n#うたがえし";
-    m.querySelector("[data-share-x]").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText);
-    m.hidden = false;
-  }
-  document.querySelectorAll("[data-share]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      openShareCard({
-        poemLines: (btn.getAttribute("data-share-poem") || "").split("|").filter(Boolean),
-        poemMeta: btn.getAttribute("data-share-poem-meta") || "",
-        replyText: btn.getAttribute("data-share-reply") || "",
-        replyUser: btn.getAttribute("data-share-user") || "",
-      });
-    });
-  });
-
-  /* ===== 投稿モーダル（Xのコンポーズ風） ===== */
-  var POEM = {
-    text: "春過ぎて 夏来にけらし 白妙の 衣ほすてふ 天の香具山",
-    meta: "持統天皇／百人一首・二番",
+     カードは長い言葉が来ても高さを変えない。入らなければ1段ずつ
+     小さくし、最小でも入らなければ省略して「続きを読む」を出す。
+     モックで実際に使うのは、投稿欄から増える自分のカードだけ。
+     --------------------------------------------------------- */
+  var SIZES = ["xl", "lg", "md", "sm"];
+  var METRICS = {
+    xl: { fontSize: 28, lineHeight: 1.85 },
+    lg: { fontSize: 23, lineHeight: 1.9 },
+    md: { fontSize: 19, lineHeight: 1.9 },
+    sm: { fontSize: 17, lineHeight: 1.65 },
   };
-  var MIN = 10, MAX = 200;
-  var composeModal;
-  function ensureComposeModal() {
-    if (composeModal) return composeModal;
-    var m = document.createElement("div");
-    m.className = "modal-overlay";
-    m.hidden = true;
-    m.innerHTML =
-      '<div class="modal" role="dialog" aria-modal="true">' +
-      '  <div class="modal-head">' +
-      '    <button class="modal-close" type="button" data-modal-close aria-label="とじる">✕</button>' +
-      '    <span class="modal-title">返す</span>' +
-      '    <button class="btn-post" type="button" data-submit disabled>返す</button>' +
-      '  </div>' +
-      '  <div class="modal-body">' +
-      '    <div class="modal-poem">' +
-      '      <div class="label">このうたに返す</div>' +
-      '      <div class="text">' + POEM.text + '</div>' +
-      '      <div class="meta">' + POEM.meta + '</div>' +
-      '    </div>' +
-      '    <p class="form-note">正解じゃなくて大丈夫。今の自分ならどう言うかを書いてください。</p>' +
-      '    <textarea class="textarea" placeholder="今の自分なら、どう返しますか？"></textarea>' +
-      '    <div class="count"><span class="hint">10〜200字</span>' +
-      '      <span><span data-count-status class="count-status">あと10字</span> ・ <b data-count-num>0</b> / 200</span></div>' +
-      '  </div>' +
-      '</div>';
-    document.body.appendChild(m);
+  var TEXT_AREA = { width: 280, height: 260 };
+  var LETTER_SPACING = 0.02;
+  var MORE_HEIGHT = 33;
+  var HALF_WIDTH = /[ -~｡-ﾟ]/;
 
-    var ta = m.querySelector(".textarea");
-    var submit = m.querySelector("[data-submit]");
-    var numEl = m.querySelector("[data-count-num]");
-    var statusEl = m.querySelector("[data-count-status]");
-    var wrap = m.querySelector(".count");
-
-    var update = function () {
-      var raw = ta.value.length, len = ta.value.trim().length;
-      numEl.textContent = raw;
-      var over = raw > MAX, under = len < MIN;
-      wrap.classList.toggle("over", over);
-      if (over) { statusEl.textContent = (raw - MAX) + "字オーバー"; statusEl.className = "count-status danger"; }
-      else if (under) { statusEl.textContent = "あと" + (MIN - len) + "字"; statusEl.className = "count-status"; }
-      else { statusEl.textContent = "OK"; statusEl.className = "count-status ok"; }
-      submit.disabled = over || under;
-    };
-    m.__update = update;
-    ta.addEventListener("input", update);
-
-    var close = function () { m.hidden = true; };
-    m.querySelector("[data-modal-close]").addEventListener("click", close);
-    m.addEventListener("click", function (e) { if (e.target === m) close(); });
-
-    submit.addEventListener("click", function () {
-      if (submit.disabled) return;
-      var val = ta.value.trim();
-      close();
-      prependMyReply(val);
-      toast("返しました");
-      ta.value = ""; update();
-    });
-    composeModal = m;
-    return m;
+  function charsPerLine(size) {
+    return Math.floor(TEXT_AREA.width / (METRICS[size].fontSize * (1 + LETTER_SPACING)));
   }
-
-  function openCompose(prefill) {
-    if (!isLoggedIn()) { showLogin("返すにはログインが必要です。"); return; }
-    var m = ensureComposeModal();
-    var ta = m.querySelector(".textarea");
-    if (prefill) ta.value = prefill;
-    m.hidden = false;
-    m.__update();
-    setTimeout(function () { ta.focus(); }, 60);
+  function maxLines(size, withMore) {
+    var m = METRICS[size];
+    return Math.floor((TEXT_AREA.height - (withMore ? MORE_HEIGHT : 0)) / (m.fontSize * m.lineHeight));
   }
-
-  /* 自分の返しをフィード先頭に差し込む（モック） */
-  function prependMyReply(text) {
-    var list = document.querySelector("[data-list]");
-    if (!list) return;
-    var p = getProfile();
-    var el = document.createElement("article");
-    el.className = "post";
-    el.setAttribute("data-reactions", "0");
-    el.setAttribute("data-time", "9999");
-    el.innerHTML =
-      '<a class="post-main" href="post-detail.html">' +
-      '  <div class="post-head"><span class="avatar"></span>' +
-      '    <div><div class="post-user"></div><div class="post-time">たった今</div></div></div>' +
-      '  <p class="post-body"></p>' +
-      '</a>' +
-      '<div class="reactions">' +
-      '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">0</span></button>' +
-      '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">0</span></button>' +
-      '  <button class="react"><span class="emoji">🤍</span>好き<span class="count">0</span></button>' +
-      '</div>';
-    var elAvatar = el.querySelector(".avatar");
-    elAvatar.textContent = p.name.charAt(0) || PROFILE_DEFAULT.name;
-    setAvatarColor(elAvatar, p.color);
-    el.querySelector(".post-user").textContent = p.name;
-    el.querySelector(".post-body").textContent = text;
-    list.insertBefore(el, list.firstChild);
-    bindReactions(el);
+  function textWidth(text) {
+    var width = 0;
+    for (var i = 0; i < text.length; i++) width += HALF_WIDTH.test(text[i]) ? 0.5 : 1;
+    return width;
   }
-
-  /* ===== ログイン誘導・実行トリガー ===== */
-  document.querySelectorAll("[data-login-msg]").forEach(function (el) {
-    el.addEventListener("click", function (e) {
-      if (isLoggedIn()) return;
-      e.preventDefault();
-      showLogin(el.getAttribute("data-login-msg"));
-    });
-  });
-  document.querySelectorAll("[data-do-login]").forEach(function (el) {
-    el.addEventListener("click", function (e) { e.preventDefault(); setLoggedIn(true); location.href = "index.html"; });
-  });
-  document.querySelectorAll("[data-do-logout]").forEach(function (el) {
-    el.addEventListener("click", function (e) { e.preventDefault(); setLoggedIn(false); location.reload(); });
-  });
-
-  /* 返す導線・投稿バー・返しの例 → モーダル（未ログインは誘導） */
-  document.querySelectorAll("[data-compose]").forEach(function (el) {
-    el.addEventListener("click", function (e) {
-      e.preventDefault();
-      openCompose(el.getAttribute("data-text") || "");
-    });
-  });
-
-  applyAuth();
-
-  /* 下部ナビの現在地ハイライト */
-  var path = location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll(".nav-item").forEach(function (el) {
-    if (el.getAttribute("href") === path) el.classList.add("on");
-  });
-
-  bindReactions(document);
-
-  /* 縦書き本文：句読点(。、)を優先して列を折り返す。
-     1列あたりの文字数は.book-cardのCSS値(height:460px, padding:26px, font-size:17px,
-     セル高さ1.9em)から計算した固定値にしている。非表示(hidden)のエントリは
-     clientHeightが0になり測れないため、DOM測定ではなく定数で持つ */
-  var BOOK_COL_MAX_CHARS = 12;
-  document.querySelectorAll(".book-text").forEach(function (el) {
-    var text = el.textContent;
-    el.textContent = "";
-
-    /* 句読点の直後で区切ったかたまりに分割し、句読点で終わる形を保つ */
-    var chunks = text.match(/[^。、]*[。、]|[^。、]+$/g) || [text];
-
-    var columns = [];
-    var current = "";
-    chunks.forEach(function (chunk) {
-      if (current && current.length + chunk.length > BOOK_COL_MAX_CHARS) {
-        columns.push(current);
-        current = "";
+  function countLines(text, perLine) {
+    return text.split("\n").reduce(function (total, line) {
+      return total + Math.max(1, Math.ceil(textWidth(line) / perLine));
+    }, 0);
+  }
+  /** 本文に合う段階を返す。maxSize より大きくはしない */
+  function layoutText(raw, maxSize) {
+    var text = String(raw).replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+    var ladder = SIZES.slice(Math.max(0, SIZES.indexOf(maxSize || "xl")));
+    for (var i = 0; i < ladder.length; i++) {
+      if (countLines(text, charsPerLine(ladder[i])) <= maxLines(ladder[i], false)) {
+        return { size: ladder[i], text: text };
       }
-      current += chunk;
-      /* かたまり自体が1列に収まらないときだけ、やむを得ず途中で区切る */
-      while (current.length > BOOK_COL_MAX_CHARS) {
-        columns.push(current.slice(0, BOOK_COL_MAX_CHARS));
-        current = current.slice(BOOK_COL_MAX_CHARS);
-      }
-    });
-    if (current) columns.push(current);
+    }
+    var size = ladder[ladder.length - 1];
+    var perLine = charsPerLine(size);
+    var limit = maxLines(size, true) * perLine - 1;
+    var width = 0;
+    var cut = "";
+    for (var j = 0; j < text.length; j++) {
+      var next = width + (HALF_WIDTH.test(text[j]) ? 0.5 : 1);
+      if (next > limit) break;
+      width = next;
+      cut += text[j];
+    }
+    return { size: size, text: cut.replace(/\s+$/, "") + "…" };
+  }
 
-    columns.forEach(function (colText) {
-      var col = document.createElement("div");
-      col.className = "book-col";
-      Array.prototype.forEach.call(colText, function (ch) {
-        var span = document.createElement("span");
-        span.className = "ch";
-        span.textContent = ch;
-        col.appendChild(span);
+  /** 本文の段落に、決めた段階をそのまま当てる */
+  function applyText(p, raw, maxSize) {
+    var layout = layoutText(raw, maxSize);
+    p.textContent = layout.text;
+    p.className = "vcard-text vcard-text--" + layout.size;
+  }
+
+  /* ---------------------------------------------------------
+     共通の小道具
+     --------------------------------------------------------- */
+  function all(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
+  }
+
+  /** 目次から札を選んだときに、上のカードまで画面を戻す（lib/scroll-to-card.ts） */
+  function scrollToCard(card) {
+    if (!card) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    card.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+
+  /** 左右スワイプでめくる（lib/use-swipe.ts）。45px以上・縦のほうが大きい動きは無視 */
+  var SWIPE_THRESHOLD = 45;
+  function onSwipe(el, prev, next) {
+    var start = null;
+    el.addEventListener("touchstart", function (event) {
+      var touch = event.touches[0];
+      start = { x: touch.clientX, y: touch.clientY };
+    }, { passive: true });
+    el.addEventListener("touchend", function (event) {
+      var from = start;
+      start = null;
+      if (!from) return;
+      var touch = event.changedTouches[0];
+      var dx = touch.clientX - from.x;
+      var dy = touch.clientY - from.y;
+      if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dy) > Math.abs(dx)) return;
+      if (dx > 0) prev();
+      else next();
+    });
+  }
+
+  /* ---------------------------------------------------------
+     デッキ（CardDeck / PersonDeck）
+
+     ・カードはすべてHTMLにあり、表示するものだけを出す
+     ・pages はいま積んである札（カードの位置）の並び
+     ・目次（.scene-link / .word / .index-row）は押しても遷移せず、
+       上のカードが切り替わるだけ。開いている札は目次でも光る
+     ・○○さんの残した言葉だけは5枚から始め、目次から開いたものを
+       末尾に足す（減らさないので、さっき読んだ札が消えない）
+     --------------------------------------------------------- */
+  function setupDeck(root) {
+    var deck = root.querySelector("[data-deck]");
+    if (!deck) return null;
+
+    var cards = all(".vcard", deck);
+    var initial = deck.getAttribute("data-deck-initial");
+    var pages = initial
+      ? initial.split(",").map(Number)
+      : cards.map(function (_, index) { return index; });
+    var index = 0;
+
+    var prevBtn = root.querySelector("[data-deck-prev]");
+    var nextBtn = root.querySelector("[data-deck-next]");
+    var countEl = root.querySelector("[data-deck-count]");
+    var labelEl = root.querySelector("[data-deck-label]");
+    var row = root.querySelector("[data-deck-row]");
+    var swipeNote = root.querySelector(".swipe-note");
+
+    function render() {
+      var card = pages[index];
+      cards.forEach(function (el, position) { el.hidden = position !== card; });
+
+      if (countEl) countEl.textContent = (index + 1) + " / " + pages.length;
+      if (labelEl) labelEl.textContent = cards[card].getAttribute("data-label") || "";
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.disabled = index === pages.length - 1;
+      if (swipeNote) swipeNote.hidden = pages.length < 2;
+
+      if (row) {
+        all("[data-for]", row).forEach(function (el) {
+          el.hidden = Number(el.getAttribute("data-for")) !== card;
+        });
+        closeActMenu();
+      }
+
+      all("[data-deck-open]", root).forEach(function (el) {
+        var open = Number(el.getAttribute("data-deck-open")) === card;
+        el.classList.toggle("is-current", open);
+        if (open) el.setAttribute("aria-current", "true");
+        else el.removeAttribute("aria-current");
       });
-      el.appendChild(col);
-    });
-  });
+    }
 
-  /* ===== 1枚ずつめくるカード体験の共通実装（返し帳のbook / トップのdeckで共有） =====
-     スワイプ・トラックパッド横スクロール・マウスドラッグ・前後ボタンのどれでも
-     めくれるようにし、切り替え時は横スライド＋高さアニメーションで入れ替える。
-     opts.scrollConflictSelector を指定すると、その要素内で実際に横スクロールが
-     必要なとき（scrollWidth>clientWidth）だけスワイプ/ドラッグを内部スクロール優先にする */
-  function initCardCarousel(root, opts) {
-    var viewport = root.querySelector(opts.viewportSelector);
-    var pages = Array.prototype.slice.call(root.querySelectorAll(opts.entrySelector));
-    if (!pages.length) return;
-    var currentIndex = opts.initialIndex === "last" ? pages.length - 1 : 0;
-    var renderedIdx = currentIndex;
-    var isAnimating = false;
-    var indicator = root.querySelector(opts.indicatorSelector);
-    var prevBtns = Array.prototype.slice.call(root.querySelectorAll(opts.prevSelector));
-    var nextBtns = Array.prototype.slice.call(root.querySelectorAll(opts.nextSelector));
+    function go(to) {
+      index = Math.min(pages.length - 1, Math.max(0, to));
+      render();
+    }
 
-    var updateNav = function () {
-      if (indicator) indicator.textContent = (currentIndex + 1) + " / " + pages.length;
-      prevBtns.forEach(function (b) { b.disabled = currentIndex === 0 || isAnimating; });
-      nextBtns.forEach(function (b) { b.disabled = currentIndex === pages.length - 1 || isAnimating; });
-    };
-
-    /* direction: "next"/"prev" で現在のカードと次のカードを同時にスライドさせて入れ替える。
-       省略時（初期表示）はアニメーションなし */
-    var render = function (direction) {
-      if (!direction) {
-        pages.forEach(function (el, i) { el.hidden = i !== currentIndex; });
-        renderedIdx = currentIndex;
-        updateNav();
-        return;
+    /** 目次から開く。積んでいない札は末尾に足す */
+    function open(card) {
+      var at = pages.indexOf(card);
+      if (at < 0) {
+        pages.push(card);
+        at = pages.length - 1;
       }
-      if (renderedIdx === currentIndex || isAnimating) { updateNav(); return; }
+      go(at);
+      scrollToCard(deck);
+    }
 
-      var oldEl = pages[renderedIdx];
-      var newEl = pages[currentIndex];
-      isAnimating = true;
-      updateNav();
+    if (prevBtn) prevBtn.addEventListener("click", function () { go(index - 1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { go(index + 1); });
+    onSwipe(deck, function () { go(index - 1); }, function () { go(index + 1); });
 
-      var startHeight = oldEl.getBoundingClientRect().height;
-      viewport.style.height = startHeight + "px";
-
-      newEl.hidden = false;
-      oldEl.classList.add("is-sliding");
-      newEl.classList.add("is-sliding", direction === "next" ? "slide-in-next" : "slide-in-prev");
-      void newEl.offsetWidth; /* 初期位置を確定させてから次のフレームで遷移させる */
-
-      var endHeight = newEl.getBoundingClientRect().height;
-      renderedIdx = currentIndex;
-
-      requestAnimationFrame(function () {
-        viewport.style.transition = "height .32s ease";
-        viewport.style.height = endHeight + "px";
-        oldEl.classList.add(direction === "next" ? "slide-out-next" : "slide-out-prev");
-        newEl.classList.remove("slide-in-next", "slide-in-prev");
-        newEl.classList.add("slide-settle");
+    all("[data-deck-open]", root).forEach(function (el) {
+      el.addEventListener("click", function () {
+        open(Number(el.getAttribute("data-deck-open")));
       });
+    });
 
-      setTimeout(function () {
-        oldEl.hidden = true;
-        oldEl.classList.remove("is-sliding", "slide-out-next", "slide-out-prev");
-        newEl.classList.remove("is-sliding", "slide-settle");
-        viewport.style.transition = "";
-        viewport.style.height = "";
-        isAnimating = false;
-        updateNav();
-      }, 340);
-    };
+    /* 自分の言葉の「…」。整える・削除はこの中へ畳む */
+    var actMenu = root.querySelector("[data-act-menu]");
+    function closeActMenu() {
+      if (!actMenu) return;
+      actMenu.hidden = true;
+      all("[data-act-more]", root).forEach(function (el) {
+        el.setAttribute("aria-expanded", "false");
+      });
+    }
+    document.addEventListener("pointerdown", function (event) {
+      if (!actMenu || actMenu.hidden) return;
+      if (row && !row.contains(event.target)) closeActMenu();
+    });
 
-    var goNext = function () { if (currentIndex < pages.length - 1 && !isAnimating) { currentIndex++; render("next"); } };
-    var goPrev = function () { if (currentIndex > 0 && !isAnimating) { currentIndex--; render("prev"); } };
-
-    prevBtns.forEach(function (b) { b.addEventListener("click", goPrev); });
-    nextBtns.forEach(function (b) { b.addEventListener("click", goNext); });
     render();
 
-    var conflictSel = opts.scrollConflictSelector;
-    var hasScrollConflict = function (target) {
-      if (!conflictSel) return false;
-      var el = target.closest && target.closest(conflictSel);
-      return !!(el && el.scrollWidth > el.clientWidth);
+    return {
+      root: root,
+      deck: deck,
+      cards: cards,
+      pages: pages,
+      go: go,
+      open: open,
+      render: render,
+      addCard: function (card, at) {
+        cards.push(card);
+        deck.appendChild(card);
+        var position = cards.length - 1;
+        pages.splice(at, 0, position);
+        return position;
+      },
+      closeActMenu: closeActMenu,
     };
+  }
 
-    /* 左右スワイプ */
-    var touchStartX = null, touchStartOnConflict = false;
-    root.addEventListener("touchstart", function (e) {
-      touchStartX = e.touches[0].clientX;
-      touchStartOnConflict = hasScrollConflict(e.target);
-    }, { passive: true });
-    root.addEventListener("touchend", function (e) {
-      if (touchStartX === null) return;
-      if (touchStartOnConflict) { touchStartX = null; return; }
-      var dx = e.changedTouches[0].clientX - touchStartX;
-      if (dx < -40) goNext(); else if (dx > 40) goPrev();
-      touchStartX = null;
-    }, { passive: true });
-
-    /* PCのトラックパッド2本指スワイプはtouch系イベントが発火せずwheelのdeltaXとして届くため、
-       別途ここで拾う。縦スクロール（deltaY優勢）とは区別し、連続発火を1ジェスチャー1回に間引く */
-    var wheelCooldown = false;
-    root.addEventListener("wheel", function (e) {
-      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || wheelCooldown || isAnimating) return;
-      if (e.deltaX > 30) goNext(); else if (e.deltaX < -30) goPrev(); else return;
-      wheelCooldown = true;
-      setTimeout(function () { wheelCooldown = false; }, 400);
-    }, { passive: true });
-
-    /* マウスのクリック&ドラッグでもスライダーのようにめくれるようにする */
-    var mouseStartX = null, mouseStartOnConflict = false;
-    root.addEventListener("mousedown", function (e) {
-      mouseStartX = e.clientX;
-      mouseStartOnConflict = hasScrollConflict(e.target);
-      if (!mouseStartOnConflict) e.preventDefault(); /* ドラッグ中のテキスト選択を防ぐ */
-    });
-    document.addEventListener("mouseup", function (e) {
-      if (mouseStartX === null) return;
-      if (mouseStartOnConflict) { mouseStartX = null; return; }
-      var dx = e.clientX - mouseStartX;
-      if (dx < -40) goNext(); else if (dx > 40) goPrev();
-      mouseStartX = null;
+  /* ---------------------------------------------------------
+     「…」の開閉（自分の言葉のときだけ出る）
+     --------------------------------------------------------- */
+  function setupActMenu(root) {
+    var menu = root.querySelector("[data-act-menu]");
+    if (!menu) return;
+    root.addEventListener("click", function (event) {
+      var trigger = event.target.closest("[data-act-more]");
+      if (!trigger) return;
+      var open = menu.hidden;
+      menu.hidden = !open;
+      trigger.setAttribute("aria-expanded", String(open));
     });
   }
 
-  /* ===== 好きな返し一覧（liked.html）：デモ用の固定データから、好きした返しだけ描画する ===== */
-  var POSTS_CATALOG = {
-    "post-yuki":   { avatar: "ゆ", user: "ゆき", time: "3分前", body: "梅雨が明けたら、いちばんに会いたい人がいる。夏はそのためにある気がする。", reactions: { wakaru: 42, sasatta: 31, suki: 28 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-haruto": { avatar: "は", user: "はると", time: "12分前", body: "白いシャツを干すたびに、去年の夏を思い出す。もう戻れないけど、きらいじゃない。", reactions: { wakaru: 19, sasatta: 22, suki: 13 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-aoi":    { avatar: "あ", user: "あおい", time: "18分前", body: "鏡の中の自分と、ちょっとだけ仲直りできた気がする夜。", reactions: { wakaru: 18, sasatta: 12, suki: 10 }, source: "元のうた：花の色は うつりにけりな…", sourceMeta: "7月2日（木） / 小野小町" },
-    "post-minato": { avatar: "み", user: "みなと", time: "25分前", body: "誰にも言わずに、びしょ濡れで守ってる優しさって、きっとある。", reactions: { wakaru: 15, sasatta: 20, suki: 12 }, source: "元のうた：秋の田の かりほの庵の…", sourceMeta: "7月3日（金） / 天智天皇" },
-    "post-sora":   { avatar: "そ", user: "そら", time: "8分前", body: "夏が来たって、香具山じゃなくてスーパーの店頭で知った。桃がきれいに並んでた。", reactions: { wakaru: 14, sasatta: 6, suki: 13 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-kana":   { avatar: "か", user: "かな", time: "32分前", body: "こんなに穏やかな日なのに、心だけ気ぜわしい。困ったな、でも嫌いじゃない。", reactions: { wakaru: 14, sasatta: 11, suki: 10 }, source: "元のうた：久方の 光のどけき…", sourceMeta: "7月4日（土） / 紀友則" },
-    "post-mio":    { avatar: "み", user: "みお", time: "5分前", body: "季節が変わるのはさびしい。でも、新しい服を出すのはちょっとうれしい。", reactions: { wakaru: 11, sasatta: 7, suki: 9 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-riku":   { avatar: "り", user: "りく", time: "40分前", body: "赤って、こんなに感情の色だったっけ。竜田川、いつか見にいく。", reactions: { wakaru: 10, sasatta: 9, suki: 9 }, source: "元のうた：ちはやぶる 神代も聞かず…", sourceMeta: "7月1日（水） / 在原業平" },
-    "post-ren":    { avatar: "れ", user: "れん", time: "1時間前", body: "気づけば夏。今年はちゃんと、やりたいことをやる。まず海。", reactions: { wakaru: 4, sasatta: 2, suki: 3 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-    "post-ai-1":   { avatar: "AI", user: "うたがえしAI", isAi: true, time: "場をあたためる一返し", body: "ベランダの白いシャツがまぶしい。季節はちゃんと進んでる。", reactions: { wakaru: 6, sasatta: 3, suki: 5 }, source: "元のうた：春過ぎて 夏来にけらし…", sourceMeta: "7月5日（日） / 持統天皇" },
-  };
-  var likedList = document.querySelector("[data-liked-list]");
-  if (likedList) {
-    var likedEmpty = document.querySelector("[data-liked-empty]");
-    var likedEntries = getLikedPostIds()
-      .map(function (id) { return POSTS_CATALOG[id] ? [id, POSTS_CATALOG[id]] : null; })
-      .filter(Boolean);
+  /* ---------------------------------------------------------
+     届いた（ReactionButtons）
+     --------------------------------------------------------- */
+  function setupReactions(root) {
+    root.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-react]");
+      if (!button) return;
+      var count = button.querySelector(".reaction-count");
+      var on = button.classList.toggle("on");
+      count.textContent = String(Math.max(0, Number(count.textContent) + (on ? 1 : -1)));
+    });
+  }
 
-    if (!likedEntries.length) {
-      if (likedEmpty) likedEmpty.hidden = false;
-    } else {
-      likedEntries.forEach(function (entry) {
-        var id = entry[0], d = entry[1];
-        var el = document.createElement("article");
-        el.className = "post" + (d.isAi ? " post-ai" : "");
-        el.setAttribute("data-post-id", id);
-        el.innerHTML =
-          '<a class="post-main" href="post-detail.html">' +
-          '  <div class="post-head"><span class="avatar' + (d.isAi ? " avatar-ai" : "") + '"></span>' +
-          '    <div><div class="post-user"></div><div class="post-time"></div></div></div>' +
-          '  <p class="post-body"></p>' +
-          '</a>' +
-          '<div class="post-source">' +
-          '  <span class="src-poem"></span>' +
-          '  <span class="src-meta"></span>' +
-          '  <a class="src-link" href="poem-detail.html">このうたへの返しを全部見る ›</a>' +
-          '</div>' +
-          '<div class="reactions">' +
-          '  <button class="react"><span class="emoji">🫧</span>わかる<span class="count">' + d.reactions.wakaru + '</span></button>' +
-          '  <button class="react"><span class="emoji">🎯</span>刺さった<span class="count">' + d.reactions.sasatta + '</span></button>' +
-          '  <button class="react" data-kind="suki"><span class="emoji">🤍</span>好き<span class="count">' + d.reactions.suki + '</span></button>' +
-          '</div>';
-        el.querySelector(".avatar").textContent = d.avatar;
-        el.querySelector(".post-time").textContent = d.time;
-        el.querySelector(".post-body").textContent = d.body;
-        el.querySelector(".src-poem").textContent = d.source;
-        el.querySelector(".src-meta").textContent = d.sourceMeta;
-        var userEl = el.querySelector(".post-user");
-        userEl.textContent = d.user;
-        if (d.isAi) {
-          var tag = document.createElement("span");
-          tag.className = "ai-tag";
-          tag.textContent = "AIによる返し";
-          userEl.appendChild(tag);
-        }
-        likedList.appendChild(el);
+  /* ---------------------------------------------------------
+     投稿欄（SceneComposer）
+
+     投稿の前後で画面の作りは変えない。デッキの2ページ目に自分の言葉が
+     1枚増えて、投稿欄が消えるだけ（同じURLの状態遷移）。
+     --------------------------------------------------------- */
+  var REPLY_MAX = 140;
+  var REPLY_MIN = 1;
+
+  function setupComposer(deck) {
+    var root = deck.root;
+    var compose = root.querySelector("[data-compose]");
+    if (!compose) return;
+
+    var input = compose.querySelector("[data-compose-input]");
+    var count = compose.querySelector("[data-compose-count]");
+    var submit = compose.querySelector("[data-compose-submit]");
+    var grid = root.querySelector("[data-word-grid]");
+    var row = root.querySelector("[data-deck-row]");
+
+    input.addEventListener("input", function () {
+      if (input.value.length > REPLY_MAX) input.value = input.value.slice(0, REPLY_MAX);
+      count.textContent = input.value.length + " / " + REPLY_MAX;
+      submit.disabled = input.value.trim().length < REPLY_MIN;
+    });
+
+    submit.addEventListener("click", function () {
+      var body = input.value.trim();
+      if (body.length < REPLY_MIN) return;
+
+      var card = document.getElementById("tpl-mine-card").content.firstElementChild.cloneNode(true);
+      applyText(card.querySelector(".vcard-text"), body, "xl");
+      var position = deck.addCard(card, 1);
+
+      var acts = document.getElementById("tpl-mine-acts").content.firstElementChild.cloneNode(true);
+      acts.setAttribute("data-for", String(position));
+      acts.hidden = true;
+      row.appendChild(acts);
+
+      var chip = document.getElementById("tpl-mine-chip").content.firstElementChild.cloneNode(true);
+      chip.querySelector("p").textContent = body;
+      chip.setAttribute("data-deck-open", String(position));
+      chip.addEventListener("click", function () { deck.open(position); });
+      grid.insertBefore(chip, grid.firstElementChild);
+
+      compose.hidden = true;
+      deck.go(1);
+      scrollToCard(deck.deck);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     返し帳（ReplyBookView）
+
+     ・残した言葉 / 心に残った言葉 の2タブ
+     ・カードは1枚ずつ。前のページ / 次のページ と左右スワイプ
+     ・カードの中で 言葉 ⇄ その日の景色 を切り替える
+     ・目次の行を押しても遷移しない。上のカードが切り替わるだけ
+     ・ページ番号は古い順に固定、目次は新しい日付から降順
+     --------------------------------------------------------- */
+  function setupBook(root) {
+    var panes = all("[data-book-pane]", root);
+    if (!panes.length) return;
+
+    all("[data-book-tab]", root).forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var key = tab.getAttribute("data-book-tab");
+        all("[data-book-tab]", root).forEach(function (el) {
+          var active = el === tab;
+          el.classList.toggle("active", active);
+          el.setAttribute("aria-selected", String(active));
+        });
+        panes.forEach(function (pane) {
+          pane.hidden = pane.getAttribute("data-book-pane") !== key;
+        });
       });
-      bindReactions(likedList);
+    });
+
+    panes.forEach(setupBookPane);
+  }
+
+  function setupBookPane(pane) {
+    /* 目次の行が、そのままページの元になる（data-page は古い順の番号） */
+    var rows = all("[data-book-open]", pane).sort(function (a, b) {
+      return Number(a.getAttribute("data-page")) - Number(b.getAttribute("data-page"));
+    });
+    if (!rows.length) return;
+
+    var card = pane.querySelector("[data-book-card]");
+    var vcard = card.querySelector(".vcard");
+    var labelEl = vcard.querySelector(".vcard-label");
+    var chipEl = vcard.querySelector(".vcard-chip");
+    var textEl = vcard.querySelector(".vcard-text");
+    var toggleEl = vcard.querySelector("[data-book-toggle]");
+    var metaRightEl = vcard.querySelector("[data-book-meta-right]");
+    var counter = pane.querySelector("[data-book-counter]");
+    var prevBtn = pane.querySelector("[data-book-prev]");
+    var nextBtn = pane.querySelector("[data-book-next]");
+    var wordLabel = pane.getAttribute("data-book-word-label") || "あなたの言葉";
+
+    /* 開いたときは最新のページ（＝ページ番号がいちばん大きいもの） */
+    var index = rows.length - 1;
+    var mode = "word";
+
+    function render() {
+      var row = rows[index];
+      var scene = mode === "scene";
+
+      vcard.className = "vcard vcard--" + (scene ? "scene" : "mine");
+      vcard.style.backgroundImage = "url('" + row.getAttribute("data-image") + "')";
+      labelEl.textContent = row.getAttribute("data-date");
+      chipEl.textContent = scene ? "この日の景色" : wordLabel;
+      applyText(textEl, row.getAttribute(scene ? "data-scene" : "data-word"), scene ? "lg" : "xl");
+      toggleEl.textContent = scene ? "自分の言葉に戻る" : "この日の景色を見る";
+      metaRightEl.textContent = row.getAttribute("data-meta-right") || "";
+
+      if (counter) counter.textContent = (index + 1) + " / " + rows.length;
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.disabled = index === rows.length - 1;
+
+      rows.forEach(function (el, position) {
+        el.classList.toggle("active", position === index);
+      });
+
+      /* いま開いているページの月は、畳まれていると見つけられないので開く */
+      var month = rows[index].closest(".toc-month");
+      if (month) openMonth(month);
+    }
+
+    function move(to) {
+      index = Math.min(rows.length - 1, Math.max(0, to));
+      mode = "word";
+      render();
+    }
+
+    if (prevBtn) prevBtn.addEventListener("click", function () { move(index - 1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { move(index + 1); });
+    onSwipe(card, function () { move(index - 1); }, function () { move(index + 1); });
+
+    toggleEl.addEventListener("click", function () {
+      mode = mode === "word" ? "scene" : "word";
+      render();
+    });
+
+    rows.forEach(function (row, position) {
+      row.addEventListener("click", function () {
+        move(position);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+
+    render();
+  }
+
+  /* ---------------------------------------------------------
+     月の折りたたみ（MonthAccordion）
+     今月は開いたまま（閉じられない）、過去の月は折りたたみ
+     --------------------------------------------------------- */
+  function openMonth(month) {
+    month.classList.add("expanded");
+    var body = month.querySelector(".toc-month-body");
+    if (body) body.classList.add("open");
+    var head = month.querySelector("button.toc-month-head");
+    if (head) head.setAttribute("aria-expanded", "true");
+  }
+
+  function setupAccordion(root) {
+    all("button.toc-month-head", root).forEach(function (head) {
+      head.addEventListener("click", function () {
+        var month = head.closest(".toc-month");
+        var open = !month.classList.contains("expanded");
+        month.classList.toggle("expanded", open);
+        month.querySelector(".toc-month-body").classList.toggle("open", open);
+        head.setAttribute("aria-expanded", String(open));
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     ヘッダーのメニュー（HomeMenu）
+     --------------------------------------------------------- */
+  function setupMenu() {
+    var trigger = document.querySelector("[data-menu]");
+    var panel = document.querySelector(".header-menu-panel");
+    if (!trigger || !panel) return;
+
+    function close() {
+      panel.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    trigger.addEventListener("click", function () {
+      if (!panel.hidden) {
+        close();
+        return;
+      }
+      var rect = trigger.getBoundingClientRect();
+      panel.style.top = rect.bottom + window.scrollY + 10 + "px";
+      panel.style.right = window.innerWidth - rect.right - window.scrollX + "px";
+      panel.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+    });
+
+    document.addEventListener("pointerdown", function (event) {
+      if (panel.hidden) return;
+      if (!trigger.contains(event.target) && !panel.contains(event.target)) close();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") close();
+    });
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+  }
+
+  /* ---------------------------------------------------------
+     プロフィールの編集（ProfileIdentity）
+     別ページへ飛ばさず、同じ場所で入力欄に変える
+     --------------------------------------------------------- */
+  function setupProfile(root) {
+    var view = root.querySelector("[data-profile-view]");
+    var edit = root.querySelector("[data-profile-edit]");
+    if (!view || !edit) return;
+    var rest = root.querySelector("[data-profile-rest]");
+
+    function show(editing) {
+      view.hidden = editing;
+      edit.hidden = !editing;
+      /* 直している間も、下の内容は消さずに薄くするだけ */
+      if (rest) rest.classList.toggle("is-dim", editing);
+    }
+
+    all("[data-profile-start]", root).forEach(function (el) {
+      el.addEventListener("click", function () { show(true); });
+    });
+    all("[data-profile-cancel]", root).forEach(function (el) {
+      el.addEventListener("click", function () { show(false); });
+    });
+
+    edit.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var name = edit.querySelector("[name=display_name]").value.trim();
+      var bio = edit.querySelector("[name=bio]").value.trim();
+      view.querySelector(".person-head-body h1").textContent = name || "うたがえし";
+      var bioEl = view.querySelector(".person-bio");
+      bioEl.textContent = bio || "自己紹介はまだありません。";
+      bioEl.classList.toggle("is-empty", !bio);
+      show(false);
+    });
+
+    var bioInput = edit.querySelector("[name=bio]");
+    var bioCount = edit.querySelector("[data-bio-count]");
+    if (bioInput && bioCount) {
+      bioInput.addEventListener("input", function () {
+        bioCount.textContent = bioInput.value.length + " / 140";
+      });
     }
   }
 
-  /* ===== 返し帳：自分の返しを1ページずつめくる（初期表示は最新の返し） ===== */
-  var book = document.querySelector("[data-book]");
-  if (book) {
-    initCardCarousel(book, {
-      viewportSelector: ".book-viewport",
-      entrySelector: "[data-book-entry]",
-      indicatorSelector: "[data-book-indicator]",
-      prevSelector: "[data-book-prev]",
-      nextSelector: "[data-book-next]",
-      scrollConflictSelector: ".book-card",
-      initialIndex: "last",
-    });
+  /* ---------------------------------------------------------
+     はじめての方へ（IntroDeck）
+     --------------------------------------------------------- */
+  function setupIntro(root) {
+    var viewport = root.querySelector("[data-intro]");
+    if (!viewport) return;
+    var pages = all("[data-intro-page]", viewport);
+    var indicator = root.querySelector("[data-intro-indicator]");
+    var prevBtn = root.querySelector("[data-intro-prev]");
+    var nextBtn = root.querySelector("[data-intro-next]");
+    var index = 0;
+
+    function render() {
+      pages.forEach(function (page, position) {
+        page.hidden = position !== index;
+        page.classList.toggle("intro-card-active", position === index);
+      });
+      if (indicator) indicator.textContent = (index + 1) + " / " + pages.length;
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.disabled = index === pages.length - 1;
+    }
+    function go(delta) {
+      index = Math.min(pages.length - 1, Math.max(0, index + delta));
+      render();
+    }
+
+    if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { go(1); });
+    onSwipe(viewport, function () { go(-1); }, function () { go(1); });
+    render();
   }
 
-  /* ===== トップ：今日のうた→届いた返し→AI返し→投稿導線を1枚ずつめくる ===== */
-  var deck = document.querySelector("[data-deck]");
-  if (deck) {
-    initCardCarousel(deck, {
-      viewportSelector: ".deck-viewport",
-      entrySelector: "[data-deck-card]",
-      indicatorSelector: "[data-deck-indicator]",
-      prevSelector: "[data-deck-prev]",
-      nextSelector: "[data-deck-next]",
-      initialIndex: 0,
-    });
-  }
+  /* ---------------------------------------------------------
+     起動
+     --------------------------------------------------------- */
+  document.addEventListener("DOMContentLoaded", function () {
+    var main = document.querySelector("main");
+    if (!main) return;
 
-  /* 「AIに読んでもらう」ダミー感想（将来枠） */
-  document.querySelectorAll("[data-ai-read]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var target = document.querySelector(btn.getAttribute("data-ai-read"));
-      if (target) { target.hidden = false; btn.hidden = true; }
-    });
-  });
+    var deck = setupDeck(main);
+    if (deck) {
+      setupActMenu(main);
+      setupComposer(deck);
+    }
+    setupReactions(main);
+    setupBook(main);
+    setupAccordion(main);
+    setupProfile(main);
+    setupIntro(main);
+    setupMenu();
 
-  /* 並び替えタブ（新着 / 人気） */
-  var tabs = document.querySelectorAll(".tab");
-  if (tabs.length) {
-    tabs.forEach(function (tab) {
-      tab.addEventListener("click", function () {
-        tabs.forEach(function (t) { t.classList.remove("on"); });
-        tab.classList.add("on");
-        var mode = tab.getAttribute("data-sort");
-        var list = document.querySelector("[data-list]");
-        if (!list) return;
-        var items = Array.prototype.slice.call(list.querySelectorAll(".post"));
-        items.sort(function (a, b) {
-          if (mode === "popular") return (+b.dataset.reactions) - (+a.dataset.reactions);
-          return (+b.dataset.time) - (+a.dataset.time);
-        });
-        items.forEach(function (it) { list.appendChild(it); });
+    /* 実装ではフォームの送信ボタン。モックは行き先へ飛ばすだけ */
+    all("[data-href]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        location.href = el.getAttribute("data-href");
       });
     });
-  }
+
+    /* モックにはシェア先が無いので、押しても何も起きない */
+    all("[data-share]").forEach(function (el) {
+      el.addEventListener("click", function (event) {
+        event.preventDefault();
+      });
+    });
+  });
 })();

@@ -3,79 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="うたがえし">
-<meta name="mobile-web-app-capable" content="yes">
 <title>アカウント設定｜うたがえし</title>
-<meta name="description" content="表示名・ハンドル・アイコンの色を設定する。">
-<link rel="stylesheet" href="assets/styles.css?v=227cfa4">
+<meta name="description" content="ログイン情報の変更と、退会。">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/ui-next.css">
+<link rel="stylesheet" href="assets/mock.css">
 </head>
 <body>
 <div class="app">
 
-  <header class="header">
-    <a class="header-back" href="mypage.html">‹ 返し帳へ</a>
-    <div class="header-date"><b>アカウント設定</b></div>
-  </header>
+  <!--
+    アカウント設定 `/account`。
+    アカウントそのものを管理する場所に限定する。返し帳・投稿数・
+    プロフィールは持ち込まない（それぞれ /mypage・/profile に居場所がある）。
+    空の設定枠や「準備中」の項目も置かない。
+  -->
+  <main class="scenes-mock account-mock">
 
-  <main class="page">
-
-    <!-- ===== 未ログイン ===== -->
-    <div data-auth="out">
-      <div class="reply-invite">
-        <p class="lead" style="font-size:15px;">アカウント設定</p>
-        <p class="sub">プロフィールを設定するには、ログインしてください。</p>
-        <a class="btn btn-primary" href="login.html">ログイン / 新規登録</a>
+    <header class="home-mock-top">
+      <div class="brand-wrap">
+        <a class="brand" href="index.html">うたがえし</a>
+        <span class="book-name">アカウント設定</span>
       </div>
+      <div class="header-tools">
+        <a class="header-avatar-link" href="profile.html" aria-label="プロフィール">
+          <span class="header-avatar is-blank">ゆ</span>
+        </a>
+        <button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="book-title">
+      <h1>アカウント設定</h1>
+      <span>ログインに使う情報と、退会。</span>
     </div>
 
-    <!-- ===== ログイン済み：プロフィール編集 ===== -->
-    <div data-auth="in" hidden>
-
-      <p class="section-label" style="margin-top:0;">プロフィール</p>
-
-      <div class="card" style="padding:24px 20px 26px;">
-
-        <div style="display:flex; justify-content:center; margin-bottom:20px;">
-          <span class="avatar-lg" data-profile-preview>言</span>
+    <dl class="account-rows">
+      <div class="account-credentials">
+        <div class="account-row">
+          <div class="account-row-body">
+            <dt>メールアドレス</dt>
+            <dd>yuki@example.com</dd>
+          </div>
         </div>
 
-        <form data-account-form>
-          <label class="hint" style="display:block; margin-bottom:6px;">表示名</label>
-          <input class="input" type="text" data-profile-name-input maxlength="20" placeholder="表示名">
-
-          <label class="hint" style="display:block; margin:14px 0 6px;">ハンドル（任意）</label>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span class="muted" style="font-size:15px;">@</span>
-            <input class="input" style="margin-bottom:0;" type="text" data-profile-handle-input maxlength="20" placeholder="handle">
-          </div>
-          <p class="hint" style="margin-top:6px;">半角英数字と _ のみ。他の人の返し帳にも表示されます。</p>
-
-          <label class="hint" style="display:block; margin:18px 0 8px;">アイコンの色</label>
-          <div class="color-swatches">
-            <button type="button" class="color-swatch avatar-indigo" data-color-swatch="indigo" aria-label="藍"></button>
-            <button type="button" class="color-swatch avatar-brown" data-color-swatch="brown" aria-label="檜皮"></button>
-            <button type="button" class="color-swatch avatar-green" data-color-swatch="green" aria-label="若草"></button>
-            <button type="button" class="color-swatch avatar-red" data-color-swatch="red" aria-label="朱"></button>
-            <button type="button" class="color-swatch avatar-gold" data-color-swatch="gold" aria-label="山吹"></button>
-            <button type="button" class="color-swatch avatar-gray" data-color-swatch="gray" aria-label="鼠"></button>
-          </div>
-
-          <button class="btn btn-primary" type="submit" style="margin-top:24px;">保存する</button>
+        <!--
+          入力欄は最初から出す（開くまで何ができるか分からない形にしない）。
+          本人確認に「いまのパスワード」を訊く。確認メールは新しいアドレス
+          だけに送る（古いアドレスに入れなくなった人が、いちばん変えたい）
+        -->
+        <form class="account-form">
+          <label class="account-field">
+            <span>新しいメールアドレス</span>
+            <input class="input" type="email" name="new_email" autocomplete="off" required>
+          </label>
+          <label class="account-field">
+            <span>いまのパスワード</span>
+            <input class="input" type="password" name="current_password" autocomplete="off" required>
+          </label>
+          <p class="account-forgot">
+            <a href="login.html">パスワードを忘れた方はこちら</a>
+          </p>
+          <p class="account-note">
+            確認のメールは、新しいアドレスのほうに届きます。
+            そのリンクを開くまで、メールアドレスは変わりません。
+          </p>
+          <button class="account-save" type="button">確認メールを送る</button>
         </form>
-      </div>
 
-      <div class="book-footer-links">
-        <a href="mypage.html">返し帳へ戻る</a>
-        <span class="book-owner-sep">・</span>
-        <a href="#" data-do-logout>ログアウト</a>
+        <!--
+          パスワードはこの画面で入力させない。押すと登録のアドレスへ
+          設定用のリンクが飛ぶ。伏字を並べても何も伝わらないので、
+          行には操作だけ置く
+        -->
+        <div class="account-row">
+          <div class="account-row-body">
+            <dt>パスワード</dt>
+          </div>
+          <button type="button" class="account-row-toggle">再設定する</button>
+        </div>
+        <p class="account-row-note">
+          押すと、パスワードを設定し直すためのリンクを、いまのメールアドレスにお送りします。
+        </p>
       </div>
+    </dl>
 
+    <div class="account-actions">
+      <button class="account-signout" type="button">ログアウト</button>
+      <button class="account-delete-trigger" type="button">退会する</button>
     </div>
 
-    <div class="spacer"></div>
-
+    <!-- 同意した内容は、あとから読み返せる場所が要る -->
+    <p class="legal-consent">
+      <a href="legal.html">利用規約</a>　<a href="legal.html">プライバシーポリシー</a>
+    </p>
   </main>
 
   <nav class="bottomnav">
@@ -83,17 +106,25 @@
       <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
       ホーム
     </a>
-    <a class="nav-item" href="archive.html">
+    <a class="nav-item" href="scenes.html">
       <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
-      うた
+      これまで
     </a>
     <a class="nav-item" href="mypage.html">
       <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
       返し帳
     </a>
   </nav>
-
 </div>
-<script src="assets/app.js?v=227cfa4"></script>
+
+<div class="header-menu-panel" role="menu" hidden>
+  <a class="header-menu-item" href="profile.html" role="menuitem">プロフィール</a>
+  <a class="header-menu-item" href="account.html" role="menuitem">アカウント設定</a>
+  <a class="header-menu-item" href="mypage-list.html" role="menuitem">言葉を整える・削除する</a>
+  <a class="header-menu-item" href="intro.html" role="menuitem">はじめての方へ</a>
+  <button class="header-menu-item header-menu-item-button" type="button" role="menuitem">ログアウト</button>
+</div>
+
+<script src="assets/app.js"></script>
 </body>
 </html>

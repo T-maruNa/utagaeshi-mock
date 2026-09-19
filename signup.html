@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>新規登録｜うたがえし</title>
+<meta name="description" content="返し帳をつくると、残した言葉をあとから見返せます。">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/ui-next.css">
+<link rel="stylesheet" href="assets/mock.css">
+</head>
+<body>
+<div class="app">
+
+  <!--
+    新規登録 `/signup`。
+    即時価値（景色を見る・言葉を残す・みんなの言葉を読む）は匿名で全部
+    渡してあるので、ここで約束するのは長期価値の返し帳だけ。
+    匿名で残した言葉は引き継がないので、「さっきの言葉を見返せる」とは言わない。
+  -->
+  <header class="header auth-header">
+    <a class="header-back" href="index.html">‹ ホーム</a>
+    <div class="header-date"><b>新規登録</b></div>
+  </header>
+
+  <main class="page auth auth-mock">
+    <p class="lead">新規登録</p>
+    <p class="sub">返し帳をつくると、残した言葉をあとから見返せます。</p>
+    <p class="sub">読むだけなら、登録しなくても大丈夫です。</p>
+
+    <!-- Googleとメールのどちらにも効くよう、方式を選ぶ前に置く -->
+    <p class="legal-consent">
+      登録すると、<a href="legal.html">利用規約</a>と<a href="legal.html">プライバシーポリシー</a>に同意したことになります。
+    </p>
+
+    <p class="method-label">お持ちのアカウントで続ける</p>
+    <div class="form-stack">
+      <button class="btn btn-google btn-block" type="button">Googleで続ける</button>
+    </div>
+
+    <div class="divider">または</div>
+
+    <p class="method-label">メールアドレスで登録する</p>
+    <form class="form-stack">
+      <input class="input" type="email" name="email" placeholder="メールアドレス" autocomplete="email" required>
+      <input class="input" type="password" name="password" placeholder="パスワード（8文字以上）" autocomplete="new-password" required>
+      <button class="btn btn-primary btn-block" type="button">認証メールを送る</button>
+    </form>
+
+    <p class="empty-note">アカウントをお持ちの方は <a href="login.html">ログイン</a></p>
+
+    <div class="spacer"></div>
+  </main>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
