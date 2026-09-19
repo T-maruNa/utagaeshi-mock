@@ -2484,3 +2484,33 @@ button.index-row {
   background: var(--ink);
   box-shadow: none;
 }
+
+
+/* =========================================================
+   2026-09-20 モバイルのデッキ矢印タップ改善
+   見た目は小さいまま、実際のタップ領域だけ広げる。
+   ページ全体のピンチズームは残し、矢印のダブルタップズームだけ抑える。
+   ========================================================= */
+.home-hero .deck-ctrl button {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 広げた判定がカード外へ逃げないよう、端から少しだけ内側へ */
+.home-hero .deck-ctrl button:first-of-type {
+  left: 0;
+}
+.home-hero .deck-ctrl button:last-of-type {
+  right: 0;
+}
+
+/* 見た目の矢印サイズ自体は大きくしすぎない */
+.home-hero .deck-ctrl button {
+  font-size: 22px;
+  line-height: 1;
+}
