@@ -23,7 +23,12 @@
       1ページ目   今日の景色
       2ページ目〜 自分（投稿済みなら）→ 千年前と他の人
   -->
-  <main class="home-mock">
+  <!--
+    home-hero: ヘッダー＋景色を1つのヒーロー領域にする（assets/ui-next.css）。
+    今日ページだけの見せ方で、他の .home-mock 画面（day.html など）
+    には付けない
+  -->
+  <main class="home-mock home-hero">
 
     <header class="home-mock-top">
       <div class="brand-wrap">
@@ -40,6 +45,12 @@
       </div>
     </header>
 
+    <!--
+      .deck / .deck-ctrl / .swipe-note / .deck-open-row をまとめて包む枠。
+      写真(.vcard)と同じ矩形になり、ヒーロー化のCSSがこれを基準に
+      矢印・n/m・届いた等を写真の上へ絶対配置で重ねる
+    -->
+    <div class="deck-frame">
     <!-- ===== デッキ ===== -->
     <div class="deck" data-deck>
 
@@ -180,6 +191,7 @@
         <a class="deck-act" href="#share" data-share>シェア</a>
       </div>
     </div>
+    </div><!-- /.deck-frame -->
 
     <!-- ===== 投稿欄（未投稿のときだけ） ===== -->
     <section class="compose-card" data-compose>

@@ -919,6 +919,146 @@
 }
 
 /* ---------------------------------------------------------
+   今日のヒーロー化
+
+   ヘッダー＋景色カードを1つの大きな写真にし、composeがその下端へ
+   食い込む。`index.html`（今日）だけに付く `.home-hero` でスコープする。
+   他の .home-mock 画面（その日の景色 day.html など）はこの節の影響を
+   受けない。実装（utagaeshi）へ持っていくときは HomeToday.tsx の
+   `<main>` に home-hero を足し、CardDeck.tsx で .deck / .deck-ctrl /
+   .swipe-note / .deck-open-row を .deck-frame で包む。
+
+   ここから下のセレクタは `.home-mock .xxx` と同じ詳細度（クラス2つ）の
+   ものが多いので、**この節はファイルの中で元の指定より後ろに置くこと**。
+   詳細度が同じ場合はCSSの出現順で後勝ちになる。
+   --------------------------------------------------------- */
+
+/* ---------- ヘッダーを写真の上へ ---------- */
+.home-hero .home-mock-top {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  right: 24px;
+  z-index: 3;
+  margin-bottom: 0;
+}
+.home-hero .brand,
+.home-hero .book-name {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.home-hero .home-menu span {
+  background: var(--on-scene);
+  box-shadow: var(--on-scene-shadow-sm);
+}
+.home-hero .header-avatar.is-blank {
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+/* ---------- 景色カードを縦に拡大 ---------- */
+.home-mock.home-hero .vcard {
+  /* 670pxは「返しが上限140字（最小サイズ17px・9行）」を実測して決めた値。
+     620pxで組んだところ、本文が最大まで伸びたときに下のページャー・
+     アクション行とぶつかった。padding-topはヘッダーの逃げ、
+     padding-bottomは .vcard-bottom（自分/千年前/他人カードの下段メタ）の
+     逃げ。ここを変えるときは、必ず140字いっぱいの返しで再確認すること */
+  min-height: 670px;
+  padding: 92px 24px 118px;
+}
+
+/* ---------- .deck 一式を写真の上へ重ねる基準 ----------
+   .deck / .deck-ctrl / .swipe-note / .deck-open-row をまとめて包む枠
+   （index.html の .deck-frame）。中身は .deck の高さぶんしか無いので、
+   絶対配置の要素がここを基準に写真(.vcard)の上へ正しく重なる。
+   この枠自体は .home-hero が無い画面では position:static のままで、
+   見た目に影響しない */
+.home-hero .deck-frame {
+  position: relative;
+}
+
+/* 矢印は写真の左右端、縦方向は「n/m・種別ラベル」の行に高さを揃える。
+   中央固定にすると、返しの文字数が多い日（最大9行）に本文と重なる。
+   届いた・シェア・…の行は左寄せで矢印の位置(x:16〜58px)と重なるため、
+   その行に揃えることもできない */
+.home-hero .deck-ctrl {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: block;
+  /* 矢印以外の場所を押しても何も起きないようにする（クリックが
+     素通りして.deckのスワイプ判定に届くよう、ここではpointer-eventsを
+     切る。矢印自身だけ下のルールで戻す） */
+  pointer-events: none;
+  z-index: 2;
+}
+.home-hero .deck-ctrl button {
+  position: absolute;
+  bottom: 212px;
+  pointer-events: auto;
+  background: rgba(20, 22, 18, 0.28);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+  backdrop-filter: blur(2px);
+}
+.home-hero .deck-ctrl button:first-of-type {
+  left: 16px;
+}
+.home-hero .deck-ctrl button:last-of-type {
+  right: 16px;
+}
+.home-hero .deck-count {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 215px;
+  /* text-alignは .home-mock .deck-count の center のままにする。
+     中央寄せの短い文字（n/m・種別ラベル）だから矢印の内側に収まる。
+     左寄せにすると、左の矢印(x:16〜58px)と文字がぶつかる */
+}
+.home-hero .deck-count strong,
+.home-hero .deck-count span {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.home-hero .swipe-note {
+  position: absolute;
+  left: 24px;
+  bottom: 192px;
+  color: var(--on-scene-soft);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+/* アクション行（届いた・シェア・…）も写真の下端へ */
+.home-hero .deck-open-row {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 146px;
+  min-height: 0;
+  margin: 0;
+  justify-content: flex-start;
+}
+.home-hero .deck-acts,
+.home-hero .deck-open {
+  color: var(--on-scene-strong);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.home-hero .deck-act-sep {
+  background: var(--on-scene-line);
+}
+
+/* ---------- composeが景色の下端へ食い込む ---------- */
+.home-hero .compose-card {
+  position: relative;
+  z-index: 4;
+  /* -96pxは.vcardのpadding-bottom(118px)から、.vcard-bottomと
+     compose-cardの間に22pxの隙間を残した値。ここも.vcardの高さと
+     セットで決めているので、片方だけ変えない */
+  margin-top: -96px;
+  border-radius: 24px 24px 18px 18px;
+}
+
+/* ---------------------------------------------------------
    返し帳
    UIの正本は utagaeshi_mypage_grouped_toc_liked_mock.html。
    値はモックからそのまま移している。独自解釈で変えないこと。
