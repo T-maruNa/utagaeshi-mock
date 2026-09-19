@@ -549,6 +549,26 @@
   }
 
   /* ---------------------------------------------------------
+     トップ固定ヘッダー
+     ヒーロー上では完全透過、写真を抜けたら紙面色へ切り替える
+     --------------------------------------------------------- */
+  function setupHomeHeroHeader(root) {
+    if (!root.classList.contains("home-hero")) return;
+    var header = root.querySelector(".home-mock-top");
+    var hero = root.querySelector(".deck-frame");
+    if (!header || !hero) return;
+
+    function sync() {
+      var rect = hero.getBoundingClientRect();
+      header.classList.toggle("is-scrolled", rect.bottom <= 86);
+    }
+
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+  }
+
+  /* ---------------------------------------------------------
      起動
      --------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", function () {
@@ -565,6 +585,7 @@
     setupAccordion(main);
     setupProfile(main);
     setupIntro(main);
+    setupHomeHeroHeader(main);
     setupMenu();
 
     /* 実装ではフォームの送信ボタン。モックは行き先へ飛ばすだけ */
