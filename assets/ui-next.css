@@ -1,0 +1,2107 @@
+/* =========================================================
+   うたがえし — 刷新後の共通部品のスタイル
+
+   実装（utagaeshi）の src/app/ui-next.css をそのまま持ってきたもの。
+   visual-card / デッキ / 目次 / 返し帳 / プロフィールなど、
+   景色ファーストの画面を作っている部品はすべてここにある。
+
+   ■ 触り方
+   ここを直したら実装の ui-next.css にも同じ差分を入れる（逆も同じ）。
+   モックだけに要る差分は mock.css に置き、この1枚には足さない。
+   ========================================================= */
+
+/* =========================================================
+   うたがえし — 刷新後の共通部品のスタイル（Phase 1-2〜）
+   値は globals.css のトークンを参照する。直接の色・サイズ指定は増やさない。
+
+   トークンは の中でしか差し替わらないので、部品はルート要素に
+   を付ける（VisualCardはそうしている）。これで旧UIのページに
+   置いても新パレットで表示できる。Phase 5 で旧UIを畳んだら は
+   そのまま外せる。
+   クラス名（.vcard-*）は刷新後にしか無い名前なので、旧UIと衝突しない。
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   visual-card
+   「景色 × 言葉」を1枚で見せる基本単位。
+   scene / mine / poem / other は同じ構造を共有し、
+   出す補助情報（ラベル・作者・上下のメタ）だけが違う。
+   --------------------------------------------------------- */
+.vcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 430px;
+  padding: 24px 24px 18px;
+  overflow: hidden;
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-card);
+  background-image: var(--scene-placeholder);
+  background-size: cover;
+  background-position: center 48%;
+  color: var(--on-scene);
+  /* ::after を z-index:-1 で敷くので、カード自身で重なり順を閉じる */
+  isolation: isolate;
+}
+
+/* 写真の上の可読性を作る2層グラデーション。中身は globals.css のトークンを参照 */
+.vcard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--scene-scrim);
+}
+
+/* ---------- 上段 ---------- */
+.vcard-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-size: var(--fs-meta);
+  color: var(--on-scene-strong);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+/* ラベルの前に引く細い罫。モックの日付表示と同じ */
+.vcard-label::before {
+  content: "";
+  width: 27px;
+  height: 1px;
+  background: var(--on-scene-line);
+}
+
+/* 右上のスロット。返し帳の「言葉／その日の景色」トグルなど、
+   操作そのものは親が渡す（VisualCardは状態を持たない） */
+.vcard-chip {
+  position: absolute;
+  top: 24px;
+  right: 22px;
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: var(--fs-caption);
+  color: var(--on-scene-strong);
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- 本文 ---------- */
+/* margin-top:auto で下寄せにする。scrimが下ほど暗いので、
+   本文は暗い側に置いたほうが読める */
+.vcard-body {
+  margin-top: auto;
+  padding-top: 24px;
+  /* 右寄りの被写体に文字がかからないよう、本文は左82%に収める */
+  max-width: 82%;
+  /* 文字サイズをこの幅から決めるためのコンテナ。下の .vcard-text--* を参照 */
+  container-type: inline-size;
+}
+
+/* 430pxより狭い画面では、本文の列も狭くなって1行が短くなる。
+   狭い端末は画像も左右が切れて被写体の位置が変わるので、
+   ここでは本文の幅を優先して広げる */
+@media (max-width: 429px) {
+  .vcard-body {
+    max-width: 90%;
+  }
+}
+
+.vcard-text {
+  margin: 0;
+  /* 改行はユーザーが入れたものをそのまま活かす */
+  white-space: pre-line;
+  /* URLやローマ字のように空白の無い長い文字列は、そのままだと折り返されず
+     カード外へはみ出して切れる。行数の見積もりも当たらなくなるので必ず折る */
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  /* visual-card-text.ts の VISUAL_CARD_LETTER_SPACING と一致させる */
+  letter-spacing: 0.02em;
+  text-shadow: var(--on-scene-shadow);
+}
+
+/* 4段階。font-size / line-height は visual-card-text.ts の
+   VISUAL_CARD_TEXT_METRICS と一対一で、テストで一致を固定している。
+   ここを変えるときは必ず両方を直すこと
+
+   ■ cqw を併記している理由
+   何行になるかは visual-card-text.ts が「本文の幅280px（VISUAL_CARD_TEXT_AREA）」
+   を前提に描画前へ確定する。だが実際の幅は画面幅で変わり、320pxの端末では
+   242pxしかない。px固定のままだと1行の文字数が見積もりより減って行が増え、
+   カードが min-height を超えて伸びる（405px→436px）。めくるたびに高さが
+   変わって、下の矢印や目次まで動いてしまっていた。
+
+   そこで文字サイズを本文の幅に比例させる。cqw は .vcard-body の幅の1%で、
+   280px のときちょうど px 側の値になる係数を書いてある（28/280=10cqw）。
+   幅が変われば文字も同じ比率で変わるので、**1行の文字数は画面幅によらず
+   一定**になり、見積もりがどの幅でも当たる。
+   min() で押さえているのは、430pxより広い場所（ホームのカードは本文幅の
+   制限が無く352pxある）で文字が設計より大きくならないようにするため。 */
+.vcard-text--xl {
+  font-size: min(var(--fs-display), 10cqw);
+  line-height: 1.85;
+}
+.vcard-text--lg {
+  font-size: min(var(--fs-scene), 8.2143cqw);
+  line-height: 1.9;
+}
+.vcard-text--md {
+  font-size: min(var(--fs-lead), 6.7857cqw);
+  line-height: 1.9;
+}
+.vcard-text--sm {
+  font-size: min(var(--fs-scene-min), 6.0714cqw);
+  line-height: 1.65;
+}
+
+/* 作者名など、本文に添える一行 */
+.vcard-author {
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-size: var(--fs-caption);
+  color: var(--on-scene-soft);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+/* 省略したときだけ出る。押せるかどうかは親が決める */
+.vcard-more {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: var(--fs-caption);
+  color: var(--on-scene-strong);
+  text-shadow: var(--on-scene-shadow-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- 下段 ---------- */
+.vcard-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 20px;
+  font-size: var(--fs-note);
+  color: var(--on-scene-soft);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+/* ---------------------------------------------------------
+   未投稿ホーム
+   UIの正本は utagaeshi_same_visual_card_mock.html の `#before`。
+   値はモックからそのまま移している。独自解釈で変えないこと。
+
+   セレクタは .home-mock の中に閉じる。.word / .words / .brand のような
+   一般的な名前は globals.css の旧UIと衝突しうるため（実際 .poem は
+   text-align:center を持っていて、素で使うと千年前の言葉が中央寄せになった）。
+   --------------------------------------------------------- */
+/* 外側の .app(globals.css) は --app-max:480px の列。モックは430pxなので、
+   そのままだと430pxの外側に25pxずつ .app の地色が残り、430px以上の幅で
+   左右に縦の帯（＝モックに無い縦線）が出る。520px以上では .app の枠線も
+   加わって二重の線に見える。このページだけ列そのものを430pxにする。
+   .bottomnav も .app の中で --app-max を見ているので、変数ごと下げる */
+/* 地の色は外側の .app に置く。.home-mock に置くと、言葉が少ない日に
+   中身の高さが画面より短くなり、その下から .app の --bg が出て
+   境目が横一本の線に見える（モックの .app は min-height:100vh で
+   ページ全体が同じグラデーションになっている） */
+.app:has(> .home-mock) {
+  --app-max: 430px;
+  background: linear-gradient(#fffdf9, #faf6f0);
+}
+.home-mock {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  /* モックと同値。BottomNavのぶんは外側の .app(globals.css) が
+     padding-bottom: nav-h + 12px で確保済みなので、ここでは足さない */
+  padding: 18px 15px 52px;
+  background: none;
+  color: var(--ink);
+  font-family: var(--sans);
+  /* モックのbodyはline-heightを指定していない（=normal）。globals.cssの
+     1.7を継いだままだと、ヘッダーもcomposeもモックより数px縦に伸びる */
+  line-height: normal;
+}
+
+/* ---------- 今日の景色カード ----------
+   共通VisualCardは返し帳モック由来（430px/21px、本文は下寄せ、ラベルは左罫のみ）。
+   ホームのモックは 405px/20px・本文は上寄せ・25px と別の数字なので、
+   このページに限ってモックの値へ合わせる。
+   2つのモックが食い違っているだけなので、返し帳・Adminのカードは触らない */
+.home-mock .vcard {
+  min-height: 405px;
+  border-radius: 20px;
+  /* モック .visual-content の padding */
+  padding: 52px 24px 24px;
+}
+.home-mock .vcard-label {
+  margin-bottom: 35px;
+  font-size: 14px;
+}
+/* 本文はラベルの直下（上寄せ）。下寄せだと上半分が空いて縦長に見える */
+.home-mock .vcard-body {
+  margin-top: 0;
+  padding-top: 0;
+  /* モックの .visual-main に幅の制限は無い */
+  max-width: none;
+}
+/* 景色の文はモックのまま25px固定。景色はAIが長さを揃えて作るので、
+   可変サイズ（visual-card-text.ts）の出番が無い。
+   デッキに出る自分・千年前・他人の言葉は140字まで来るので、
+   ここでは固定せず Phase 1-2 で確定した4段階のままにする */
+.home-mock .vcard--scene .vcard-text {
+  /* 25px固定だったが、狭い画面では景色の文も行が増えてカードが伸びる。
+     言葉と同じように本文の幅に比例させる（25/280 = 8.9286cqw） */
+  font-size: min(25px, 8.9286cqw);
+  line-height: 1.9;
+}
+/* 本文を上寄せにした分、下段のメタは自分で下まで押し下げる */
+.home-mock .vcard-bottom {
+  margin-top: auto;
+}
+
+/* ---------- ヘッダー ----------
+   ヘッダーはどの画面でも同じ部品（HomeTodayHeader）なので、見た目も
+   ここ1か所に書く。以前は .home-mock 用と .book-mock/.scenes-mock 用で
+   ほぼ同じ指定を2セット持っていて、片方だけ直すと画面によって
+   ヘッダーがずれる形になっていた。
+   画面ごとに本当に違うのは、下の余白とブランドの間隔だけ。 */
+.home-mock-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand-wrap {
+  display: flex;
+  align-items: center;
+}
+.brand {
+  font-family: var(--serif);
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.book-name {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: none;
+}
+/* 補助導線はヘッダーに横並びさせず、ここへ畳む */
+.home-menu {
+  width: 29px;
+  height: 24px;
+  border: 0;
+  background: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.home-menu span {
+  height: 2px;
+  background: var(--ink);
+  border-radius: var(--radius-pill);
+}
+/* 画面ごとの差はこれだけ */
+.home-mock .home-mock-top {
+  margin-bottom: 22px;
+}
+.home-mock .brand-wrap {
+  gap: 17px;
+}
+/* 右上のひとまとまり（アイコン＋メニュー）。ヘッダーは space-between
+   なので、2つを素で並べるとブランドとの間で散らばる。
+   間隔は16px。これ未満にすると、下で広げている44pxの判定同士が重なって
+   「アイコンを押したのにメニューが開く」が起きる
+   （アイコンは左右+7px、メニューは左右+7.5px） */
+.home-mock-top .header-tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+/* 自分のアイコン。押すとプロフィールへ。
+   メニューの中にも「プロフィール」はあるが、自分の顔だけは畳まない */
+.home-mock-top .header-avatar-link {
+  display: flex;
+  text-decoration: none;
+}
+.home-mock-top .header-avatar {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+/* アイコンが無い人。プロフィールと同じく頭文字だけを地に置く */
+.home-mock-top .header-avatar.is-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ece4d9;
+  color: #806f5d;
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ---------- compose ---------- */
+.home-mock .compose-card {
+  margin-top: 20px;
+  padding: 21px 19px 19px;
+  border: 1px solid rgba(218, 211, 202, 0.9);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 23px rgba(62, 52, 43, 0.07);
+}
+.home-mock .compose-card h1 {
+  margin: 0 0 5px;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.home-mock .compose-desc {
+  margin: 0 0 13px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.home-mock .compose-input {
+  width: 100%;
+  /* 上限の140字が最初から収まる高さにする。打つほど伸びる作りだと、
+     下のボタンと目次が動くし、220pxで頭打ちにすると途中から欄の中で
+     スクロールし始めて、書いたものが見えなくなっていた。
+     文字は16px固定（iOS Safariの自動ズーム回避）なので1行の文字数は
+     幅で変わる。幅の帯ごとに、その帯のいちばん狭いところで140字が入る
+     高さを置く。実測値（中身の高さ）: 幅430→211px / 390→264px /
+     360→290px / 320→316px。box-sizing:border-box なので枠線の1px×2を足す
+     改行だらけの言葉だけは収まらないので、そのときは欄の中でスクロールする */
+  min-height: 318px;
+  resize: none;
+  border: 1px solid #d1c9bf;
+  border-radius: 13px;
+  padding: 13px 14px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink);
+  /* iOS Safariの自動ズーム回避。16pxを下回らせない */
+  font-size: var(--fs-input);
+  font-family: inherit;
+  line-height: 1.65;
+}
+@media (min-width: 360px) {
+  .home-mock .compose-input {
+    min-height: 292px;
+  }
+}
+@media (min-width: 390px) {
+  .home-mock .compose-input {
+    min-height: 266px;
+  }
+}
+@media (min-width: 430px) {
+  .home-mock .compose-input {
+    min-height: 213px;
+  }
+}
+
+.home-mock .compose-input:disabled {
+  opacity: 0.6;
+}
+.home-mock .compose-input::placeholder {
+  color: var(--ink-faint);
+}
+/* 入力欄の下の字数。超えてから知らせるのではなく、はじめから出す
+   （上限で入力が止まるので、赤くする状態は起きない） */
+.home-mock .compose-count {
+  margin: 6px 2px 0;
+  text-align: right;
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------
+   デッキで自分の言葉を書き直す（カードのすぐ下に開く）
+
+   投稿欄（.compose-*）と同じ形にする。同じ「言葉を書く」操作なので、
+   場所が違うだけで作りが変わると覚え直しになる。
+   違うのは高さで、こちらは元の言葉が入る大きさから始めれば足りる
+   （140字ぶん確保すると、直したいだけなのに画面が埋まる）。
+   --------------------------------------------------------- */
+.deck-edit {
+  margin-top: 14px;
+  padding: 16px 15px 15px;
+  border: 1px solid rgba(218, 211, 202, 0.9);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 23px rgba(62, 52, 43, 0.07);
+}
+.deck-edit-input {
+  width: 100%;
+  min-height: 132px;
+  resize: none;
+  border: 1px solid #d1c9bf;
+  border-radius: 13px;
+  padding: 13px 14px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink);
+  /* iOS Safariの自動ズーム回避。16pxを下回らせない */
+  font-size: var(--fs-input);
+  font-family: inherit;
+  line-height: 1.65;
+}
+.deck-edit-input:disabled {
+  opacity: 0.6;
+}
+.deck-edit-count {
+  margin: 6px 2px 0;
+  text-align: right;
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.deck-edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.deck-edit-save,
+.deck-edit-danger,
+.deck-edit-cancel {
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--serif);
+  font-size: 15px;
+  cursor: pointer;
+}
+.deck-edit-save,
+.deck-edit-danger {
+  border: 0;
+  color: #fff;
+}
+.deck-edit-save {
+  background: var(--accent);
+}
+/* 消すほうは色で止める。押し間違えて戻れない操作なので */
+.deck-edit-danger {
+  background: #9a5f52;
+}
+.deck-edit-save:disabled,
+.deck-edit-danger:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.deck-edit-cancel {
+  border: 1px solid var(--line-strong);
+  background: none;
+  color: var(--ink);
+}
+.deck-edit-lead {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink);
+}
+.deck-edit-note {
+  margin: 0;
+  font-size: var(--fs-note);
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.deck-edit-error {
+  margin: 10px 0 0;
+  font-size: var(--fs-note);
+  line-height: 1.8;
+  color: #9a5f52;
+}
+
+/* textareaの直下、横幅いっぱいの丸ボタン */
+.home-mock .compose-submit {
+  width: 100%;
+  /* 字数の行を挟んだぶん、モックの11pxから詰める */
+  margin-top: 5px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 16px;
+  cursor: pointer;
+}
+.home-mock .compose-submit:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.home-mock .compose-helper {
+  margin-top: 9px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.home-mock .compose-error {
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--danger, #a4443a);
+}
+
+/* 匿名枠に当たった日の投稿欄。
+   間違いではないので、枠線も文字も投稿欄のまま。赤字にしない
+   （赤くすると、書こうとした人が叱られたように見える） */
+.home-mock .compose-card.is-closed {
+  background: rgba(255, 255, 255, 0.55);
+}
+.home-mock .compose-card.is-closed h1 {
+  font-size: 18px;
+  line-height: 1.5;
+}
+.home-mock .compose-signup {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 11px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* ---------- みんなの言葉 ---------- */
+.home-mock .words {
+  margin-top: 31px;
+}
+/* 目次の先頭に置く「今日の景色」への札。デッキの1ページ目へ戻る。
+   写真はサムネイルにだけ敷く。札ごと写真にすると、すぐ上のデッキと
+   同じ絵が2枚並んでうるさい。地は言葉の札とそろえて、目次を一組に見せる */
+.home-mock .scene-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 13px;
+  padding: 12px 13px;
+  border: 1px solid rgba(226, 220, 212, 0.92);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 7px 17px rgba(64, 55, 47, 0.05);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  /* デッキの無い画面では a になる。下線が付くと札に見えなくなる */
+  text-decoration: none;
+}
+.home-mock .scene-link-thumb {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 9px;
+  /* 写真は中の <Image> が持つ。ここは景色がまだ無い日の下地 */
+  background-image: var(--scene-placeholder);
+  background-size: cover;
+  background-position: center 48%;
+  overflow: hidden;
+  /* 中の <Image fill> はこの枠を基準に広がる */
+  position: relative;
+}
+/* 折り返しをここで止めないと、長い景色がサムネイルを押し出す */
+.home-mock .scene-link-body {
+  min-width: 0;
+}
+/* 言葉の札の「千年前の言葉」と同じ見出し */
+.home-mock .scene-link-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #806f5d;
+  font-size: 11px;
+}
+/* 景色の文は3行あるので、ここでは2行まで */
+.home-mock .scene-link-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.62;
+}
+/* 言葉の札と同じ示し方でそろえる */
+.home-mock .scene-link.is-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 7px 17px rgba(64, 55, 47, 0.05);
+}
+
+.home-mock .words-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 3px 13px;
+}
+.home-mock .words-head h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.home-mock .word-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+/* デッキの目次なので button。見え方はモックの `.word` のまま */
+.home-mock .word {
+  min-height: 112px;
+  padding: 14px 13px 12px;
+  border: 1px solid rgba(226, 220, 212, 0.92);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.76);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 7px 17px rgba(64, 55, 47, 0.05);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  /* 言葉の詳細では目次ではなくリンクなので a になる。下線は消す */
+  text-decoration: none;
+}
+/* 千年前の言葉。地の色だけで軽く区別し、教材カードにはしない */
+.home-mock .word.is-poem {
+  background: #f1e6d7;
+  border-color: #d9c8b5;
+}
+/* 自分の言葉。返し帳へ残ったものなので、他の人より少し濃い地にする */
+.home-mock .word.is-mine {
+  background: #eee0ce;
+  border-color: #d8c1a5;
+}
+/* いまデッキで開いている札。地の色が3種類あるので、枠の色で示す */
+.home-mock .word.is-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 7px 17px rgba(64, 55, 47, 0.05);
+}
+.home-mock .word-type {
+  margin-bottom: 7px;
+  color: #806f5d;
+  font-size: 11px;
+}
+.home-mock .word p {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.62;
+  text-align: left;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  /* 長い言葉はここでは全部読ませない。押せばデッキで全文が読める。
+     モックのCSSにclampは無いが、モック側は本文を「さびしきに…」と
+     3行で書き切っている（一番高いカードで3行=139px）。実データは
+     140字まで入るので、モックが見せている3行で止める */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.home-mock .word.is-poem p {
+  font-size: 14px;
+}
+.home-mock .word-meta {
+  margin-top: 9px;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+
+.home-mock .book-link {
+  display: block;
+  width: max-content;
+  margin: 30px auto 0;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--serif);
+  font-size: 15px;
+}
+
+/* ---------------------------------------------------------
+   デッキ（1ページ目は今日の景色、2ページ目以降は言葉）
+   値は utagaeshi_same_visual_card_mock.html の `#after` の `.deck` から。
+
+   .deck-nav は globals.css の旧intro用に同名の指定があるので、
+   .deck-ctrl に改名している（.home-mock 配下だけとはいえ、
+   旧UIのbutton paddingを引き継ぐと45px幅のボタンがずれる）。
+   --------------------------------------------------------- */
+/* 表示するのは今の1枚だけ。カードの高さは .vcard の min-height:405px で
+   決まるが、切り替えで高さが跳ねないよう最低の高さを持たせる */
+.home-mock .deck {
+  position: relative;
+  min-height: 405px;
+}
+
+.home-mock .deck-ctrl {
+  display: grid;
+  grid-template-columns: 46px 1fr 46px;
+  align-items: center;
+  margin-top: 14px;
+}
+.home-mock .deck-ctrl button {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fffaf3;
+  color: #685745;
+  font-size: 15px;
+  cursor: pointer;
+}
+/* デッキから、いま開いているものの行き先へ。カードの真下ではなく
+   ページャの下に置いて、読む面を静かなままにする。
+   行は中身が無くても残す。めくるたびに現れたり消えたりすると、
+   下の投稿欄と目次がその分だけ上下に動く */
+.home-mock .deck-open-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  /* いちばん背の高い中身（… を含む .deck-acts）に合わせて固定する。
+     めくって1ページ目（「これまでの景色を見る」だけ）になっても、
+     他の人の言葉（… が出ない）になっても、ここは動かない */
+  min-height: 40px;
+  margin-top: 10px;
+  /* … のメニューを浮かせる基準。行の高さを変えずに重ねる */
+  position: relative;
+}
+
+/* ---------------------------------------------------------
+   カードの下の操作行
+
+   正本は utagaeshi_horizontal_actions_mock.html。
+   枠のあるピルはやめ、素の文字を細い区切り線で仕切る。読む面のすぐ下は
+   静かにする面なので、部品の形ではなく間仕切りで並びを作る。
+
+   自分の言葉のときだけ出る「整える」「削除」は … に畳む。取り消せない
+   操作を読む面へ常時置かないためで、畳んだぶん他人の言葉との差も
+   「… があるか無いか」の1つだけになる。
+
+   メニューは絶対配置で**浮かせる**。行の高さを変えないので、開いても
+   下の目次と投稿欄が動かない。
+
+   数値はモックのまま。色はモックの直値ではなく :root のトークンに寄せて
+   ある（モックは手書きのパレットで、トークンとほぼ同じ色を別に持つ）。
+   --------------------------------------------------------- */
+.home-mock .deck-acts {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 2px 8px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+.home-mock .deck-act {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 2px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.home-mock .deck-act-more {
+  font-size: 22px;
+  line-height: 1;
+  padding-inline: 5px;
+  margin-left: -2px;
+}
+.home-mock .deck-act-sep {
+  flex: none;
+  width: 1px;
+  height: 14px;
+  background: var(--line-strong);
+}
+/* 「届いた」も同じ姿にする。ピルの土台（globals.css の .react）は
+   返し帳などで使うので触らず、この行にだけ効く上書きにする */
+.home-mock .deck-open-row .reactions {
+  gap: 0;
+}
+.home-mock .deck-open-row .react {
+  gap: 6px;
+  padding: 7px 2px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 20px;
+}
+.home-mock .deck-open-row .react.on {
+  background: none;
+  color: var(--accent-ink);
+}
+.home-mock .deck-open-row .react .dot {
+  width: 10px;
+  height: 10px;
+}
+/* 数字だけ太いと、その一文字が行から浮く */
+.home-mock .deck-open-row .react .reaction-count {
+  font-weight: inherit;
+}
+
+.home-mock .deck-act-menu {
+  position: absolute;
+  top: 40px;
+  right: 42px;
+  z-index: 5;
+  display: flex;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(67, 50, 40, 0.1);
+}
+.home-mock .deck-act-menu button {
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+/* 取り消せない操作は、色で見分けられるようにする */
+.home-mock .deck-act-menu .deck-act-delete {
+  color: var(--danger);
+}
+.home-mock .deck-open {
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 20px;
+  text-decoration: none;
+}
+.home-mock .deck-ctrl button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.home-mock .deck-count {
+  text-align: center;
+}
+.home-mock .deck-count strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.home-mock .deck-count span {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------
+   返し帳
+   UIの正本は utagaeshi_mypage_grouped_toc_liked_mock.html。
+   値はモックからそのまま移している。独自解釈で変えないこと。
+
+   ホーム(.home-mock)と同じく、セレクタは .book-mock の中に閉じる。
+   --------------------------------------------------------- */
+/* 列の作り方と地の色はホームと同じ理由（ui-next.css 上部の .home-mock 参照）。
+   モックの .app は padding-bottom:94px だが、BottomNavのぶんは外側の .app が
+   確保しているので、ここでは本文の余白 20px だけ持たせる */
+.app:has(> .book-mock),
+.app:has(> .scenes-mock) {
+  --app-max: 430px;
+  background: linear-gradient(180deg, #fffdfa 0%, #faf6f0 100%);
+}
+.book-mock,
+.scenes-mock {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: 18px 15px 20px;
+  background: none;
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: normal;
+}
+/* ヘッダーの共通部分は「ヘッダー」の節にある。
+   返し帳と一覧は、ホームより下の余白が広く、ブランドの間隔が1px狭い */
+.book-mock .home-mock-top,
+.scenes-mock .home-mock-top {
+  margin-bottom: 26px;
+}
+.book-mock .brand-wrap,
+.scenes-mock .brand-wrap {
+  gap: 16px;
+}
+
+/* ---------- 表題とタブ ---------- */
+.book-mock .profile-line {
+  margin: 0 2px 16px;
+  color: #786f67;
+  font-size: 11px;
+}
+.book-mock .profile-line strong {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.book-mock .book-title,
+.scenes-mock .book-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  /* 「これまでの景色」のように見出しが長いと、添え文とくっついてしまう */
+  gap: 4px 10px;
+  margin: 0 2px 16px;
+}
+.book-mock .book-title h1,
+.scenes-mock .book-title h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.book-mock .book-title span,
+.scenes-mock .book-title span {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.book-mock .book-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 18px;
+  border-bottom: 1px solid var(--line);
+}
+.book-mock .book-tab {
+  position: relative;
+  padding: 10px 4px 12px;
+  border: 0;
+  background: none;
+  color: #9a928a;
+  font-family: var(--serif);
+  font-size: 14px;
+  cursor: pointer;
+}
+.book-mock .book-tab.active {
+  color: var(--ink);
+}
+.book-mock .book-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 27%;
+  right: 27%;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--accent);
+}
+
+/* ---------- カード ----------
+   共通VisualCardがこのモック由来（430px / 角丸21px / 本文は下寄せ）なので、
+   ずれるのは左右の余白だけ。モックは日付と下段が22px、本文が24px */
+.book-mock .vcard {
+  padding: 24px 22px 18px;
+}
+.book-mock .vcard-body {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+/* モックの本文枠は下端が card の下から88px（.reply-text-wrap の bottom:88px）。
+   下段は margin-top20 + 高さ14 + 下padding18 = 52px しか空けないので、
+   足りない36pxをここで足す */
+.book-mock .vcard-bottom {
+  margin-top: 56px;
+}
+/* 「この日の景色を見る」。カードの下段に置く、遷移しないトグル */
+.book-mock .toggle-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 255, 255, 0.48);
+  cursor: pointer;
+}
+
+/* ---------- ページャ ---------- */
+.book-mock .pager {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-top: 15px;
+}
+.book-mock .pager-btn {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fffaf3;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 12px;
+  cursor: pointer;
+}
+.book-mock .pager-btn.right {
+  justify-self: end;
+}
+.book-mock .pager-btn:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+.book-mock .counter {
+  min-width: 72px;
+  text-align: center;
+}
+.book-mock .counter strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.book-mock .counter span {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+/* 返し帳とデッキで同じ案内。スワイプでめくれるのは見た目に出ないので、
+   めくれる画面には必ずこの一行を添える */
+.book-mock .swipe-note,
+.home-mock .swipe-note {
+  margin-top: 9px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+/* ---------- 目次 ---------- */
+.book-mock .toc {
+  margin-top: 30px;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--line);
+}
+.book-mock .toc-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 0 2px 10px;
+}
+.book-mock .toc-head h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.book-mock .toc-head span {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.book-mock .grouped-toc,
+.scenes-mock .grouped-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+/* 年は見出しだけ。年自体は折りたたまない（REDESIGN.md 4章）。
+   モックは1年ぶんしか無いので、2年以上ある時だけ出す */
+.book-mock .toc-year,
+.scenes-mock .toc-year {
+  margin: 6px 5px 2px;
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.book-mock .toc-month,
+.scenes-mock .toc-month {
+  border: 1px solid #e5ddd3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.42);
+}
+/* 今月は枠を外して、開いたまま置く */
+.book-mock .toc-month.current-month,
+.scenes-mock .toc-month.current-month {
+  border-color: transparent;
+  border-radius: 0;
+  background: transparent;
+}
+.book-mock .toc-month-head,
+.scenes-mock .toc-month-head {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 0;
+  background: #f7f1e8;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 9px;
+  align-items: center;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.book-mock .toc-month-head.static,
+.scenes-mock .toc-month-head.static {
+  min-height: 40px;
+  padding: 0 5px;
+  background: transparent;
+  grid-template-columns: auto 1fr;
+  cursor: default;
+}
+.book-mock .toc-month-name,
+.scenes-mock .toc-month-name {
+  font-family: var(--serif);
+  font-size: 15px;
+}
+.book-mock .toc-month-count,
+.scenes-mock .toc-month-count {
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+.book-mock .toc-month-arrow,
+.scenes-mock .toc-month-arrow {
+  font-size: 20px;
+  color: #9c938a;
+  transform: rotate(0deg);
+  transition: transform 0.18s ease;
+}
+.book-mock .toc-month.expanded .toc-month-arrow,
+.scenes-mock .toc-month.expanded .toc-month-arrow {
+  transform: rotate(90deg);
+}
+.book-mock .toc-month-body,
+.scenes-mock .toc-month-body {
+  display: none;
+  padding: 0 7px 5px;
+}
+.book-mock .toc-month-body.open,
+.scenes-mock .toc-month-body.open {
+  display: block;
+}
+.book-mock .toc-month.current-month .toc-month-body,
+.scenes-mock .toc-month.current-month .toc-month-body {
+  padding: 0;
+}
+.book-mock .toc-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px 52px 1fr 14px;
+  gap: 8px;
+  align-items: center;
+  min-height: 50px;
+  padding: 9px 5px;
+  border: 0;
+  border-bottom: 1px solid #e8e1d8;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.book-mock .toc-month .toc-row:last-child {
+  border-bottom: 0;
+}
+/* いま開いているページ。ホームの目次と同じ考え方で、行に色を付ける */
+.book-mock .toc-row.active {
+  background: #f3ecdf;
+  border-radius: 12px;
+  border-bottom-color: transparent;
+}
+.book-mock .toc-page {
+  text-align: center;
+  color: #978d83;
+  font-family: var(--serif);
+  font-size: 12px;
+}
+.book-mock .toc-date {
+  color: #756d65;
+  font-size: 11px;
+}
+.book-mock .toc-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-size: 13px;
+}
+.book-mock .toc-arrow {
+  text-align: center;
+  color: #aaa197;
+  font-size: 18px;
+}
+
+/* ---------- 0件 ---------- */
+.book-mock .book-empty,
+.scenes-mock .book-empty {
+  width: 100%;
+  margin: 18px 2px 0;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 15px;
+}
+.book-mock .book-link,
+.scenes-mock .book-link {
+  display: block;
+  width: max-content;
+  margin: 26px auto 0;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--serif);
+  font-size: 15px;
+}
+
+/* ---------------------------------------------------------
+   一覧の画面（これまでの景色 / ○○さんの残した言葉）
+   モックが無いので REDESIGN.md 4章に従う。
+   月のまとめ方と開閉は返し帳の目次と同じものを使う（上のブロックで
+   .scenes-mock も同じ指定を受けている）。違うのは中身が行であることだけ。
+
+   .scenes-mock は「一覧の作り」の名前として2画面で共有し、○○さんの
+   残した言葉は .person-mock を足して差分だけ書く（.home-mock に対する
+   .day-mock と同じやり方）。
+   --------------------------------------------------------- */
+.scenes-mock .toc-month-body {
+  padding: 0 7px 9px;
+}
+.scenes-mock .toc-month.current-month .toc-month-body {
+  padding: 0 0 4px;
+}
+/* 一覧の1行。これまでの景色と○○さんの残した言葉で共通。
+   主役は下段の文（その日の景色／その人の言葉）で、写真は小さいサムネイルに
+   留める。写真は1か月8枚しかないので、大きく並べると同じ絵が月に4回ずつ出る。
+   形はホームの「今日の景色の札」と返し帳の目次を合わせたもの */
+.scenes-mock .index-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 14px;
+  gap: 12px;
+  align-items: center;
+  min-height: 74px;
+  padding: 9px 5px;
+  border-bottom: 1px solid #e8e1d8;
+  color: var(--ink);
+  text-decoration: none;
+}
+.scenes-mock .toc-month-body .index-row:last-child {
+  border-bottom: 0;
+}
+.scenes-mock .index-row-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 9px;
+  /* 写真は中の <Image> が持つ。ここは景色がまだ無い日の下地 */
+  background-image: var(--scene-placeholder);
+  background-size: cover;
+  background-position: center 48%;
+  overflow: hidden;
+  /* 中の <Image fill> はこの枠を基準に広がる */
+  position: relative;
+}
+
+/* サムネイルの写真。枠は正方形、元画像は4:5なので、切り取りはここで決める。
+   大きいカードと同じ場所（center 48%）を見せる */
+.scene-thumb-img {
+  object-fit: cover;
+  object-position: center 48%;
+}
+/* 折り返しをここで止めないと、長い景色がサムネイルを押し出す */
+.scenes-mock .index-row-body {
+  min-width: 0;
+}
+.scenes-mock .index-row-lead {
+  display: block;
+  margin-bottom: 4px;
+  color: #756d65;
+  font-size: 11px;
+}
+.scenes-mock .index-row-sub {
+  color: var(--ink-faint);
+}
+/* 景色の文は3行あるので、ここでは2行まで */
+.scenes-mock .index-row-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.scenes-mock .index-row-arrow {
+  text-align: center;
+  color: #aaa197;
+  font-size: 18px;
+}
+
+/* ---------------------------------------------------------
+   ○○さんの残した言葉（/users/[userId]）
+   一覧の作りは これまでの景色 と同じ（.scenes-mock）。違うのは、
+   持ち主が誰かを先に見せることだけ。ここではアイコン・表示名・自己紹介を
+   前に出してよい（REDESIGN.md 4章）。
+   --------------------------------------------------------- */
+.person-mock .person-head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: 0 2px 12px;
+}
+.person-mock .person-avatar {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+/* アイコンが無い人。頭文字だけを地に置く */
+.person-mock .person-avatar.is-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ece4d9;
+  color: #806f5d;
+  font-family: var(--serif);
+  font-size: 20px;
+}
+.person-mock .person-head-body {
+  min-width: 0;
+}
+.person-mock .person-head h1 {
+  margin: 0 0 4px;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.person-mock .person-head span {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+/* 自分のページに来たときの但し書き。ここは返し帳ではない、と言う行 */
+.person-mock .person-self-note {
+  margin: 0 2px 18px;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+/* 自己紹介は本人の言葉なので、一覧の文と同じ明朝で置く */
+.person-mock .person-bio {
+  margin: 0 2px 20px;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+/* ---------------------------------------------------------
+   自分のプロフィール（/profile）
+   モックが無いので REDESIGN.md 4章に従う。
+   「自分が他人からどう見えるか」の画面なので、頭は ○○さんの残した言葉
+   （.person-mock）と同じ形を使い、下に件数と導線だけを足す。
+   --------------------------------------------------------- */
+/* ふだんの状態。編集は別ページへ飛ばさず、この場所で入力欄に変える */
+.profile-mock .profile-edit-toggle {
+  flex: none;
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 7px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 13px;
+  cursor: pointer;
+}
+.profile-mock .person-bio.is-empty {
+  color: var(--ink-faint);
+}
+
+/* ---------- 編集中 ---------- */
+/* 見出しと同じ場所に入力欄が来る。位置が動くと、直したものが元の場所で
+   どう見えるのか分からなくなる */
+.profile-mock .profile-edit .person-head {
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+.profile-mock .profile-field {
+  display: block;
+  flex-grow: 1;
+  min-width: 0;
+}
+.profile-mock .profile-field > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+.profile-mock .profile-field input,
+.profile-mock .profile-field textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 13px;
+  outline: none;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--serif);
+  /* iOS Safariの自動ズーム回避。16pxを下回らせない */
+  font-size: 16px;
+  line-height: 1.75;
+}
+.profile-mock .profile-field textarea {
+  resize: none;
+}
+.profile-mock .profile-field input:focus,
+.profile-mock .profile-field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(120, 133, 88, 0.14);
+}
+/* アイコンは選んだ時点で保存される。押せることが分かるよう帯を重ねる */
+.profile-mock .profile-avatar-pick {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  cursor: pointer;
+}
+.profile-mock .profile-avatar-pick span[aria-hidden] {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 56px;
+  padding: 2px 0;
+  border-radius: var(--radius-pill);
+  background: rgba(47, 42, 37, 0.72);
+  color: #fff;
+  font-size: 9px;
+  text-align: center;
+}
+.profile-mock .profile-avatar-pick input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.profile-mock .profile-count {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+.profile-mock .profile-error {
+  margin: 6px 0 0;
+  color: var(--danger, #a4553f);
+  font-size: 11px;
+}
+/* 直している間、下の内容は消さずに薄くする */
+.profile-mock .profile-rest.is-dim {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.profile-mock .profile-edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.profile-mock .profile-cancel,
+.profile-mock .profile-save {
+  padding: 12px 14px;
+  border-radius: var(--radius-pill);
+  font-family: var(--serif);
+  font-size: 15px;
+  cursor: pointer;
+}
+.profile-mock .profile-cancel {
+  flex: 1;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink-soft);
+}
+.profile-mock .profile-save {
+  flex: 2;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+}
+.profile-mock .profile-save:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* 件数は飾りではなく入口。押すと返し帳の該当タブが開く */
+.profile-mock .profile-counts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0 24px;
+}
+.profile-mock .profile-counts a {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 15px 16px;
+  border: 1px solid rgba(226, 220, 212, 0.92);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 7px 17px rgba(64, 55, 47, 0.05);
+  color: var(--ink);
+  text-decoration: none;
+}
+.profile-mock .profile-counts strong {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+}
+.profile-mock .profile-counts span {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+/* 導線。返し帳の月の見出しと同じ行の作りにそろえる */
+.profile-mock .profile-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 5px;
+  border-bottom: 1px solid #e8e1d8;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15px;
+  text-decoration: none;
+}
+.profile-mock .profile-links a:last-child {
+  border-bottom: 0;
+}
+.profile-mock .profile-links small {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-faint);
+  font-family: var(--sans);
+  font-size: 11px;
+}
+.profile-mock .profile-link-arrow {
+  color: #aaa197;
+  font-size: 18px;
+}
+
+/* ---------------------------------------------------------
+   アカウント設定（/account）
+   モックが無いので REDESIGN.md 4章に従う。
+   アカウントそのものだけを置く画面なので、行を数本並べるだけにする。
+   --------------------------------------------------------- */
+.account-mock .account-rows {
+  margin: 0;
+}
+.account-mock .account-rows > div {
+  padding: 15px 5px;
+  border-bottom: 1px solid #e8e1d8;
+}
+.account-mock .account-rows dt {
+  margin-bottom: 5px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+.account-mock .account-rows dd {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+/* ---------- ログイン情報の変更 ----------
+   見せるだけにしない。押すと同じ場所が入力欄になる（/profile と同じ扱い）。
+   開くのは常に片方だけなので、行の見た目はそのまま使い回す */
+.account-mock .account-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 5px;
+  border-bottom: 1px solid #e8e1d8;
+}
+.account-mock .account-row-body {
+  min-width: 0;
+  flex: 1;
+}
+.account-mock .account-row-toggle {
+  flex: none;
+  padding: 7px 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+}
+/* 行にぶら下がる小さい説明。行の中に入れると行が背高になって、
+   右の「変更」だけが折り返した文の真横に浮いて見える */
+.account-mock .account-pending,
+.account-mock .account-row-note {
+  margin: 0;
+  padding: 11px 5px 13px;
+  border-bottom: 1px solid #e8e1d8;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.account-mock .account-form {
+  padding: 16px 5px 20px;
+  border-bottom: 1px solid #e8e1d8;
+}
+.account-mock .account-field {
+  display: block;
+}
+.account-mock .account-field + .account-field {
+  margin-top: 14px;
+}
+.account-mock .account-field > span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+.account-mock .account-field small {
+  display: block;
+  margin-top: 5px;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+.account-mock .account-note {
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.account-mock .account-save {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 15px;
+  cursor: pointer;
+}
+.account-mock .account-save:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.account-mock .account-error,
+.account-mock .account-done {
+  margin: 14px 5px 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.account-mock .account-error {
+  color: var(--danger);
+}
+.account-mock .account-done {
+  color: var(--accent-ink);
+}
+
+.account-mock .account-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+.account-mock .account-signout {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15px;
+  cursor: pointer;
+}
+/* 退会は押し間違えたくないので、いちばん弱い見え方のまま下に置く */
+.account-mock .account-delete-trigger {
+  margin-top: 22px;
+}
+
+/* ---------------------------------------------------------
+   その日の景色（/poems/[id]）
+   作りはホームと同じデッキ＋目次なので .home-mock をそのまま使う。
+   違うのは、日付の見出しがあることと、目次が1列であること。
+   --------------------------------------------------------- */
+/* その日の言葉は上限が無いので、2列に詰めるより1列で読ませる。
+   ホームは8件だけなので2列のまま（モックどおり） */
+.day-mock .word-grid {
+  grid-template-columns: 1fr;
+}
+/* 2列用の高さ(112px)のままだと、横に広い1列では下が大きく空く。
+   行として詰めて、中身の分だけの高さにする */
+.day-mock .word {
+  min-height: 0;
+}
+.day-mock .word-meta {
+  margin-top: 7px;
+}
+.home-mock .day-title {
+  margin: 0 2px 16px;
+}
+.home-mock .day-title h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.home-mock .day-title span {
+  display: block;
+  margin-top: 5px;
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+/* ---------------------------------------------------------
+   うまくいかなかったとき
+   （見つからない / 読み込めない / 「届いた」が送れない）
+
+   専用の見た目は作らない。景色の一覧（.scenes-mock）の枠と文字を
+   そのまま使い、出口だけ足す。失敗の画面だけ雰囲気が変わると、
+   「アプリが壊れた」ように見えてしまう。
+   --------------------------------------------------------- */
+.retry-button {
+  display: block;
+  width: max-content;
+  margin: 22px auto 0;
+  padding: 9px 20px;
+  border: 1px solid var(--line-strong, #d9d3c7);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 14px;
+  cursor: pointer;
+}
+/* global-error はページ内の移動が使えないので、同じ見た目のボタンにする */
+button.book-link {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+/* 「届いた」が送れなかったとき。ボタンの下へ回り込ませる
+   （.reactions は flex-wrap: wrap） */
+.reaction-error {
+  flex-basis: 100%;
+  margin: 8px 0 0;
+  color: var(--danger, #9f3f3f);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   ログイン / 新規登録
+
+   体験の主役ではないので作りは変えない（REDESIGN.md 4章「新パレット・
+   タイポへ追従のみ」）。これらの画面のCSSは元から色も字も変数で書いて
+   あるので、を付けるだけで新しい値に入れ替わる。
+   ここに足すのは、地の色の食い違いを消すぶんだけ。
+   --------------------------------------------------------- */
+/* 中身が画面より短いと、その下から外側 .app の旧い地色が出て、
+   境目が横一本の線に見える（.home-mock と同じ理由） */
+.app:has(> .auth-mock) {
+  background: linear-gradient(#fffdf9, #faf6f0);
+}
+.auth-mock {
+  background: none;
+}
+/* ヘッダーの地は --bg を混ぜた色だが、この画面の本文側は上のグラデーション
+   なので、そのままだと帯だけ色が違って見える。ここだけ合わせる
+   （全ヘッダーに効かせないよう .auth-header を付けた要素にだけ当てる） */
+.header.auth-header {
+  background: color-mix(in srgb, #fffdf9 86%, transparent);
+}
+/* 文中のリンクが既定の青のままだった（パレット追従の漏れ） */
+.auth-mock a {
+  color: var(--ink);
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+.auth-mock .btn,
+.auth-mock .btn:hover {
+  text-decoration: none;
+}
+/* 「パスワードを忘れた方はこちら」。ログインの邪魔をしないよう右に小さく置くが、
+   思い出せないと気づくのはパスワード欄なので、そのすぐ下に残す */
+.auth-mock .auth-forgot {
+  margin: 10px 2px 0;
+  text-align: right;
+  font-size: var(--fs-caption);
+}
+
+/* 目次の行をボタンにしたとき（押しても遷移しない目次）。
+   リンクのときと同じ見た目に揃える */
+button.index-row {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.scenes-mock .index-row.is-current {
+  background: var(--accent-soft);
+}
+
+/* 名前がその人の言葉への入口。写真の上なので、下線は出さずに
+   ラベルの見た目のまま押せるようにする */
+.vcard-label-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------------
+   Admin
+
+   「利用者UIと切り離す。無理に同じ見た目にしない」（REDESIGN.md 4章）。
+   色と字はトークンが :root へ移ったので自動で揃うが、列幅まで430pxに
+   するのは審査画面には狭い。ここだけ元の幅に戻す。
+
+   /admin/ui（部品の見本帳）は対象外。あちらは「実際のページと同じ幅」で
+   見るためのものなので、430pxのままでないと確認の意味が無くなる。
+   --------------------------------------------------------- */
+.app:has(> .admin-scenes),
+.app:has(> .admin-scene-detail) {
+  --app-max: 480px;
+}
+
+/* ---------------------------------------------------------
+   押せる範囲
+
+   Phase 5 の実測で、指で押す部分が小さすぎるものが見つかった。
+   ハンバーガーは29x24px、「整える」「削除する」は高さ15pxしかない。
+   WCAG 2.5.8 の下限は24x24で、そこにも届いていない。
+
+   ■ 大きく描くのではなく、当たり判定だけ広げる
+   この画面は静かな見た目が設計そのものなので、ボタンを大きく描くと
+   設計が壊れる。padding で内側を広げ、同じ値の負の margin で外形を
+   元に戻す。こうすると**見た目と配置は1pxも動かないまま**、押せる
+   範囲だけが広がる。
+
+   広げる量は上下に10〜12px。隣の要素の判定と重なって「押したつもりの
+   ものと違うものが反応する」ほうが困るので、44pxまでは広げない。
+   --------------------------------------------------------- */
+/* ヘッダーの中は flex で位置が決まるうえ、幅と高さを固定してあるので、
+   padding では広げられない（box-sizing が border-box なので内側を食う）。
+   ここだけは透明な板を重ねて判定を広げる。右上の角にあり、隣の操作と
+   重なる心配が無い場所なので、この手が使える */
+/* .home-mock 付きで書いてあったので、これまでの景色や返し帳
+   （.scenes-mock / .book-mock）のハンバーガーだけ判定が29x24のままだった。
+   ヘッダーはどの画面でも同じ部品なので、ここも画面で分けない */
+.home-menu,
+.brand-wrap .book-name,
+.home-mock-top .header-avatar-link {
+  position: relative;
+}
+.home-menu::after,
+.brand-wrap .book-name::after,
+.home-mock-top .header-avatar-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+}
+/* この2つは既に margin を持っている（.book-link は 26〜30px auto 0 で
+   中央寄せ）。padding + 負の margin で広げると、その margin ごと
+   置き換えてしまって配置が変わる。ここも板を重ねる */
+.deck-open,
+.book-link {
+  position: relative;
+}
+.deck-open::after,
+.book-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: calc(100% + 16px);
+  /* 上下の隣（ページャ・目次）の判定に噛まない範囲で広げる */
+  height: 38px;
+}
+/* ピルは高さ26px。左右は padding で足りているので、上下だけ板で広げる。
+   左右まで広げると、gap(14px)しかない隣のピルと判定が重なる */
+.deck-act,
+.deck-open-row .react {
+  position: relative;
+}
+.deck-act::after,
+.deck-open-row .react::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 100%;
+  height: 38px;
+}
+.book-record-actions .book-edit,
+.book-record-actions .book-delete {
+  /* 高さ15px -> 39px。左右は隣との間隔(18px)を食いつぶさない範囲で */
+  padding: 12px 6px;
+  margin: -12px -6px;
+}
+.book-record-source > summary {
+  /* 高さ15px -> 39px */
+  padding: 12px 6px;
+  margin: -12px -6px;
+}
+.book-mock .toggle-link {
+  /* 高さ14px -> 34px */
+  padding: 10px 6px;
+  margin: -10px -6px;
+}
+
+/* ---------------------------------------------------------
+   利用規約 / プライバシーポリシー
+
+   読ませるための文書で、体験の一部ではない。作りは増やさず、
+   .scenes-mock の上に本文の組みだけ足す。本文はサンセリフのまま
+   （明朝は「言葉」と「景色」のためのもの）。
+   --------------------------------------------------------- */
+/* 添え文が長いので、見出しの横ではなく下に置く
+   （他のページの添え文は短く、横並びで収まっている） */
+.legal-mock .book-title {
+  display: block;
+}
+.legal-mock .book-title span {
+  display: block;
+  margin-top: 6px;
+}
+
+.legal-mock .legal-body {
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.95;
+}
+.legal-mock .legal-body > p {
+  margin: 0 0 18px;
+}
+.legal-mock .legal-section {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.legal-mock .legal-section h2 {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.legal-mock .legal-section p {
+  margin: 0 0 14px;
+}
+.legal-mock .legal-section p:last-child {
+  margin-bottom: 0;
+}
+.legal-mock .legal-body ul {
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+.legal-mock .legal-body li {
+  margin-bottom: 8px;
+}
+.legal-mock .legal-body code {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: var(--surface-2);
+  font-size: 12px;
+  /* Cookie名は折り返してよい。狭い画面で横に溢れさせない */
+  overflow-wrap: anywhere;
+}
+.legal-mock .legal-body a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
+/* 運営者の連絡先。項目名と値が縦に積まれる小さな表 */
+.legal-mock .legal-contact {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.legal-mock .legal-contact > div + div {
+  margin-top: 10px;
+}
+.legal-mock .legal-contact dt {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.legal-mock .legal-contact dd {
+  margin: 2px 0 0;
+  /* メールアドレスは長い。狭い画面で横に溢れさせない */
+  overflow-wrap: anywhere;
+}
+.legal-mock .legal-revised {
+  margin: 28px 0 0;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+/* 「いまのパスワードが分からない」。変更フォームの中に置く。
+   ログインできていても覚えているとは限らないので、ここで行き止まりに
+   しない（AccountCredentials の ForgotPassword） */
+.account-mock .account-forgot {
+  margin: 10px 0 0;
+  font-size: var(--fs-caption);
+}
+.account-mock .account-forgot a {
+  color: var(--ink-soft);
+  text-underline-offset: 3px;
+}
+
+/* 登録・ログイン・投稿欄から規約へ送る一行 */
+.legal-consent {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+.legal-consent a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}

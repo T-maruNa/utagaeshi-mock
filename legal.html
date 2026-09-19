@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>利用規約｜うたがえし</title>
+<meta name="description" content="規約・ポリシーの見え方（モック）。">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/ui-next.css">
+<link rel="stylesheet" href="assets/mock.css">
+</head>
+<body>
+<div class="app">
+
+  <!--
+    利用規約 `/terms` / プライバシーポリシー `/privacy` の見え方。
+    この2ページは読ませるための文書で、体験の一部ではないので、
+    作りは増やさず、他の下層ページと同じ .scenes-mock の上に
+    読みやすい本文の組みだけ足す。
+
+    ■ モックが持つのは「見え方」だけ
+    本文の正本は実装リポジトリ（utagaeshi の /terms・/privacy）にある。
+    条文をこちらで書くと、どちらが本当の文か分からなくなるので置かない。
+  -->
+  <header class="header">
+    <a class="header-back" href="index.html">‹ ホーム</a>
+    <div class="header-date"><b>利用規約</b></div>
+  </header>
+
+  <main class="scenes-mock legal-mock">
+    <div class="book-title">
+      <h1>利用規約</h1>
+      <span>うたがえしを使うときの約束です。</span>
+    </div>
+
+    <article class="legal-body">
+      <p>本文はダミーです。実際の条文は実装リポジトリ側にあります。</p>
+
+      <section class="legal-section">
+        <h2>このサービスについて</h2>
+        <p>節の見出しと本文の組み方だけを示しています。番号は振らず、並び順で決まるようにします。</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>残した言葉の扱い</h2>
+        <p>箇条書きが入る場合の見え方です。</p>
+        <ul>
+          <li>景色と言葉は、他の人にも見えます</li>
+          <li>消した言葉の扱い</li>
+          <li>退会したときの扱い</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>お問い合わせ</h2>
+        <dl class="legal-contact">
+          <div>
+            <dt>運営者</dt>
+            <dd>（実装側で設定）</dd>
+          </div>
+          <div>
+            <dt>問い合わせ</dt>
+            <dd>（実装側で設定）</dd>
+          </div>
+          <div>
+            <dt>住所</dt>
+            <dd>ご請求があった場合に、遅滞なくご回答します。</dd>
+          </div>
+        </dl>
+      </section>
+    </article>
+
+    <p class="legal-revised">最終改定日：（実装側で設定）</p>
+  </main>
+
+  <nav class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+      ホーム
+    </a>
+    <a class="nav-item" href="scenes.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+      これまで
+    </a>
+    <a class="nav-item" href="mypage.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
+      返し帳
+    </a>
+  </nav>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

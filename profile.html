@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>プロフィール｜うたがえし</title>
+<meta name="description" content="自分が他の人からどう見えるかを確認する場所。">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/ui-next.css">
+<link rel="stylesheet" href="assets/mock.css">
+</head>
+<body>
+<div class="app">
+
+  <!--
+    プロフィール `/profile`。
+    自分が他人からどう見えるかを確認・編集する場所。
+    アカウントの管理（メール・パスワード・退会）は /account に置き、
+    ここには持ち込まない。編集は別ページへ飛ばさず、同じ場所で入力欄に変える
+    （直した結果が、元の見え方のまま確かめられる）。
+  -->
+  <main class="scenes-mock person-mock profile-mock">
+
+    <header class="home-mock-top">
+      <div class="brand-wrap">
+        <a class="brand" href="index.html">うたがえし</a>
+        <span class="book-name">プロフィール</span>
+      </div>
+      <div class="header-tools">
+        <!-- いまプロフィールを開いているので、アイコンはリンクにしない -->
+        <span class="header-avatar-link"><span class="header-avatar is-blank">ゆ</span></span>
+        <button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div data-profile-view>
+      <div class="person-head">
+        <span class="person-avatar is-blank">ゆ</span>
+        <div class="person-head-body">
+          <h1>ゆき</h1>
+          <span>この名前と文で、他の人から見えています</span>
+        </div>
+        <button class="profile-edit-toggle" type="button" data-profile-start>編集</button>
+      </div>
+      <p class="person-bio">夜に散歩するのが好きです。うまく書けない日もそのまま残しています。</p>
+    </div>
+
+    <form class="profile-edit" data-profile-edit hidden>
+      <div class="person-head">
+        <label class="profile-avatar-pick">
+          <span class="person-avatar is-blank">ゆ</span>
+          <span aria-hidden="true">変更</span>
+          <input type="file" accept="image/*">
+        </label>
+        <label class="profile-field">
+          <span>表示名</span>
+          <input type="text" name="display_name" value="ゆき" maxlength="20" autocomplete="nickname" required>
+        </label>
+      </div>
+
+      <label class="profile-field">
+        <span>自己紹介</span>
+        <textarea name="bio" rows="3" maxlength="140" placeholder="書かなくても大丈夫です。">夜に散歩するのが好きです。うまく書けない日もそのまま残しています。</textarea>
+      </label>
+      <div class="profile-count">
+        <span data-bio-count>34 / 140</span>
+      </div>
+
+      <div class="profile-edit-actions">
+        <button type="button" class="profile-cancel" data-profile-cancel>やめる</button>
+        <button type="submit" class="profile-save">保存する</button>
+      </div>
+    </form>
+
+    <!-- 直している間も、下の内容は消さずに薄くするだけ -->
+    <div class="profile-rest" data-profile-rest>
+      <!-- 件数は飾りにしない。押すと返し帳の該当タブが開く -->
+      <div class="profile-counts">
+        <a href="mypage.html">
+          <strong>6</strong>
+          <span>残した言葉</span>
+        </a>
+        <a href="mypage.html">
+          <strong>3</strong>
+          <span>心に残った言葉</span>
+        </a>
+      </div>
+
+      <nav class="profile-links">
+        <a href="user.html">
+          <span>
+            公開ページを見る
+            <small>他の人に見えている、あなたの残した言葉</small>
+          </span>
+          <span class="profile-link-arrow">›</span>
+        </a>
+        <a href="account.html">
+          <span>
+            アカウント設定
+            <small>メールアドレス・ログアウト・退会</small>
+          </span>
+          <span class="profile-link-arrow">›</span>
+        </a>
+      </nav>
+    </div>
+  </main>
+
+  <nav class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/></svg>
+      ホーム
+    </a>
+    <a class="nav-item" href="scenes.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+      これまで
+    </a>
+    <a class="nav-item" href="mypage.html">
+      <svg viewBox="0 0 24 24"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 3v18"/></svg>
+      返し帳
+    </a>
+  </nav>
+</div>
+
+<div class="header-menu-panel" role="menu" hidden>
+  <a class="header-menu-item" href="profile.html" role="menuitem">プロフィール</a>
+  <a class="header-menu-item" href="account.html" role="menuitem">アカウント設定</a>
+  <a class="header-menu-item" href="mypage-list.html" role="menuitem">言葉を整える・削除する</a>
+  <a class="header-menu-item" href="intro.html" role="menuitem">はじめての方へ</a>
+  <button class="header-menu-item header-menu-item-button" type="button" role="menuitem">ログアウト</button>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
