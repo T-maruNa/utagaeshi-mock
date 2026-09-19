@@ -2421,14 +2421,15 @@ button.index-row {
    景色の上にブランドだけを固定し、スクロール後は可読性を戻す。
    ========================================================= */
 .home-mock.home-hero .home-mock-top {
-  position: fixed;
-  top: env(safe-area-inset-top, 0px);
-  left: 50%;
+  position: sticky;
+  top: 0;
+  left: auto;
   right: auto;
-  transform: translateX(-50%);
-  width: min(100%, 430px);
-  padding: 22px 24px 10px;
-  margin: 0;
+  transform: none;
+  width: calc(100% + 30px);
+  min-height: 72px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px;
+  margin: 0 -15px -72px;
   z-index: 60;
   background: transparent;
   border: 0;
