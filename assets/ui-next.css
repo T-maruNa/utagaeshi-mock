@@ -2395,3 +2395,18 @@ button.index-row {
 .home-hero .words {
   margin-top: 52px;
 }
+
+
+/* ---------- ヒーローを親の左右paddingいっぱいまで広げる ---------- */
+/* .home-mock の左右15pxは本文には必要だが、今日の景色だけは窮屈に見える。
+   deck-frame だけ親paddingを打ち消して、写真面を画面幅いっぱいに近づける。 */
+.home-hero .deck-frame {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+/* 広げた分、カード内部の読み余白は維持する */
+.home-hero .deck-frame .vcard {
+  padding-left: 24px;
+  padding-right: 24px;
+}
