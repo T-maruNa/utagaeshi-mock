@@ -2245,3 +2245,153 @@ button.index-row {
   color: var(--ink);
   text-underline-offset: 3px;
 }
+
+
+/* =========================================================
+   2026-09-19 トップ静音化
+   UIカード感を減らし、景色と言葉を主役にする。
+   機能・DOM構造は変えず、index.html(.home-hero)だけ上書きする。
+   ========================================================= */
+
+/* スワイプ説明は、触れば分かる補助UIなのでトップでは常時出さない */
+.home-hero .swipe-note {
+  display: none;
+}
+
+/* 今日の景色カードは「カード」より「画面」に寄せる */
+.home-mock.home-hero .vcard {
+  border-radius: 0 0 18px 18px;
+  box-shadow: none;
+  padding-top: 112px;
+}
+
+/* ラベルを主張させず、景色の文を前に出す */
+.home-hero .vcard-label {
+  opacity: 0.72;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.home-hero .vcard-label::before {
+  width: 18px;
+  opacity: 0.7;
+}
+
+/* 景色の文を少し下へ置き、写真の余白を感じられるようにする */
+.home-hero .vcard--scene .vcard-body {
+  padding-top: 78px;
+  max-width: 86%;
+}
+.home-hero .vcard--scene .vcard-text {
+  line-height: 2.02;
+  letter-spacing: 0.035em;
+}
+
+/* 矢印を「丸ボタン」から、写真端に浮く記号へ寄せる */
+.home-hero .deck-ctrl button {
+  width: 34px;
+  height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  font-size: 22px;
+  opacity: 0.72;
+}
+.home-hero .deck-ctrl button:first-of-type {
+  left: 8px;
+}
+.home-hero .deck-ctrl button:last-of-type {
+  right: 8px;
+}
+.home-hero .deck-ctrl button:disabled {
+  opacity: 0.14;
+}
+
+/* n/m・種別も操作パネルではなく、小さな注釈として扱う */
+.home-hero .deck-count {
+  bottom: 210px;
+}
+.home-hero .deck-count strong {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+.home-hero .deck-count span {
+  margin-top: 3px;
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* カード下アクションもさらに薄く */
+.home-hero .deck-open-row {
+  bottom: 146px;
+}
+.home-hero .deck-acts,
+.home-hero .deck-open {
+  opacity: 0.78;
+  font-size: 12px;
+}
+
+/* 投稿欄を「白いカード」ではなく、景色の次に続く紙面へ */
+.home-hero .compose-card {
+  margin-top: -52px;
+  padding: 44px 8px 12px;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 247, 241, 0.92) 0,
+    rgba(250, 247, 241, 0.985) 44px,
+    rgba(250, 247, 241, 1) 100%
+  );
+  box-shadow: none;
+}
+
+/* 問いかけは少しだけ作品側へ */
+.home-hero .compose-card h1 {
+  margin-left: 4px;
+  font-size: 20px;
+  letter-spacing: 0.045em;
+}
+
+/* 入力欄を箱ではなく「書く面」に近づける */
+.home-hero .compose-input {
+  min-height: 170px;
+  padding: 18px 4px 16px;
+  border: 0;
+  border-bottom: 1px solid rgba(112, 98, 84, 0.28);
+  border-radius: 0;
+  background: transparent;
+  line-height: 1.9;
+  box-shadow: none;
+}
+.home-hero .compose-input:focus {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+/* 字数と補足は控えめに */
+.home-hero .compose-count {
+  margin-top: 8px;
+  opacity: 0.7;
+}
+.home-hero .compose-helper,
+.home-hero .legal-consent {
+  opacity: 0.72;
+}
+
+/* CTAも巨大なピルをやめ、静かな矩形へ */
+.home-hero .compose-submit {
+  width: auto;
+  min-width: 132px;
+  margin: 14px 0 0 auto;
+  padding: 11px 24px;
+  border-radius: 8px;
+  display: block;
+}
+
+/* みんなの言葉との間をしっかり空け、景色→書く→読むの段差を作る */
+.home-hero .words {
+  margin-top: 52px;
+}
