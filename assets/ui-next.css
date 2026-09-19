@@ -2414,3 +2414,72 @@ button.index-row {
   padding-left: 24px;
   padding-right: 24px;
 }
+
+
+/* =========================================================
+   2026-09-20 トップ固定透過ヘッダー
+   景色の上にブランドだけを固定し、スクロール後は可読性を戻す。
+   ========================================================= */
+.home-mock.home-hero .home-mock-top {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(100%, 430px);
+  padding: 22px 24px 10px;
+  margin: 0;
+  z-index: 60;
+  background: transparent;
+  border: 0;
+  pointer-events: none;
+}
+
+.home-mock.home-hero .home-mock-top .brand-wrap,
+.home-mock.home-hero .home-mock-top .header-tools,
+.home-mock.home-hero .home-mock-top .home-menu,
+.home-mock.home-hero .home-mock-top .header-avatar-link {
+  pointer-events: auto;
+}
+
+/* 返し帳はBottomNavにあるので、トップヘッダーでは重複させない */
+.home-mock.home-hero .book-name {
+  display: none;
+}
+
+.home-mock.home-hero .brand-wrap {
+  gap: 0;
+}
+
+.home-mock.home-hero .brand {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.home-mock.home-hero .home-menu span {
+  background: var(--on-scene);
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+.home-mock.home-hero .header-avatar.is-blank {
+  background: rgba(255, 255, 255, 0.88);
+  color: #6b5d4d;
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+/* ヒーローを抜けたら固定ヘッダーだけ静かに紙面色へ切り替える */
+.home-mock.home-hero .home-mock-top.is-scrolled {
+  background: color-mix(in srgb, #fffdf8 88%, transparent);
+  backdrop-filter: saturate(1.1) blur(12px);
+  border-bottom: 1px solid rgba(211, 201, 188, 0.55);
+}
+
+.home-mock.home-hero .home-mock-top.is-scrolled .brand {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.home-mock.home-hero .home-mock-top.is-scrolled .home-menu span {
+  background: var(--ink);
+  box-shadow: none;
+}
