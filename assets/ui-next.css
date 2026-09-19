@@ -2400,8 +2400,11 @@ button.index-row {
 /* ---------- ヒーローを親の左右paddingいっぱいまで広げる ---------- */
 /* .home-mock の左右15pxは本文には必要だが、今日の景色だけは窮屈に見える。
    deck-frame だけ親paddingを打ち消して、写真面を画面幅いっぱいに近づける。 */
+.home-mock.home-hero {
+  padding-top: 0;
+}
+
 .home-hero .deck-frame {
-  margin-top: -18px;
   margin-left: -15px;
   margin-right: -15px;
 }
