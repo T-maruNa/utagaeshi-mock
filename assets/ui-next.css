@@ -3347,3 +3347,13 @@ button.index-row {
 .book-mock .counter span {
   display: none;
 }
+
+
+/* =========================================================
+   2026-09-20 返し帳ヘッダー直下の余白調整
+   ヘッダーと「ゆきの返し帳」を分断しすぎない。
+   ========================================================= */
+.book-mock .book-title.book-title--personal {
+  margin-top: 12px;
+  margin-bottom: 14px;
+}
