@@ -3493,3 +3493,152 @@ button.index-row {
   padding-top: 20px;
   border-top: 0;
 }
+
+
+/* =========================================================
+   2026-09-20 返し帳 — 詩集としての階層を強める
+   作品面は明朝と余白で見せ、操作UIは静かに残す。
+   ========================================================= */
+
+/* ヘッダーは存在感を抑え、作品面を前に出す */
+.book-mock .book-simple-header {
+  min-height: 58px;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  padding-bottom: 8px;
+  background: color-mix(in srgb, #fffdf8 94%, transparent);
+}
+.book-mock .book-simple-header .brand {
+  font-size: 17px;
+  letter-spacing: 0.16em;
+}
+
+/* 写真面を詩集の1ページとして扱う */
+.book-mock .book-page-card .vcard {
+  min-height: 585px;
+  padding: 126px 24px 74px;
+}
+
+/* ページ番号は大きく、ただし写真より前に出すぎない */
+.book-mock .book-page-mark {
+  top: 30px;
+  left: 24px;
+}
+.book-mock .book-page-mark strong {
+  font-size: 76px;
+  line-height: 0.86;
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  opacity: 0.16;
+}
+.book-mock .book-page-mark span {
+  margin-top: 10px;
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  opacity: 0.82;
+}
+
+/* 既存の日付ラベルはページ番号側に統合する */
+.book-mock .book-page-card .vcard-label {
+  display: none;
+}
+
+/* 種別は小さな注釈として右上へ */
+.book-mock .book-page-card .vcard-chip {
+  top: 38px;
+  right: 24px;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 0.07em;
+  opacity: 0.82;
+}
+
+/* 言葉そのものを最も強くする */
+.book-mock .book-page-card .vcard-body {
+  max-width: 90%;
+  margin-top: auto;
+  padding: 0;
+}
+.book-mock .book-page-card .vcard-text {
+  line-height: 1.95;
+  letter-spacing: 0.035em;
+}
+
+/* 下部メタは小さく、余韻を壊さない */
+.book-mock .book-page-card .vcard-bottom {
+  margin-top: 34px;
+  font-size: 11px;
+  opacity: 0.9;
+}
+.book-mock .book-page-card .toggle-link {
+  font-family: var(--serif);
+  letter-spacing: 0.02em;
+}
+
+/* ページャは本のページをめくる程度の存在感に */
+.book-mock .pager {
+  min-height: 48px;
+  margin-top: 6px;
+}
+.book-mock .pager-btn {
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+}
+.book-mock .counter {
+  padding-top: 7px;
+}
+.book-mock .counter strong {
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+/* 目次切替も「UIタブ」ではなく詩集の章見出しに寄せる */
+.book-mock .book-tabs--toc {
+  margin-top: 34px;
+}
+.book-mock .book-tabs--toc .book-tab {
+  font-family: var(--serif);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+.book-mock .book-tabs--toc .book-tab.active {
+  color: var(--ink);
+}
+.book-mock .book-tabs--toc .book-tab.active::after {
+  left: 36%;
+  right: 36%;
+  height: 1px;
+}
+
+/* 「目次」も少し作品側へ */
+.book-mock .toc-head h2 {
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+.book-mock .toc-head span {
+  font-family: var(--serif);
+  font-size: 11px;
+}
+
+/* 目次のページ番号と日付を詩集らしく揃える */
+.book-mock .toc-page {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.book-mock .toc-date {
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.book-mock .toc-text {
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1.6;
+}
