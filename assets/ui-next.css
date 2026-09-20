@@ -2653,3 +2653,183 @@ button.index-row {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+
+
+/* =========================================================
+   2026-09-20 過去日詳細 — 「あの日を読み返す」画面
+   トップの景色体験を引き継ぎつつ、投稿画面ではなく記録ページに寄せる。
+   ========================================================= */
+
+/* ヘッダーはページ名を重ねず、ブランドだけを固定して共通化 */
+.day-mock .home-mock-top {
+  position: sticky;
+  top: 0;
+  z-index: 55;
+  width: calc(100% + 30px);
+  min-height: 68px;
+  margin: -18px -15px 0;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px;
+  background: color-mix(in srgb, #fffdf8 88%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
+}
+.day-mock .brand-wrap {
+  gap: 0;
+}
+.day-mock .book-name {
+  display: none;
+}
+
+/* 日付を記憶の入口にして、説明文は置かない */
+.home-mock.day-mock .day-title {
+  margin: 30px 2px 20px;
+}
+.home-mock.day-mock .day-title-date {
+  display: block;
+  margin: 0 0 7px;
+  color: var(--ink-faint);
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+}
+.home-mock.day-mock .day-title h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.5;
+  letter-spacing: 0.035em;
+}
+
+/* カード・ページャ・アクションを1つの写真領域として扱う */
+.day-mock .day-deck-frame {
+  position: relative;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.day-mock .day-deck-frame .vcard {
+  min-height: 610px;
+  padding: 88px 24px 118px;
+  border-radius: 0 0 18px 18px;
+  box-shadow: none;
+}
+
+.day-mock .day-deck-frame .vcard-label {
+  opacity: 0.75;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+}
+.day-mock .day-deck-frame .vcard-label::before {
+  width: 18px;
+  opacity: 0.68;
+}
+
+/* 本文は写真の余白を残して、下寄せしすぎない */
+.day-mock .day-deck-frame .vcard--scene .vcard-body {
+  padding-top: 72px;
+  max-width: 88%;
+}
+
+/* ページャは写真の中へ。見た目は小さく、タップ領域は広く */
+.day-mock .day-deck-frame .deck-ctrl {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  pointer-events: none;
+}
+.day-mock .day-deck-frame .deck-ctrl button {
+  position: absolute;
+  bottom: 90px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--on-scene);
+  box-shadow: none;
+  font-size: 22px;
+  line-height: 1;
+  opacity: 0.74;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.day-mock .day-deck-frame .deck-ctrl button:first-of-type {
+  left: 0;
+}
+.day-mock .day-deck-frame .deck-ctrl button:last-of-type {
+  right: 0;
+}
+.day-mock .day-deck-frame .deck-ctrl button:disabled {
+  opacity: 0.16;
+}
+.day-mock .day-deck-frame .deck-count {
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 101px;
+  text-align: center;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.day-mock .day-deck-frame .deck-count strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 500;
+}
+.day-mock .day-deck-frame .deck-count span {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  opacity: 0.74;
+}
+
+/* 操作方法の説明は常時出さず、操作で理解できるようにする */
+.day-mock .day-deck-frame .swipe-note {
+  display: none;
+}
+
+/* 反応やシェアは読む体験を邪魔しない位置と濃さへ */
+.day-mock .day-deck-frame .deck-open-row {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 44px;
+  z-index: 4;
+  margin: 0;
+}
+.day-mock .day-deck-frame .deck-acts {
+  opacity: 0.72;
+  font-size: 11px;
+}
+
+/* 写真の次に一覧が自然につながるよう、別カード感を作らない */
+.day-mock .words {
+  margin-top: 42px;
+}
+.day-mock .words-head {
+  margin-bottom: 16px;
+}
+.day-mock .words-head h2 {
+  font-size: 19px;
+  letter-spacing: 0.04em;
+}
+
+/* 一覧は引き続き1列。dayでは本文を少し読み物寄りにする */
+.day-mock .word {
+  padding: 16px 15px;
+}
+.day-mock .word p {
+  line-height: 1.75;
+}
+
+/* 遷移先を探す操作もスマホでズームを誘発しにくくする */
+.day-mock .word,
+.day-mock .scene-link {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
