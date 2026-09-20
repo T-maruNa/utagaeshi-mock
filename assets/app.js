@@ -456,6 +456,26 @@
   }
 
   /* ---------------------------------------------------------
+     返し帳ヘッダー
+     写真の上では透過、写真を抜けたら紙面色へ切り替える
+     --------------------------------------------------------- */
+  function setupBookHeader(root) {
+    if (!root.classList.contains("book-mock")) return;
+    var header = root.querySelector(".book-simple-header");
+    var card = root.querySelector("[data-book-card]");
+    if (!header || !card) return;
+
+    function sync() {
+      var rect = card.getBoundingClientRect();
+      header.classList.toggle("is-scrolled", rect.bottom <= 72);
+    }
+
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+  }
+
+  /* ---------------------------------------------------------
      ヘッダーのメニュー（HomeMenu）
      --------------------------------------------------------- */
   function setupMenu() {
@@ -601,6 +621,7 @@
     }
     setupReactions(main);
     setupBook(main);
+    setupBookHeader(main);
     setupAccordion(main);
     setupProfile(main);
     setupIntro(main);
