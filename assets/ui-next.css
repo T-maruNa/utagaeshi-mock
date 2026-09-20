@@ -2979,3 +2979,38 @@ button.index-row {
 .home-mock.home-hero.day-mock .day-deck-frame .deck-open-row {
   bottom: 78px;
 }
+
+
+/* =========================================================
+   2026-09-20 dayヒーロー下部UIの再配置
+   本文・作者とページャの衝突を避け、余っていた画像下部へ操作群を下げる。
+   ========================================================= */
+
+/* 下部情報のために取っていた余白を少し詰める */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard {
+  padding-bottom: 78px;
+}
+
+/* カード自身のメタ（百人一首23番 / 千年前 など）を少し上へ残し、
+   その下にページャと反応を置く */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard-bottom {
+  margin-top: 22px;
+}
+
+/* 矢印とページ番号を画像下部へ */
+.home-mock.home-hero.day-mock .day-deck-frame .deck-ctrl button {
+  bottom: 58px;
+}
+.home-mock.home-hero.day-mock .day-deck-frame .deck-count {
+  bottom: 66px;
+}
+
+/* 反応・シェア行は最下部へ */
+.home-mock.home-hero.day-mock .day-deck-frame .deck-open-row {
+  bottom: 18px;
+}
+
+/* 下の一覧までの空白も少し削る */
+.home-mock.home-hero.day-mock .words {
+  margin-top: 30px;
+}
