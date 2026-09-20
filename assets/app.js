@@ -326,7 +326,7 @@
       tab.addEventListener("click", function () {
         var key = tab.getAttribute("data-book-tab");
         all("[data-book-tab]", root).forEach(function (el) {
-          var active = el === tab;
+          var active = el.getAttribute("data-book-tab") === key;
           el.classList.toggle("active", active);
           el.setAttribute("aria-selected", String(active));
         });
