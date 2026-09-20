@@ -962,7 +962,6 @@
      アクション行とぶつかった。padding-topはヘッダーの逃げ、
      padding-bottomは .vcard-bottom（自分/千年前/他人カードの下段メタ）の
      逃げ。ここを変えるときは、必ず140字いっぱいの返しで再確認すること */
-  min-height: 670px;
   padding: 92px 24px 118px;
 }
 
@@ -2260,8 +2259,6 @@ button.index-row {
 
 /* 今日の景色カードは「カード」より「画面」に寄せる */
 .home-mock.home-hero .vcard {
-  border-radius: 0 0 18px 18px;
-  box-shadow: none;
   padding-top: 112px;
 }
 
@@ -2404,10 +2401,7 @@ button.index-row {
   padding-top: 0;
 }
 
-.home-hero .deck-frame {
-  margin-left: -15px;
-  margin-right: -15px;
-}
+
 
 /* 広げた分、カード内部の読み余白は維持する */
 .home-hero .deck-frame .vcard {
@@ -2871,10 +2865,7 @@ button.index-row {
 }
 
 .home-mock.home-hero.day-mock .day-deck-frame .vcard {
-  min-height: 670px;
   padding: 112px 24px 118px;
-  border-radius: 0 0 18px 18px;
-  box-shadow: none;
 }
 
 .home-mock.home-hero.day-mock .day-deck-frame .vcard-label {
@@ -2925,7 +2916,6 @@ button.index-row {
    日付とページ文脈を写真内へ入れ、トップより少し短い記録カードにする。
    ========================================================= */
 .home-mock.home-hero.day-mock .day-deck-frame .vcard {
-  min-height: 585px;
   padding-top: 132px;
   padding-bottom: 112px;
 }
@@ -3087,15 +3077,9 @@ button.index-row {
 }
 
 /* 言葉の1枚を主役にする。左右の本文余白だけ残して写真は広げる */
-.book-mock .book-pane > [data-book-card] {
-  margin-left: -15px;
-  margin-right: -15px;
-}
+.book-mock .book-pane > 
 .book-mock .book-pane > [data-book-card] .vcard {
-  min-height: 560px;
   padding: 72px 24px 76px;
-  border-radius: 0 0 18px 18px;
-  box-shadow: none;
 }
 .book-mock .book-pane > [data-book-card] .vcard-label {
   font-size: 11px;
@@ -3313,7 +3297,6 @@ button.index-row {
 
 /* ページ番号を置いたぶん、既存ラベルと本文を少し下げる */
 .book-mock .book-page-card .vcard {
-  min-height: 560px;
   padding-top: 118px;
 }
 .book-mock .book-page-card .vcard-label {
@@ -3439,9 +3422,7 @@ button.index-row {
 }
 
 /* カードと統合ヘッダーの間を詰める */
-.book-mock .book-page-card .vcard {
-  border-radius: 0 0 18px 18px;
-}
+
 
 
 /* =========================================================
@@ -3514,7 +3495,6 @@ button.index-row {
 
 /* 写真面を詩集の1ページとして扱う */
 .book-mock .book-page-card .vcard {
-  min-height: 585px;
   padding: 126px 24px 74px;
 }
 
@@ -3704,19 +3684,6 @@ button.index-row {
 
 
 /* =========================================================
-   2026-09-20 作品カード高さの共通基準
-   トップを正本として home / day / 返し帳を 670px に統一する。
-   ========================================================= */
-:root {
-  --scene-page-height: 670px;
-}
-
-.home-mock.home-hero .deck-frame .vcard,
-.book-mock .book-page-card .vcard {
-  min-height: var(--scene-page-height);
-}
-
-/* =========================================================
    2026-09-21 AppHeader 正本
    index / day / mypage / scenes は全て同じDOM・同じ寸法を使う。
    ページ差分は overlay / paper の背景挙動だけ。
@@ -3858,5 +3825,33 @@ button.index-row {
 .book-mock,
 .scenes-mock {
   padding-top: 0;
+}
+
+/* =========================================================
+   2026-09-21 MainVisualCard 正本
+   top / day / mypage のメイン画像カード外枠だけを共通化する。
+   本文・日付・ページ番号など内部配置の padding / margin は各画面側に残す。
+   ========================================================= */
+:root {
+  --main-visual-height: 670px;
+  --main-visual-radius: 0 0 18px 18px;
+}
+
+/* 3画面とも同じフル幅 */
+.home-mock.home-hero .deck-frame,
+.book-mock [data-book-card] {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+/* 3画面とも同じ画像外枠 */
+.home-mock.home-hero .deck-frame .vcard,
+.book-mock .book-page-card .vcard {
+  min-height: var(--main-visual-height);
+  box-sizing: border-box;
+  border-radius: var(--main-visual-radius);
+  box-shadow: none;
+  background-size: cover;
+  background-position: center;
 }
 
