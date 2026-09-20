@@ -456,18 +456,43 @@
   }
 
   /* ---------------------------------------------------------
-     返し帳ヘッダー
-     写真の上では透過、写真を抜けたら紙面色へ切り替える
+     共通アプリヘッダー（AppHeader）
+     4画面ともDOMはここで1度だけ生成する。
+     overlay: 写真上では透過、写真を抜けたら紙色
+     paper:   常に紙色
      --------------------------------------------------------- */
-  function setupBookHeader(root) {
-    if (!root.classList.contains("book-mock")) return;
-    var header = root.querySelector(".book-simple-header");
-    var card = root.querySelector("[data-book-card]");
-    if (!header || !card) return;
+  function setupAppHeader(root) {
+    var mount = root.querySelector("[data-app-header]");
+    if (!mount) return;
+
+    var mode = mount.getAttribute("data-app-header") || "overlay";
+    var boundarySelector = mount.getAttribute("data-header-boundary");
+
+    var header = document.createElement("header");
+    header.className = "app-shell-header" + (mode === "paper" ? " app-shell-header--paper" : "");
+    header.innerHTML =
+      '<div class="brand-wrap">' +
+        '<a class="brand" href="index.html">うたがえし</a>' +
+      '</div>' +
+      '<div class="header-tools">' +
+        '<a class="header-avatar-link" href="profile.html" aria-label="プロフィール">' +
+          '<span class="header-avatar is-blank">ゆ</span>' +
+        '</a>' +
+        '<button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>' +
+          '<span></span><span></span><span></span>' +
+        '</button>' +
+      '</div>';
+
+    mount.replaceWith(header);
+
+    if (mode === "paper" || !boundarySelector) return;
+
+    var boundary = root.querySelector(boundarySelector);
+    if (!boundary) return;
 
     function sync() {
-      var rect = card.getBoundingClientRect();
-      header.classList.toggle("is-scrolled", rect.bottom <= 72);
+      var rect = boundary.getBoundingClientRect();
+      header.classList.toggle("is-scrolled", rect.bottom <= 86);
     }
 
     sync();
@@ -588,31 +613,13 @@
   }
 
   /* ---------------------------------------------------------
-     トップ固定ヘッダー
-     ヒーロー上では完全透過、写真を抜けたら紙面色へ切り替える
-     --------------------------------------------------------- */
-  function setupHomeHeroHeader(root) {
-    if (!root.classList.contains("home-hero")) return;
-    var header = root.querySelector(".home-mock-top");
-    var hero = root.querySelector(".deck-frame");
-    if (!header || !hero) return;
-
-    function sync() {
-      var rect = hero.getBoundingClientRect();
-      header.classList.toggle("is-scrolled", rect.bottom <= 86);
-    }
-
-    sync();
-    window.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
-  }
-
-  /* ---------------------------------------------------------
      起動
      --------------------------------------------------------- */
   document.addEventListener("DOMContentLoaded", function () {
     var main = document.querySelector("main");
     if (!main) return;
+
+    setupAppHeader(main);
 
     var deck = setupDeck(main);
     if (deck) {
@@ -621,11 +628,9 @@
     }
     setupReactions(main);
     setupBook(main);
-    setupBookHeader(main);
     setupAccordion(main);
     setupProfile(main);
     setupIntro(main);
-    setupHomeHeroHeader(main);
     setupMenu();
 
     /* 実装ではフォームの送信ボタン。モックは行き先へ飛ばすだけ */
