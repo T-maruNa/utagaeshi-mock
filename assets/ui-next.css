@@ -3769,3 +3769,32 @@ button.index-row {
 .book-mock {
   padding-top: 0;
 }
+
+
+/* =========================================================
+   2026-09-20 ヒーローカード縦幅統一
+   home / day / 返し帳の作品面を 585px に揃える。
+   ========================================================= */
+.home-mock.home-hero:not(.day-mock) .deck-frame .vcard {
+  min-height: 585px;
+  padding-top: 112px;
+  padding-bottom: 78px;
+}
+
+/* 670px前提だったトップの操作群を585pxの下部へ移動 */
+.home-mock.home-hero:not(.day-mock) .deck-frame .deck-ctrl button {
+  bottom: 58px;
+}
+
+.home-mock.home-hero:not(.day-mock) .deck-frame .deck-count {
+  bottom: 66px;
+}
+
+.home-mock.home-hero:not(.day-mock) .deck-frame .deck-open-row {
+  bottom: 18px;
+}
+
+/* scene本文も短くなったカード内で間延びしないようにする */
+.home-mock.home-hero:not(.day-mock) .deck-frame .vcard--scene .vcard-body {
+  padding-top: 46px;
+}
