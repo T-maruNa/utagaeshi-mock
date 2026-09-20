@@ -3783,3 +3783,40 @@ button.index-row {
 .book-mock .book-page-card .vcard {
   min-height: var(--scene-page-height);
 }
+
+
+/* =========================================================
+   2026-09-21 共通ヘッダー紙面版
+   「これまで」は写真ヒーローではないため背景だけ紙色。
+   寸法・文字・アイコン位置は app-shell-header と完全共通。
+   ========================================================= */
+.app-shell-header--paper {
+  margin: 0 -15px 18px !important;
+  background: color-mix(in srgb, #fffdf8 94%, transparent) !important;
+  backdrop-filter: saturate(1.05) blur(12px) !important;
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58) !important;
+}
+
+.app-shell-header--paper .brand {
+  color: var(--ink) !important;
+  text-shadow: none !important;
+}
+
+.app-shell-header--paper .home-menu span {
+  background: var(--ink) !important;
+  box-shadow: none !important;
+}
+
+/* scenes側に残っていた旧ヘッダー差分を無効化 */
+.scenes-mock {
+  padding-top: 0;
+}
+
+.scenes-mock .app-shell-header {
+  min-height: 72px !important;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px !important;
+}
+
+.scenes-mock .app-shell-header .brand-wrap {
+  gap: 0;
+}
