@@ -2918,3 +2918,64 @@ button.index-row {
 .home-mock.home-hero.day-mock .words {
   margin-top: 52px;
 }
+
+
+/* =========================================================
+   2026-09-20 dayヒーローの空白整理
+   日付とページ文脈を写真内へ入れ、トップより少し短い記録カードにする。
+   ========================================================= */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard {
+  min-height: 585px;
+  padding-top: 132px;
+  padding-bottom: 112px;
+}
+
+/* 日付＋「この日の言葉」を写真上部のページ見出しとして固定表示 */
+.day-mock .day-hero-meta {
+  position: absolute;
+  top: 80px;
+  left: 24px;
+  z-index: 5;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+  pointer-events: none;
+}
+.day-mock .day-hero-meta span {
+  display: block;
+  margin-bottom: 5px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+.day-mock .day-hero-meta strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0.045em;
+}
+
+/* 種別ラベルはページ見出しの下に置き、本文との階層を明確にする */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard-label {
+  margin-top: 44px;
+  font-size: 11px;
+}
+
+/* 景色文は空白を取りすぎず、上部情報から自然につなげる */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-body {
+  margin-top: 46px;
+  padding-top: 0;
+  max-width: 86%;
+}
+
+/* カードを短くしたぶん、操作群も同じ比率で下へ寄せ直す */
+.home-mock.home-hero.day-mock .day-deck-frame .deck-ctrl button {
+  bottom: 136px;
+}
+.home-mock.home-hero.day-mock .day-deck-frame .deck-count {
+  bottom: 144px;
+}
+.home-mock.home-hero.day-mock .day-deck-frame .deck-open-row {
+  bottom: 78px;
+}
