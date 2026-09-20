@@ -3844,9 +3844,11 @@ button.index-row {
   margin-right: -15px;
 }
 
-/* 3画面とも同じ画像外枠 */
+/* 3画面とも同じ画像外枠。min-heightではなく固定heightにして、
+   中身によってページごとの見た目の高さがズレないようにする。 */
 .home-mock.home-hero .deck-frame .vcard,
 .book-mock .book-page-card .vcard {
+  height: var(--main-visual-height);
   min-height: var(--main-visual-height);
   box-sizing: border-box;
   border-radius: var(--main-visual-radius);
@@ -3855,3 +3857,10 @@ button.index-row {
   background-position: center;
 }
 
+
+
+/* dayでは日付・ページ文脈が写真上部に既にあるため、
+   vcard-bottom の日付/補助メタは重複させない。 */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard-bottom {
+  display: none;
+}
