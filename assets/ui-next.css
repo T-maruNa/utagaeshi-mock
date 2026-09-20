@@ -3763,3 +3763,9 @@ button.index-row {
   background: var(--ink) !important;
   box-shadow: none !important;
 }
+
+
+/* 返し帳も home/day と同じく画面最上部からヒーローを始める */
+.book-mock {
+  padding-top: 0;
+}
