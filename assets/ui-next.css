@@ -3704,74 +3704,6 @@ button.index-row {
 
 
 /* =========================================================
-   2026-09-20 共通アプリヘッダー
-   home / day / 返し帳で同一。ページ固有の寸法・色指定は持たせない。
-   ========================================================= */
-.app-shell-header {
-  position: sticky !important;
-  top: 0 !important;
-  left: auto !important;
-  right: auto !important;
-  transform: none !important;
-  width: calc(100% + 30px) !important;
-  min-height: 72px !important;
-  margin: 0 -15px -72px !important;
-  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px !important;
-  z-index: 60 !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  border: 0 !important;
-  pointer-events: none;
-}
-
-.app-shell-header .brand-wrap,
-.app-shell-header .header-tools,
-.app-shell-header .home-menu,
-.app-shell-header .header-avatar-link {
-  pointer-events: auto;
-}
-
-.app-shell-header .brand {
-  color: var(--on-scene) !important;
-  text-shadow: var(--on-scene-shadow-sm) !important;
-}
-
-.app-shell-header .home-menu span {
-  background: var(--on-scene) !important;
-  box-shadow: var(--on-scene-shadow-sm) !important;
-}
-
-.app-shell-header .header-avatar.is-blank {
-  background: rgba(255, 255, 255, 0.88) !important;
-  color: #6b5d4d !important;
-  box-shadow: var(--on-scene-shadow-sm) !important;
-}
-
-/* 写真領域を抜けた後だけ、3画面とも同じ紙色ヘッダーへ */
-.app-shell-header.is-scrolled {
-  background: color-mix(in srgb, #fffdf8 90%, transparent) !important;
-  backdrop-filter: saturate(1.05) blur(12px) !important;
-  border-bottom: 1px solid rgba(222, 213, 202, 0.58) !important;
-}
-
-.app-shell-header.is-scrolled .brand {
-  color: var(--ink) !important;
-  text-shadow: none !important;
-}
-
-.app-shell-header.is-scrolled .home-menu span {
-  background: var(--ink) !important;
-  box-shadow: none !important;
-}
-
-
-/* 返し帳も home/day と同じく画面最上部からヒーローを始める */
-.book-mock {
-  padding-top: 0;
-}
-
-
-/* =========================================================
    2026-09-20 作品カード高さの共通基準
    トップを正本として home / day / 返し帳を 670px に統一する。
    ========================================================= */
@@ -3784,39 +3716,147 @@ button.index-row {
   min-height: var(--scene-page-height);
 }
 
-
 /* =========================================================
-   2026-09-21 共通ヘッダー紙面版
-   「これまで」は写真ヒーローではないため背景だけ紙色。
-   寸法・文字・アイコン位置は app-shell-header と完全共通。
+   2026-09-21 AppHeader 正本
+   index / day / mypage / scenes は全て同じDOM・同じ寸法を使う。
+   ページ差分は overlay / paper の背景挙動だけ。
    ========================================================= */
+.app-shell-header {
+  position: sticky;
+  top: 0;
+  left: auto;
+  right: auto;
+  z-index: 60;
+
+  width: calc(100% + 30px);
+  min-height: 72px;
+  margin: 0 -15px -72px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  pointer-events: none;
+}
+
+.app-shell-header .brand-wrap,
+.app-shell-header .header-tools,
+.app-shell-header .home-menu,
+.app-shell-header .header-avatar-link {
+  pointer-events: auto;
+}
+
+.app-shell-header .brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.app-shell-header .brand {
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  color: var(--on-scene);
+  text-decoration: none;
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.app-shell-header .header-tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-shell-header .header-avatar-link {
+  position: relative;
+  display: flex;
+  text-decoration: none;
+}
+
+.app-shell-header .header-avatar-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 44px;
+  height: 44px;
+}
+
+.app-shell-header .header-avatar {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.app-shell-header .header-avatar.is-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+  color: #6b5d4d;
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+.app-shell-header .home-menu {
+  width: 29px;
+  height: 24px;
+}
+
+.app-shell-header .home-menu span {
+  background: var(--on-scene);
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+/* overlay: 写真を抜けたら紙面ヘッダーへ */
+.app-shell-header.is-scrolled {
+  background: color-mix(in srgb, #fffdf8 90%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
+}
+
+.app-shell-header.is-scrolled .brand {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.app-shell-header.is-scrolled .home-menu span {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+/* paper: 寸法は完全共通。背景だけ最初から紙面 */
 .app-shell-header--paper {
-  margin: 0 -15px 18px !important;
-  background: color-mix(in srgb, #fffdf8 94%, transparent) !important;
-  backdrop-filter: saturate(1.05) blur(12px) !important;
-  border-bottom: 1px solid rgba(222, 213, 202, 0.58) !important;
+  margin-bottom: 18px;
+  background: color-mix(in srgb, #fffdf8 94%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
 }
 
 .app-shell-header--paper .brand {
-  color: var(--ink) !important;
-  text-shadow: none !important;
+  color: var(--ink);
+  text-shadow: none;
 }
 
 .app-shell-header--paper .home-menu span {
-  background: var(--ink) !important;
-  box-shadow: none !important;
+  background: var(--ink);
+  box-shadow: none;
 }
 
-/* scenes側に残っていた旧ヘッダー差分を無効化 */
+/* 4画面ともヘッダーを画面最上部から始める */
+.home-mock.home-hero,
+.book-mock,
 .scenes-mock {
   padding-top: 0;
 }
 
-.scenes-mock .app-shell-header {
-  min-height: 72px !important;
-  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px !important;
-}
-
-.scenes-mock .app-shell-header .brand-wrap {
-  gap: 0;
-}
