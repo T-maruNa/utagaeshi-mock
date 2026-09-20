@@ -368,7 +368,7 @@
       var row = rows[index];
       var scene = mode === "scene";
 
-      vcard.className = "vcard scene-page-card vcard--" + (scene ? "scene" : "mine");
+      vcard.className = "vcard vcard--" + (scene ? "scene" : "mine");
       vcard.style.backgroundImage = "url('" + row.getAttribute("data-image") + "')";
       labelEl.textContent = "";
       chipEl.textContent = scene ? "この日の景色" : wordLabel;
