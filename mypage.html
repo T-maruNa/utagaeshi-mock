@@ -23,28 +23,28 @@
   -->
   <main class="book-mock">
 
-    <header class="home-mock-top">
-      <div class="brand-wrap">
-        <a class="brand" href="index.html">うたがえし</a>
+    <header class="home-mock-top book-shell-header">
+      <div class="book-shell-top">
+        <div class="brand-wrap">
+          <a class="brand" href="index.html">うたがえし</a>
+        </div>
+        <div class="header-tools">
+          <a class="header-avatar-link" href="profile.html" aria-label="プロフィール">
+            <span class="header-avatar is-blank">ゆ</span>
+          </a>
+          <button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </div>
-      <div class="header-tools">
-        <a class="header-avatar-link" href="profile.html" aria-label="プロフィール">
-          <span class="header-avatar is-blank">ゆ</span>
-        </a>
-        <button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>
-          <span></span><span></span><span></span>
-        </button>
+
+      <div class="book-shell-title">ゆきの返し帳</div>
+
+      <div class="book-tabs" role="tablist">
+        <button class="book-tab active" type="button" role="tab" aria-selected="true" data-book-tab="mine">残した言葉</button>
+        <button class="book-tab" type="button" role="tab" aria-selected="false" data-book-tab="liked">心に残った言葉</button>
       </div>
     </header>
-
-    <div class="book-title book-title--personal">
-      <h1>ゆきの返し帳</h1>
-    </div>
-
-    <div class="book-tabs" role="tablist">
-      <button class="book-tab active" type="button" role="tab" aria-selected="true" data-book-tab="mine">残した言葉</button>
-      <button class="book-tab" type="button" role="tab" aria-selected="false" data-book-tab="liked">心に残った言葉</button>
-    </div>
 
     <!-- ===== 残した言葉 ===== -->
     <div class="book-pane" data-book-pane="mine" data-book-word-label="あなたの言葉">
