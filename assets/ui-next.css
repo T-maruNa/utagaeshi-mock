@@ -3642,3 +3642,62 @@ button.index-row {
   font-size: 13px;
   line-height: 1.6;
 }
+
+
+/* =========================================================
+   2026-09-20 返し帳ヘッダーを写真上では透過
+   トップ/dayと同じく、作品面の上では背景を持たせない。
+   ========================================================= */
+.book-mock .book-simple-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  width: calc(100% + 30px);
+  min-height: 58px;
+  margin: -18px -15px -58px;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 15px 8px;
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: 0;
+  pointer-events: none;
+}
+
+.book-mock .book-simple-header .brand-wrap,
+.book-mock .book-simple-header .header-tools,
+.book-mock .book-simple-header .home-menu,
+.book-mock .book-simple-header .header-avatar-link {
+  pointer-events: auto;
+}
+
+.book-mock .book-simple-header .brand {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.book-mock .book-simple-header .home-menu span {
+  background: var(--on-scene);
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+.book-mock .book-simple-header .header-avatar.is-blank {
+  background: rgba(255, 255, 255, 0.88);
+  color: #6b5d4d;
+  box-shadow: var(--on-scene-shadow-sm);
+}
+
+/* 写真を抜けたら紙色へ戻して可読性を確保 */
+.book-mock .book-simple-header.is-scrolled {
+  background: color-mix(in srgb, #fffdf8 90%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
+}
+
+.book-mock .book-simple-header.is-scrolled .brand {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.book-mock .book-simple-header.is-scrolled .home-menu span {
+  background: var(--ink);
+  box-shadow: none;
+}
