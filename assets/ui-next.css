@@ -3442,3 +3442,54 @@ button.index-row {
 .book-mock .book-page-card .vcard {
   border-radius: 0 0 18px 18px;
 }
+
+
+/* =========================================================
+   2026-09-20 返し帳ヘッダー簡略化 + タブを目次へ
+   上はグローバルヘッダーだけ。モード切替は目次の入口で行う。
+   ========================================================= */
+.book-mock .book-simple-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  width: calc(100% + 30px);
+  min-height: 64px;
+  margin: -18px -15px 0;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 15px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: color-mix(in srgb, #fffdf8 92%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
+}
+
+/* 旧統合ヘッダー要素は使わない */
+.book-mock .book-shell-top,
+.book-mock .book-shell-title {
+  display: none;
+}
+
+/* カードをヘッダー直下から始める */
+.book-mock .book-pane {
+  margin-top: 0;
+}
+.book-mock .book-pane > [data-book-card] {
+  margin-top: 0;
+}
+
+/* タブは「目次の種類」を切り替えるUIとして目次直前に置く */
+.book-mock .book-tabs--toc {
+  margin: 38px 0 0;
+  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
+}
+.book-mock .book-tabs--toc .book-tab {
+  padding: 10px 4px 12px;
+  font-size: 13px;
+  letter-spacing: 0.035em;
+}
+.book-mock .book-tabs--toc + .toc {
+  margin-top: 0;
+  padding-top: 20px;
+  border-top: 0;
+}
