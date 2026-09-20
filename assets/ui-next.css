@@ -3260,3 +3260,90 @@ button.index-row {
   box-shadow: inset 2px 0 0 var(--accent);
   padding-left: 9px;
 }
+
+
+/* =========================================================
+   2026-09-20 返し帳 — ページ番号を視覚的な軸にする
+   ========================================================= */
+.book-mock .book-title.book-title--personal {
+  margin: 28px 2px 18px;
+}
+.book-mock .book-title--personal h1 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.4;
+  letter-spacing: 0.055em;
+}
+
+/* タブからカードまでの距離を少し詰める */
+.book-mock .book-tabs {
+  margin-bottom: 12px;
+}
+
+/* ページ番号レイヤー */
+.book-mock .book-page-card {
+  position: relative;
+}
+.book-mock .book-page-mark {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  z-index: 5;
+  pointer-events: none;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.book-mock .book-page-mark strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 64px;
+  line-height: 0.92;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  opacity: 0.18;
+}
+.book-mock .book-page-mark span {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  opacity: 0.78;
+}
+
+/* ページ番号を置いたぶん、既存ラベルと本文を少し下げる */
+.book-mock .book-page-card .vcard {
+  min-height: 560px;
+  padding-top: 118px;
+}
+.book-mock .book-page-card .vcard-label {
+  margin-top: 14px;
+}
+.book-mock .book-page-card .vcard-chip {
+  top: 112px;
+}
+.book-mock .book-page-card .vcard-body {
+  margin-top: auto;
+}
+
+/* 目次でもページ番号を少し強くし、上のカードとの関係を作る */
+.book-mock .toc-page {
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0.95;
+  font-family: var(--serif);
+}
+.book-mock .toc-row.active .toc-page {
+  color: var(--accent-ink);
+}
+
+/* 現在ページは背景ではなく左罫＋ページ番号で示す */
+.book-mock .toc-row.active {
+  box-shadow: inset 2px 0 0 var(--accent);
+  background: transparent;
+}
+
+/* ページャ中央の「返し帳」は重複するので隠す */
+.book-mock .counter span {
+  display: none;
+}
