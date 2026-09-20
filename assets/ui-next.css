@@ -3704,19 +3704,6 @@ button.index-row {
 
 
 /* =========================================================
-   2026-09-20 作品カード高さの共通基準
-   トップを正本として home / day / 返し帳を 670px に統一する。
-   ========================================================= */
-:root {
-  --scene-page-height: 670px;
-}
-
-.home-mock.home-hero .deck-frame .vcard,
-.book-mock .book-page-card .vcard {
-  min-height: var(--scene-page-height);
-}
-
-/* =========================================================
    2026-09-21 AppHeader 正本
    index / day / mypage / scenes は全て同じDOM・同じ寸法を使う。
    ページ差分は overlay / paper の背景挙動だけ。
@@ -3858,5 +3845,28 @@ button.index-row {
 .book-mock,
 .scenes-mock {
   padding-top: 0;
+}
+
+/* =========================================================
+   2026-09-21 ScenePageCard 正本
+   top / day / mypage の写真カードは同一寸法・同一余白を使う。
+   トップを基準にする。
+   ========================================================= */
+:root {
+  --scene-page-height: 670px;
+  --scene-page-padding-top: 112px;
+  --scene-page-padding-inline: 24px;
+  --scene-page-padding-bottom: 118px;
+  --scene-page-radius: 0 0 18px 18px;
+}
+
+.scene-page-card {
+  min-height: var(--scene-page-height) !important;
+  padding:
+    var(--scene-page-padding-top)
+    var(--scene-page-padding-inline)
+    var(--scene-page-padding-bottom) !important;
+  border-radius: var(--scene-page-radius) !important;
+  box-shadow: none !important;
 }
 
