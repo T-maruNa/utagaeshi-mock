@@ -2514,3 +2514,142 @@ button.index-row {
   font-size: 22px;
   line-height: 1;
 }
+
+
+/* =========================================================
+   2026-09-20 これまでの景色 — 「目次」寄りの再設計
+   写真ギャラリーではなく、日付と景色の文をたどる静かな索引にする。
+   ========================================================= */
+
+/* トップと同じブランド行を残しつつ、一覧では紙面上に固定する */
+.scenes-mock .home-mock-top {
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  width: calc(100% + 30px);
+  min-height: 64px;
+  margin: -18px -15px 30px;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 15px 10px;
+  background: color-mix(in srgb, #fffdf8 90%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.62);
+}
+
+/* ページ名は本文で一度だけ見せる */
+.scenes-mock .brand-wrap {
+  gap: 0;
+}
+.scenes-mock .book-name {
+  display: none;
+}
+
+/* 表題は「アプリの見出し」より、本の章扉に近づける */
+.scenes-mock .book-title {
+  display: block;
+  margin: 0 2px 30px;
+}
+.scenes-mock .book-title h1 {
+  font-size: 31px;
+  line-height: 1.45;
+  letter-spacing: 0.035em;
+}
+.scenes-mock .book-title span {
+  display: block;
+  margin-top: 9px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* 月をカードにしない。章見出しとして余白だけで区切る */
+.scenes-mock .grouped-toc {
+  gap: 30px;
+}
+.scenes-mock .toc-month,
+.scenes-mock .toc-month.current-month {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.scenes-mock .toc-month-head,
+.scenes-mock .toc-month-head.static {
+  min-height: 42px;
+  padding: 0 2px 10px;
+  grid-template-columns: auto 1fr auto;
+  border: 0;
+  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
+  background: transparent;
+}
+.scenes-mock .toc-month-head.static {
+  grid-template-columns: auto 1fr;
+}
+.scenes-mock .toc-month-name {
+  font-size: 17px;
+  letter-spacing: 0.055em;
+}
+.scenes-mock .toc-month-count {
+  justify-self: start;
+  margin-left: 2px;
+  font-size: 10px;
+  opacity: 0.78;
+}
+.scenes-mock .toc-month-arrow {
+  font-size: 18px;
+  opacity: 0.68;
+}
+
+/* 月の中身も枠を作らず、そのまま紙面に並べる */
+.scenes-mock .toc-month-body,
+.scenes-mock .toc-month.current-month .toc-month-body {
+  padding: 0;
+}
+
+/* 1日を「サムネ付きカード」ではなく、日記の索引行として見せる */
+.scenes-mock .index-row {
+  grid-template-columns: 64px minmax(0, 1fr) 12px;
+  gap: 14px;
+  min-height: 94px;
+  padding: 15px 2px;
+  border-bottom: 1px solid rgba(232, 225, 216, 0.92);
+}
+.scenes-mock .toc-month-body .index-row:last-child {
+  border-bottom: 0;
+}
+
+.scenes-mock .index-row-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+}
+
+/* 日付は索引情報。景色の文より一段弱くする */
+.scenes-mock .index-row-lead {
+  margin-bottom: 7px;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+}
+.scenes-mock .index-row-sub {
+  color: inherit;
+  opacity: 0.78;
+}
+
+/* 主役は景色の文 */
+.scenes-mock .index-row-text {
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.025em;
+  color: var(--ink);
+}
+
+.scenes-mock .index-row-arrow {
+  font-size: 17px;
+  color: #b3aaa1;
+}
+
+/* スマホでは行全体を押しやすくし、連打ズームを起こしにくくする */
+.scenes-mock .index-row,
+.scenes-mock .toc-month-head {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
