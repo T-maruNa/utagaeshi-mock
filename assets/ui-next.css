@@ -3014,3 +3014,249 @@ button.index-row {
 .home-mock.home-hero.day-mock .words {
   margin-top: 30px;
 }
+
+
+/* =========================================================
+   2026-09-20 返し帳 — 「本を読む場所」へ
+   管理画面ではなく、1枚の言葉をめくりながら記憶を拾う体験に寄せる。
+   ========================================================= */
+
+/* 共通ヘッダー。ページ名は本文で一度だけ見せる */
+.book-mock .home-mock-top {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: calc(100% + 30px);
+  min-height: 66px;
+  margin: -18px -15px 0;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 15px 10px;
+  background: color-mix(in srgb, #fffdf8 90%, transparent);
+  backdrop-filter: saturate(1.05) blur(12px);
+  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
+}
+.book-mock .brand-wrap {
+  gap: 0;
+}
+.book-mock .book-name {
+  display: none;
+}
+
+/* 「ゆき の返し帳」＋「返し帳」の重複を1つの章扉に統合 */
+.book-mock .profile-line {
+  display: none;
+}
+.book-mock .book-title.book-title--personal {
+  display: block;
+  margin: 28px 2px 22px;
+}
+.book-mock .book-title--personal .book-title-kicker {
+  display: block;
+  margin: 0 0 1px;
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+.book-mock .book-title--personal h1 {
+  margin: 0;
+  font-size: 31px;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+}
+.book-mock .book-title--personal .book-title-copy {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.025em;
+}
+
+/* タブはUIの箱ではなく、本の章を切り替える見出しとして扱う */
+.book-mock .book-tabs {
+  margin: 0 0 18px;
+  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
+}
+.book-mock .book-tab {
+  padding: 9px 4px 11px;
+  font-size: 13px;
+  letter-spacing: 0.035em;
+}
+.book-mock .book-tab.active::after {
+  left: 33%;
+  right: 33%;
+  height: 1px;
+}
+
+/* 言葉の1枚を主役にする。左右の本文余白だけ残して写真は広げる */
+.book-mock .book-pane > [data-book-card] {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.book-mock .book-pane > [data-book-card] .vcard {
+  min-height: 560px;
+  padding: 72px 24px 76px;
+  border-radius: 0 0 18px 18px;
+  box-shadow: none;
+}
+.book-mock .book-pane > [data-book-card] .vcard-label {
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  opacity: 0.78;
+}
+.book-mock .book-pane > [data-book-card] .vcard-label::before {
+  width: 18px;
+}
+.book-mock .book-pane > [data-book-card] .vcard-chip {
+  top: 72px;
+  right: 24px;
+  min-height: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+  font-size: 11px;
+  opacity: 0.78;
+}
+.book-mock .book-pane > [data-book-card] .vcard-body {
+  max-width: 88%;
+  padding-left: 0;
+  padding-right: 0;
+}
+.book-mock .book-pane > [data-book-card] .vcard-bottom {
+  margin-top: 34px;
+}
+
+/* ページャは丸ボタンをやめ、写真の余韻を壊さない記号にする */
+.book-mock .pager {
+  position: relative;
+  display: block;
+  min-height: 58px;
+  margin-top: 8px;
+}
+.book-mock .pager-btn {
+  position: absolute;
+  top: 0;
+  width: 56px;
+  height: 56px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--ink-soft);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.book-mock .pager-btn:first-child {
+  left: -4px;
+}
+.book-mock .pager-btn.right {
+  right: -4px;
+}
+.book-mock .pager-btn:disabled {
+  opacity: 0.16;
+}
+.book-mock .counter {
+  min-width: 0;
+  padding-top: 8px;
+  text-align: center;
+}
+.book-mock .counter strong {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+.book-mock .counter span {
+  margin-top: 1px;
+  font-size: 10px;
+}
+
+/* 操作説明は常時出さない */
+.book-mock .swipe-note {
+  display: none;
+}
+
+/* 目次までしっかり間を取り、「読む」と「探す」を分離 */
+.book-mock .toc {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(222, 213, 202, 0.9);
+}
+.book-mock .toc-head {
+  margin: 0 2px 18px;
+}
+.book-mock .toc-head h2 {
+  font-size: 21px;
+  letter-spacing: 0.05em;
+}
+.book-mock .toc-head span {
+  font-size: 10px;
+}
+
+/* 月もカードにせず、本の目次の章見出しとして扱う */
+.book-mock .grouped-toc {
+  gap: 28px;
+}
+.book-mock .toc-month,
+.book-mock .toc-month.current-month {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.book-mock .toc-month-head,
+.book-mock .toc-month-head.static {
+  min-height: 40px;
+  padding: 0 2px 9px;
+  border: 0;
+  border-bottom: 1px solid rgba(222, 213, 202, 0.88);
+  background: transparent;
+  grid-template-columns: auto 1fr auto;
+}
+.book-mock .toc-month-head.static {
+  grid-template-columns: auto 1fr;
+}
+.book-mock .toc-month-name {
+  font-size: 16px;
+  letter-spacing: 0.05em;
+}
+.book-mock .toc-month-count {
+  font-size: 10px;
+  opacity: 0.76;
+}
+.book-mock .toc-month-body,
+.book-mock .toc-month.current-month .toc-month-body {
+  padding: 0;
+}
+
+/* 目次の行も管理表ではなく、本の索引に寄せる */
+.book-mock .toc-row {
+  grid-template-columns: 26px 48px minmax(0, 1fr) 12px;
+  gap: 9px;
+  min-height: 58px;
+  padding: 11px 2px;
+  border-bottom: 1px solid rgba(232, 225, 216, 0.9);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.book-mock .toc-page {
+  font-size: 10px;
+  opacity: 0.7;
+}
+.book-mock .toc-date {
+  font-size: 10px;
+}
+.book-mock .toc-text {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.book-mock .toc-arrow {
+  font-size: 16px;
+  opacity: 0.62;
+}
+.book-mock .toc-row.active {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: inset 2px 0 0 var(--accent);
+  padding-left: 9px;
+}
