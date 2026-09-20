@@ -3769,3 +3769,17 @@ button.index-row {
 .book-mock {
   padding-top: 0;
 }
+
+
+/* =========================================================
+   2026-09-20 作品カード高さの共通基準
+   トップを正本として home / day / 返し帳を 670px に統一する。
+   ========================================================= */
+:root {
+  --scene-page-height: 670px;
+}
+
+.home-mock.home-hero .deck-frame .vcard,
+.book-mock .book-page-card .vcard {
+  min-height: var(--scene-page-height);
+}
