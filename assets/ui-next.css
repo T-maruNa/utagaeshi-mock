@@ -3306,7 +3306,7 @@ button.index-row {
   top: 112px;
 }
 .book-mock .book-page-card .vcard-body {
-  margin-top: auto;
+  margin-top: 104px;
 }
 
 /* 目次でもページ番号を少し強くし、上のカードとの関係を作る */
@@ -3540,7 +3540,7 @@ button.index-row {
 /* 言葉そのものを最も強くする */
 .book-mock .book-page-card .vcard-body {
   max-width: 90%;
-  margin-top: auto;
+  margin-top: 104px;
   padding: 0;
 }
 .book-mock .book-page-card .vcard-text {
