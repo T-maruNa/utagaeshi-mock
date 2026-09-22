@@ -1190,48 +1190,6 @@
 }
 
 /* ---------- ページャ ---------- */
-.book-mock .pager {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 12px;
-  align-items: center;
-  margin-top: 15px;
-}
-.book-mock .pager-btn {
-  min-height: 42px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: #fffaf3;
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: 12px;
-  cursor: pointer;
-}
-.book-mock .pager-btn.right {
-  justify-self: end;
-}
-.book-mock .pager-btn:disabled {
-  opacity: 0.28;
-  cursor: default;
-}
-.book-mock .counter {
-  min-width: 72px;
-  text-align: center;
-}
-.book-mock .counter strong {
-  display: block;
-  font-family: var(--serif);
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
-}
-.book-mock .counter span {
-  display: block;
-  margin-top: 2px;
-  font-size: 11px;
-  color: var(--ink-faint);
-}
 /* 返し帳とデッキで同じ案内。スワイプでめくれるのは見た目に出ないので、
    めくれる画面には必ずこの一行を添える */
 .book-mock .swipe-note,
@@ -3110,50 +3068,6 @@ button.index-row {
 }
 
 /* ページャは丸ボタンをやめ、写真の余韻を壊さない記号にする */
-.book-mock .pager {
-  position: relative;
-  display: block;
-  min-height: 58px;
-  margin-top: 8px;
-}
-.book-mock .pager-btn {
-  position: absolute;
-  top: 0;
-  width: 56px;
-  height: 56px;
-  min-height: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  font-family: var(--serif);
-  font-size: 22px;
-  color: var(--ink-soft);
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-.book-mock .pager-btn:first-child {
-  left: -4px;
-}
-.book-mock .pager-btn.right {
-  right: -4px;
-}
-.book-mock .pager-btn:disabled {
-  opacity: 0.16;
-}
-.book-mock .counter {
-  min-width: 0;
-  padding-top: 8px;
-  text-align: center;
-}
-.book-mock .counter strong {
-  font-size: 13px;
-  letter-spacing: 0.08em;
-}
-.book-mock .counter span {
-  margin-top: 1px;
-  font-size: 10px;
-}
 
 /* 操作説明は常時出さない */
 .book-mock .swipe-note {
@@ -3316,9 +3230,6 @@ button.index-row {
 }
 
 /* ページャ中央の「返し帳」は重複するので隠す */
-.book-mock .counter span {
-  display: none;
-}
 
 
 /* =========================================================
@@ -3526,29 +3437,8 @@ button.index-row {
 }
 
 /* 下部メタは小さく、余韻を壊さない */
-.book-mock .book-page-card .toggle-link {
-  font-family: var(--serif);
-  letter-spacing: 0.02em;
-}
 
 /* ページャは本のページをめくる程度の存在感に */
-.book-mock .pager {
-  min-height: 48px;
-  margin-top: 6px;
-}
-.book-mock .pager-btn {
-  width: 48px;
-  height: 48px;
-  font-size: 20px;
-}
-.book-mock .counter {
-  padding-top: 7px;
-}
-.book-mock .counter strong {
-  font-family: var(--serif);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-}
 
 /* 目次切替も「UIタブ」ではなく詩集の章見出しに寄せる */
 .book-mock .book-tabs--toc {
@@ -3853,16 +3743,6 @@ button.index-row {
 }
 
 /* 「この日の景色を見る」は本文の直後ではなくカード下部へ */
-.book-mock .book-page-card .vcard-bottom {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
-  margin: 0;
-  padding: 0;
-  font-size: 11px;
-  opacity: 0.9;
-}
 
 /* dayと同じ数字の日付表記・小さな補助情報のトーン */
 .book-mock .book-page-mark span {
@@ -3870,6 +3750,96 @@ button.index-row {
   font-family: var(--sans);
   font-size: 10px;
   letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+
+/* =========================================================
+   2026-09-22 返し帳も共通デッキ構造へ
+   pager / vcard-bottom を廃止し、home/day と同じ
+   deck-frame / deck-ctrl / deck-open-row を使う。
+   ========================================================= */
+.book-mock .book-page-card.deck-frame {
+  position: relative;
+}
+
+/* 矢印・ページ番号はトップのデッキと同じ高さ */
+.book-mock .book-page-card .deck-ctrl {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  pointer-events: none;
+}
+
+.book-mock .book-page-card .deck-ctrl button {
+  position: absolute;
+  bottom: 212px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--on-scene);
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1;
+  text-shadow: var(--on-scene-shadow-sm);
+  opacity: 0.72;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.book-mock .book-page-card .deck-ctrl button:first-of-type {
+  left: 0;
+}
+
+.book-mock .book-page-card .deck-ctrl button:last-of-type {
+  right: 0;
+}
+
+.book-mock .book-page-card .deck-ctrl button:disabled {
+  opacity: 0.14;
+}
+
+.book-mock .book-page-card .deck-count {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 210px;
+  text-align: center;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.book-mock .book-page-card .deck-count strong {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+/* 景色/言葉の切替もカード下端ではなく、共通の操作行へ */
+.book-mock .book-page-card .deck-open-row {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 146px;
+  z-index: 4;
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+}
+
+.book-mock .book-page-card .deck-open,
+.book-mock .book-page-card [data-book-meta-right] {
+  color: var(--on-scene-strong);
+  text-shadow: var(--on-scene-shadow-sm);
+  font-size: 12px;
   opacity: 0.78;
 }
 
