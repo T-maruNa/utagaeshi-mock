@@ -3286,14 +3286,6 @@ button.index-row {
   letter-spacing: -0.04em;
   opacity: 0.18;
 }
-.book-mock .book-page-mark span {
-  display: block;
-  margin-top: 8px;
-  font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  opacity: 0.78;
-}
 
 /* ページ番号を置いたぶん、既存ラベルと本文を少し下げる */
 .book-mock .book-page-card .vcard {
@@ -3304,9 +3296,6 @@ button.index-row {
 }
 .book-mock .book-page-card .vcard-chip {
   top: 112px;
-}
-.book-mock .book-page-card .vcard-body {
-  margin-top: 32px;
 }
 
 /* 目次でもページ番号を少し強くし、上のカードとの関係を作る */
@@ -3510,13 +3499,6 @@ button.index-row {
   letter-spacing: -0.055em;
   opacity: 0.16;
 }
-.book-mock .book-page-mark span {
-  margin-top: 10px;
-  font-family: var(--serif);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  opacity: 0.82;
-}
 
 /* 既存の日付ラベルはページ番号側に統合する */
 .book-mock .book-page-card .vcard-label {
@@ -3538,22 +3520,12 @@ button.index-row {
 }
 
 /* 言葉そのものを最も強くする */
-.book-mock .book-page-card .vcard-body {
-  max-width: 90%;
-  margin-top: 32px;
-  padding: 0;
-}
 .book-mock .book-page-card .vcard-text {
   line-height: 1.95;
   letter-spacing: 0.035em;
 }
 
 /* 下部メタは小さく、余韻を壊さない */
-.book-mock .book-page-card .vcard-bottom {
-  margin-top: 34px;
-  font-size: 11px;
-  opacity: 0.9;
-}
 .book-mock .book-page-card .toggle-link {
   font-family: var(--serif);
   letter-spacing: 0.02em;
@@ -3864,3 +3836,36 @@ button.index-row {
 .home-mock.home-hero.day-mock .day-deck-frame .vcard-bottom {
   display: none;
 }
+
+/* =========================================================
+   2026-09-22 返し帳の縦リズム 正本
+   本文・下部アクション・日付を独立して配置し、極端な上下移動を防ぐ。
+   ========================================================= */
+.book-mock .book-page-card .vcard {
+  padding: 126px 24px 42px;
+}
+
+/* 本文は上にも下にも寄せすぎない中間位置 */
+.book-mock .book-page-card .vcard-body {
+  max-width: 90%;
+  margin-top: 56px;
+  padding: 0;
+}
+
+/* 「この日の景色を見る」は本文の直後ではなくカード下部へ */
+.book-mock .book-page-card .vcard-bottom {
+  margin-top: auto;
+  padding-top: 24px;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+/* dayと同じ数字の日付表記・小さな補助情報のトーン */
+.book-mock .book-page-mark span {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+
