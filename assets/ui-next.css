@@ -2847,21 +2847,6 @@ button.index-row {
 }
 
 /* ページャもトップの位置へ戻す */
-.home-mock.home-hero.day-mock .day-deck-frame .deck-ctrl button {
-  bottom: 212px;
-  width: 56px;
-  height: 56px;
-}
-.home-mock.home-hero.day-mock .day-deck-frame .deck-count {
-  left: 24px;
-  right: 24px;
-  bottom: 210px;
-}
-.home-mock.home-hero.day-mock .day-deck-frame .deck-open-row {
-  left: 24px;
-  right: 24px;
-  bottom: 146px;
-}
 
 /* day独自で入れていた余白をなくし、写真の次へ素直につなぐ */
 .home-mock.home-hero.day-mock .words {
@@ -2918,15 +2903,6 @@ button.index-row {
 }
 
 /* カードを短くしたぶん、操作群も同じ比率で下へ寄せ直す */
-.home-mock.home-hero.day-mock .day-deck-frame .deck-ctrl button {
-  bottom: 136px;
-}
-.home-mock.home-hero.day-mock .day-deck-frame .deck-count {
-  bottom: 144px;
-}
-.home-mock.home-hero.day-mock .day-deck-frame .deck-open-row {
-  bottom: 78px;
-}
 
 
 /* =========================================================
@@ -2946,17 +2922,8 @@ button.index-row {
 }
 
 /* 矢印とページ番号を画像下部へ */
-.home-mock.home-hero.day-mock .day-deck-frame .deck-ctrl button {
-  bottom: 58px;
-}
-.home-mock.home-hero.day-mock .day-deck-frame .deck-count {
-  bottom: 66px;
-}
 
 /* 反応・シェア行は最下部へ */
-.home-mock.home-hero.day-mock .day-deck-frame .deck-open-row {
-  bottom: 18px;
-}
 
 /* 下の一覧までの空白も少し削る */
 .home-mock.home-hero.day-mock .words {
@@ -3763,77 +3730,14 @@ button.index-row {
 }
 
 /* 矢印・ページ番号はトップのデッキと同じ高さ */
-.book-mock .book-page-card .deck-ctrl {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  margin: 0;
-  pointer-events: none;
-}
 
-.book-mock .book-page-card .deck-ctrl button {
-  position: absolute;
-  bottom: 58px;
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--on-scene);
-  font-family: var(--serif);
-  font-size: 22px;
-  line-height: 1;
-  text-shadow: var(--on-scene-shadow-sm);
-  opacity: 0.72;
-  pointer-events: auto;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
 
-.book-mock .book-page-card .deck-ctrl button:first-of-type {
-  left: 0;
-}
 
-.book-mock .book-page-card .deck-ctrl button:last-of-type {
-  right: 0;
-}
 
-.book-mock .book-page-card .deck-ctrl button:disabled {
-  opacity: 0.14;
-}
 
-.book-mock .book-page-card .deck-count {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 66px;
-  text-align: center;
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
 
-.book-mock .book-page-card .deck-count strong {
-  font-family: var(--serif);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  opacity: 0.8;
-}
 
 /* 景色/言葉の切替もカード下端ではなく、共通の操作行へ */
-.book-mock .book-page-card .deck-open-row {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 18px;
-  z-index: 4;
-  min-height: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 14px;
-}
 
 .book-mock .book-page-card .deck-open,
 .book-mock .book-page-card [data-book-meta-right] {
@@ -3856,3 +3760,84 @@ button.index-row {
   line-height: 20px;
   cursor: pointer;
 }
+
+/* =========================================================
+   2026-09-22 RecordDeckControls 正本
+   day / 返し帳の画像上操作は同じ位置・同じ寸法を使う。
+   ページ固有CSSで座標を持たない。
+   ========================================================= */
+.deck-frame--record {
+  position: relative;
+}
+
+.deck-frame--record .deck-ctrl {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  pointer-events: none;
+}
+
+.deck-frame--record .deck-ctrl button {
+  position: absolute;
+  bottom: 58px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--on-scene);
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1;
+  text-shadow: var(--on-scene-shadow-sm);
+  opacity: 0.72;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deck-frame--record .deck-ctrl button:first-of-type {
+  left: 0;
+}
+
+.deck-frame--record .deck-ctrl button:last-of-type {
+  right: 0;
+}
+
+.deck-frame--record .deck-ctrl button:disabled {
+  opacity: 0.14;
+}
+
+.deck-frame--record .deck-count {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 66px;
+  text-align: center;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.deck-frame--record .deck-count strong {
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+.deck-frame--record .deck-open-row {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 18px;
+  z-index: 4;
+  min-height: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+}
+
