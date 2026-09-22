@@ -351,8 +351,8 @@
     var labelEl = vcard.querySelector(".vcard-label");
     var chipEl = vcard.querySelector(".vcard-chip");
     var textEl = vcard.querySelector(".vcard-text");
-    var toggleEl = vcard.querySelector("[data-book-toggle]");
-    var metaRightEl = vcard.querySelector("[data-book-meta-right]");
+    var toggleEl = card.querySelector("[data-book-toggle]");
+    var metaRightEl = card.querySelector("[data-book-meta-right]");
     var counter = pane.querySelector("[data-book-counter]");
     var prevBtn = pane.querySelector("[data-book-prev]");
     var nextBtn = pane.querySelector("[data-book-next]");
