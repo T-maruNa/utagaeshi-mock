@@ -3854,8 +3854,12 @@ button.index-row {
 
 /* 「この日の景色を見る」は本文の直後ではなくカード下部へ */
 .book-mock .book-page-card .vcard-bottom {
-  margin-top: auto;
-  padding-top: 24px;
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  margin: 0;
+  padding: 0;
   font-size: 11px;
   opacity: 0.9;
 }
