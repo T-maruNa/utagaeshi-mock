@@ -28,7 +28,7 @@
     <!-- ===== 残した言葉 ===== -->
     <div class="book-pane" data-book-pane="mine" data-book-word-label="あなたの言葉">
 
-      <div data-book-card class="book-page-card">
+      <div data-book-card class="book-page-card deck-frame">
         <article class="vcard vcard--mine">
           <div class="book-page-mark" aria-hidden="true">
             <strong data-book-page-mark>06</strong>
@@ -37,20 +37,20 @@
           <div class="vcard-label"></div>
           <div class="vcard-chip">あなたの言葉</div>
           <div class="vcard-body"><p class="vcard-text vcard-text--xl"></p></div>
-          <div class="vcard-bottom">
-            <span><button class="toggle-link" type="button" data-book-toggle>この日の景色を見る</button></span>
-            <span data-book-meta-right></span>
-          </div>
         </article>
-      </div>
 
-      <div class="pager">
-        <button class="pager-btn" type="button" data-book-prev>←</button>
-        <div class="counter">
-          <strong data-book-counter>6 / 6</strong>
-          <span>返し帳</span>
+        <div class="deck-ctrl">
+          <button type="button" data-book-prev aria-label="前のページ">←</button>
+          <div class="deck-count">
+            <strong data-book-counter>6 / 6</strong>
+          </div>
+          <button type="button" data-book-next aria-label="次のページ">→</button>
         </div>
-        <button class="pager-btn right" type="button" data-book-next>→</button>
+
+        <div class="deck-open-row">
+          <button class="deck-open" type="button" data-book-toggle>この日の景色を見る</button>
+          <span data-book-meta-right></span>
+        </div>
       </div>
 
       <div class="swipe-note">左右にスワイプしてもめくれます</div>
@@ -166,7 +166,7 @@
     -->
     <div class="book-pane" data-book-pane="liked" data-book-word-label="心に残った言葉" hidden>
 
-      <div data-book-card class="book-page-card">
+      <div data-book-card class="book-page-card deck-frame">
         <article class="vcard vcard--mine">
           <div class="book-page-mark" aria-hidden="true">
             <strong data-book-page-mark>03</strong>
@@ -175,20 +175,20 @@
           <div class="vcard-label"></div>
           <div class="vcard-chip">心に残った言葉</div>
           <div class="vcard-body"><p class="vcard-text vcard-text--xl"></p></div>
-          <div class="vcard-bottom">
-            <span><button class="toggle-link" type="button" data-book-toggle>この日の景色を見る</button></span>
-            <span data-book-meta-right></span>
-          </div>
         </article>
-      </div>
 
-      <div class="pager">
-        <button class="pager-btn" type="button" data-book-prev>←</button>
-        <div class="counter">
-          <strong data-book-counter>3 / 3</strong>
-          <span>返し帳</span>
+        <div class="deck-ctrl">
+          <button type="button" data-book-prev aria-label="前のページ">←</button>
+          <div class="deck-count">
+            <strong data-book-counter>3 / 3</strong>
+          </div>
+          <button type="button" data-book-next aria-label="次のページ">→</button>
         </div>
-        <button class="pager-btn right" type="button" data-book-next>→</button>
+
+        <div class="deck-open-row">
+          <button class="deck-open" type="button" data-book-toggle>この日の景色を見る</button>
+          <span data-book-meta-right></span>
+        </div>
       </div>
 
       <div class="swipe-note">左右にスワイプしてもめくれます</div>
