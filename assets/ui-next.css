@@ -3773,7 +3773,7 @@ button.index-row {
 
 .book-mock .book-page-card .deck-ctrl button {
   position: absolute;
-  bottom: 212px;
+  bottom: 58px;
   width: 56px;
   height: 56px;
   padding: 0;
@@ -3806,7 +3806,7 @@ button.index-row {
   position: absolute;
   left: 24px;
   right: 24px;
-  bottom: 210px;
+  bottom: 66px;
   text-align: center;
   color: var(--on-scene);
   text-shadow: var(--on-scene-shadow-sm);
@@ -3825,7 +3825,7 @@ button.index-row {
   position: absolute;
   left: 24px;
   right: 24px;
-  bottom: 146px;
+  bottom: 18px;
   z-index: 4;
   min-height: 0;
   margin: 0;
@@ -3843,3 +3843,16 @@ button.index-row {
   opacity: 0.78;
 }
 
+
+
+.book-mock .book-page-card button.deck-open {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--serif);
+  line-height: 20px;
+  cursor: pointer;
+}
