@@ -2677,8 +2677,6 @@ button.index-row {
 
 /* 本文は写真の余白を残して、下寄せしすぎない */
 .day-mock .day-deck-frame .vcard--scene .vcard-body {
-  padding-top: 72px;
-  max-width: 88%;
 }
 
 /* ページャは写真の中へ。見た目は小さく、タップ領域は広く */
@@ -2838,8 +2836,6 @@ button.index-row {
 
 /* 景色本文もトップと同位置 */
 .home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-body {
-  padding-top: 78px;
-  max-width: 86%;
 }
 .home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-text {
   line-height: 2.02;
@@ -2897,9 +2893,6 @@ button.index-row {
 
 /* 景色文は空白を取りすぎず、上部情報から自然につなげる */
 .home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-body {
-  margin-top: 46px;
-  padding-top: 0;
-  max-width: 86%;
 }
 
 /* カードを短くしたぶん、操作群も同じ比率で下へ寄せ直す */
@@ -3026,9 +3019,6 @@ button.index-row {
   opacity: 0.78;
 }
 .book-mock .book-pane > [data-book-card] .vcard-body {
-  max-width: 88%;
-  padding-left: 0;
-  padding-right: 0;
 }
 .book-mock .book-pane > [data-book-card] .vcard-bottom {
   margin-top: 34px;
@@ -3704,9 +3694,6 @@ button.index-row {
 
 /* 本文は上にも下にも寄せすぎない中間位置 */
 .book-mock .book-page-card .vcard-body {
-  max-width: 90%;
-  margin-top: 56px;
-  padding: 0;
 }
 
 /* 「この日の景色を見る」は本文の直後ではなくカード下部へ */
@@ -3839,5 +3826,21 @@ button.index-row {
   align-items: center;
   justify-content: flex-start;
   gap: 14px;
+}
+
+/* =========================================================
+   2026-09-23 RecordDeckBody 正本
+   day / 返し帳の本文は、前にあるラベルやページ番号の高さに依存せず
+   画像カード上端から同じ位置に置く。
+   ========================================================= */
+.deck-frame--record > .vcard > .vcard-body {
+  position: absolute;
+  top: 240px;
+  left: 24px;
+  right: 24px;
+  width: auto;
+  max-width: 86%;
+  margin: 0;
+  padding: 0;
 }
 
