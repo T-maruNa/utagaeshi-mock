@@ -2680,63 +2680,6 @@ button.index-row {
 }
 
 /* ページャは写真の中へ。見た目は小さく、タップ領域は広く */
-.day-mock .day-deck-frame .deck-ctrl {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  margin: 0;
-  pointer-events: none;
-}
-.day-mock .day-deck-frame .deck-ctrl button {
-  position: absolute;
-  bottom: 90px;
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--on-scene);
-  box-shadow: none;
-  font-size: 22px;
-  line-height: 1;
-  opacity: 0.74;
-  pointer-events: auto;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  user-select: none;
-}
-.day-mock .day-deck-frame .deck-ctrl button:first-of-type {
-  left: 0;
-}
-.day-mock .day-deck-frame .deck-ctrl button:last-of-type {
-  right: 0;
-}
-.day-mock .day-deck-frame .deck-ctrl button:disabled {
-  opacity: 0.16;
-}
-.day-mock .day-deck-frame .deck-count {
-  position: absolute;
-  left: 72px;
-  right: 72px;
-  bottom: 101px;
-  text-align: center;
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
-.day-mock .day-deck-frame .deck-count strong {
-  display: block;
-  font-family: var(--serif);
-  font-size: 12px;
-  font-weight: 500;
-}
-.day-mock .day-deck-frame .deck-count span {
-  display: block;
-  margin-top: 2px;
-  font-size: 10px;
-  opacity: 0.74;
-}
 
 /* 操作方法の説明は常時出さず、操作で理解できるようにする */
 .day-mock .day-deck-frame .swipe-note {
@@ -2744,14 +2687,6 @@ button.index-row {
 }
 
 /* 反応やシェアは読む体験を邪魔しない位置と濃さへ */
-.day-mock .day-deck-frame .deck-open-row {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 44px;
-  z-index: 4;
-  margin: 0;
-}
 .day-mock .day-deck-frame .deck-acts {
   opacity: 0.72;
   font-size: 11px;
