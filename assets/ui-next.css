@@ -3702,7 +3702,7 @@ button.index-row {
 
 .deck-frame--record .deck-ctrl button {
   position: absolute;
-  bottom: 58px;
+  bottom: 90px;
   width: 56px;
   height: 56px;
   padding: 0;
@@ -3735,7 +3735,7 @@ button.index-row {
   position: absolute;
   left: 24px;
   right: 24px;
-  bottom: 66px;
+  bottom: 101px;
   text-align: center;
   color: var(--on-scene);
   text-shadow: var(--on-scene-shadow-sm);
@@ -3753,7 +3753,7 @@ button.index-row {
   position: absolute;
   left: 24px;
   right: 24px;
-  bottom: 18px;
+  bottom: 44px;
   z-index: 4;
   min-height: 0;
   margin: 0;
