@@ -632,11 +632,20 @@
     var nextBtn = root.querySelector("[data-intro-next]");
     var index = 0;
 
+    var appShell = root.closest(".app");
+
     function render() {
       pages.forEach(function (page, position) {
         page.hidden = position !== index;
         page.classList.toggle("intro-card-active", position === index);
       });
+
+      var activePage = pages[index];
+      var background = activePage ? activePage.getAttribute("data-intro-bg") : "";
+      if (appShell && background) {
+        appShell.style.setProperty("--intro-bg", 'url("' + background + '")');
+      }
+
       if (indicator) indicator.textContent = (index + 1) + " / " + pages.length;
       if (prevBtn) prevBtn.disabled = index === 0;
       if (nextBtn) nextBtn.disabled = index === pages.length - 1;
