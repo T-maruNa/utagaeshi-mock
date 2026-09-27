@@ -460,7 +460,6 @@
     var title = mount.getAttribute("data-header-title") || "";
     var titleHref = mount.getAttribute("data-header-title-href") || "";
     var avatarCurrent = mount.getAttribute("data-header-avatar-current") === "true";
-    var showTools = mount.getAttribute("data-header-tools") !== "none";
 
     var header = document.createElement("header");
     header.className = "app-shell-header" + (mode === "paper" ? " app-shell-header--paper" : "");
@@ -472,29 +471,37 @@
         : '<span class="app-shell-title">' + title + '</span>';
     }
 
-    var toolsHtml = "";
-    if (showTools) {
-      var avatarHtml = avatarCurrent
-        ? '<span class="header-avatar-link" aria-current="page"><span class="header-avatar is-blank">ゆ</span></span>'
-        : '<a class="header-avatar-link" href="profile.html" aria-label="プロフィール"><span class="header-avatar is-blank">ゆ</span></a>';
-
-      toolsHtml =
-        '<div class="header-tools">' +
-          avatarHtml +
-          '<button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>' +
-            '<span></span><span></span><span></span>' +
-          '</button>' +
-        '</div>';
-    }
+    var avatarHtml = avatarCurrent
+      ? '<span class="header-avatar-link" aria-current="page"><span class="header-avatar is-blank">ゆ</span></span>'
+      : '<a class="header-avatar-link" href="profile.html" aria-label="プロフィール"><span class="header-avatar is-blank">ゆ</span></a>';
 
     header.innerHTML =
       '<div class="brand-wrap">' +
         '<a class="brand" href="index.html">うたがえし</a>' +
         titleHtml +
       '</div>' +
-      toolsHtml;
+      '<div class="header-tools">' +
+        avatarHtml +
+        '<button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>' +
+          '<span></span><span></span><span></span>' +
+        '</button>' +
+      '</div>';
 
     mount.replaceWith(header);
+
+    if (!document.querySelector(".header-menu-panel")) {
+      var panel = document.createElement("div");
+      panel.className = "header-menu-panel";
+      panel.setAttribute("role", "menu");
+      panel.hidden = true;
+      panel.innerHTML =
+        '<a class="header-menu-item" href="profile.html" role="menuitem">プロフィール</a>' +
+        '<a class="header-menu-item" href="account.html" role="menuitem">アカウント設定</a>' +
+        '<a class="header-menu-item" href="mypage-list.html" role="menuitem">言葉を整える・削除する</a>' +
+        '<a class="header-menu-item" href="intro.html" role="menuitem">はじめての方へ</a>' +
+        '<button class="header-menu-item header-menu-item-button" type="button" role="menuitem">ログアウト</button>';
+      document.body.appendChild(panel);
+    }
 
     if (mode === "paper" || !boundarySelector) return;
 
