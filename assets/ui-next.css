@@ -3186,6 +3186,33 @@ button.index-row {
   box-shadow: none;
 }
 
+
+
+/* transparent: 紙面上で背景を持たない共通ヘッダー。
+   DOM/寸法/メニューは AppHeader 共通のまま、文字色だけ紙面用にする。 */
+.app-shell-header--transparent {
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+}
+
+.app-shell-header--transparent .brand,
+.app-shell-header--transparent .app-shell-title {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.app-shell-header--transparent .home-menu span {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.app-shell-header--transparent .header-avatar.is-blank {
+  background: #ece4d9;
+  color: #806f5d;
+  box-shadow: none;
+}
+
 /* paper: 寸法は完全共通。背景だけ最初から紙面 */
 .app-shell-header--paper {
   margin-bottom: 18px;
