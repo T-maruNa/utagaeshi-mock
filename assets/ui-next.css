@@ -289,9 +289,6 @@
   background: var(--ink);
   border-radius: var(--radius-pill);
 }
-.home-mock .brand-wrap {
-  gap: 17px;
-}
 
 /* ---------- compose ---------- */
 .home-mock .compose-card {
@@ -861,13 +858,6 @@
   font-size: 11px;
   color: var(--ink-soft);
 }
-.home-hero .home-menu span {
-  background: var(--on-scene);
-  box-shadow: var(--on-scene-shadow-sm);
-}
-.home-hero .header-avatar.is-blank {
-  box-shadow: var(--on-scene-shadow-sm);
-}
 
 /* ---------- 景色カードを縦に拡大 ---------- */
 .home-mock.home-hero .vcard {
@@ -997,9 +987,6 @@
   line-height: normal;
 }
 .book-mock .brand-wrap,
-.scenes-mock .brand-wrap {
-  gap: 16px;
-}
 
 /* ---------- 表題とタブ ---------- */
 .book-mock .profile-line {
@@ -2235,25 +2222,11 @@ button.index-row {
   padding-right: 24px;
 }
 
-.home-mock.home-hero .brand-wrap {
-  gap: 0;
-}
 
-.home-mock.home-hero .brand {
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
 
-.home-mock.home-hero .home-menu span {
-  background: var(--on-scene);
-  box-shadow: var(--on-scene-shadow-sm);
-}
+.home-mock
 
-.home-mock.home-hero .header-avatar.is-blank {
-  background: rgba(255, 255, 255, 0.88);
-  color: #6b5d4d;
-  box-shadow: var(--on-scene-shadow-sm);
-}
+.home-mock
 
 
 /* =========================================================
@@ -2286,9 +2259,6 @@ button.index-row {
 }
 
 /* ページ名は本文で一度だけ見せる */
-.scenes-mock .brand-wrap {
-  gap: 0;
-}
 
 /* 表題は「アプリの見出し」より、本の章扉に近づける */
 .scenes-mock .book-title {
@@ -2399,9 +2369,6 @@ button.index-row {
 .scenes-mock .toc-month-head {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-}
-.day-mock .brand-wrap {
-  gap: 0;
 }
 
 /* 日付を記憶の入口にして、説明文は置かない */
@@ -2610,9 +2577,6 @@ button.index-row {
 /* 下の一覧までの空白も少し削る */
 .home-mock.home-hero.day-mock .words {
   margin-top: 30px;
-}
-.book-mock .brand-wrap {
-  gap: 0;
 }
 
 /* 「ゆき の返し帳」＋「返し帳」の重複を1つの章扉に統合 */
@@ -2889,11 +2853,6 @@ button.index-row {
   min-height: 38px;
 }
 
-.book-mock .book-shell-top .brand {
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  color: var(--ink-soft);
-}
 
 .book-mock .book-shell-title {
   margin-top: 7px;
@@ -3186,26 +3145,6 @@ button.index-row {
   box-shadow: none;
 }
 
-
-
-/* transparent: 紙面上で背景を持たない共通ヘッダー。
-   DOM/寸法/メニューは AppHeader 共通のまま、文字色だけ紙面用にする。 */
-.app-shell-header--transparent {
-  background: transparent;
-  border: 0;
-  backdrop-filter: none;
-}
-
-.app-shell-header--transparent .brand,
-.app-shell-header--transparent .app-shell-title {
-  color: var(--ink);
-  text-shadow: none;
-}
-
-.app-shell-header--transparent .home-menu span {
-  background: var(--ink);
-  box-shadow: none;
-}
 
 
 /* paper: 寸法は完全共通。背景だけ最初から紙面 */
