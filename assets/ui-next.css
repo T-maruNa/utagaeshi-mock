@@ -986,8 +986,6 @@
   font-family: var(--sans);
   line-height: normal;
 }
-.book-mock .brand-wrap,
-
 /* ---------- 表題とタブ ---------- */
 .book-mock .profile-line {
   margin: 0 2px 16px;
