@@ -82,3 +82,37 @@
   text-shadow: none;
 }
 
+/* intro はヘッダー直下から景色を始め、ページ送りも景色の中に置く。 */
+.intro-mock > .deck {
+  margin-top: 0;
+}
+
+.intro-mock .deck-viewport {
+  position: relative;
+}
+
+.intro-mock .deck-nav {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 14px;
+  z-index: 3;
+  margin-top: 0;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.intro-mock .deck-nav button,
+.intro-mock .deck-indicator {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.intro-mock .deck-nav button:disabled {
+  opacity: .38;
+}
+
+.intro-mock .intro-bg .intro-page {
+  padding-bottom: 96px;
+}
+
