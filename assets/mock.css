@@ -22,195 +22,129 @@
 }
 
 /* =========================================================
-   intro — 説明スライドではなく、小さな詩集の扉として見せる
+   intro — TOPと同じ「景色 → 言葉」の視覚言語で説明する
    ========================================================= */
 .intro-mock {
   padding-top: 0;
 }
 
-.intro-mock .intro-book {
+.intro-mock .intro-hero {
+  position: relative;
+  min-height: 590px;
   margin: 0 -15px;
-  background: var(--surface);
-  border-top: 1px solid rgba(222, 213, 202, .55);
-  border-bottom: 1px solid rgba(222, 213, 202, .72);
-}
-
-.intro-mock .intro-deck {
-  position: relative;
-  min-height: 610px;
-}
-
-.intro-mock .deck-card {
-  width: 100%;
-}
-
-.intro-mock .intro-page {
-  position: relative;
-  min-height: 610px;
-  display: block;
-  padding: 78px 30px 64px;
-  text-align: left;
+  padding: 0 24px 54px;
+  display: flex;
+  align-items: flex-end;
+  background-size: cover;
+  background-position: center;
   overflow: hidden;
 }
 
-.intro-mock .intro-page-number {
+.intro-mock .intro-hero::before {
+  content: "";
   position: absolute;
-  top: 28px;
-  right: 24px;
-  font-family: var(--serif);
-  font-size: 82px;
-  line-height: .85;
-  font-weight: 400;
-  letter-spacing: -.06em;
-  color: var(--ink);
-  opacity: .055;
+  inset: 0;
+  background: var(--scene-scrim);
   pointer-events: none;
 }
 
-.intro-mock .intro-page-copy {
+.intro-mock .intro-hero-copy {
   position: relative;
   z-index: 1;
-  max-width: 315px;
+  max-width: 340px;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow);
 }
 
-.intro-mock .intro-eyebrow {
-  margin: 0 0 42px;
-  padding-left: 28px;
-  position: relative;
+.intro-mock .intro-kicker {
+  margin: 0 0 18px;
   font-family: var(--sans);
   font-size: 11px;
   line-height: 1.4;
-  letter-spacing: .14em;
-  color: var(--ink-faint);
+  letter-spacing: .12em;
+  color: var(--on-scene-soft);
 }
 
-.intro-mock .intro-eyebrow::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: .62em;
-  width: 18px;
-  height: 1px;
-  background: var(--line-strong);
-}
-
-.intro-mock .intro-title {
+.intro-mock .intro-hero h1 {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(29px, 8vw, 36px);
-  line-height: 1.65;
+  font-size: clamp(30px, 8.4vw, 38px);
+  line-height: 1.62;
   font-weight: 500;
   letter-spacing: .035em;
-  color: var(--ink);
 }
 
-.intro-mock .intro-scene,
-.intro-mock .intro-poem {
-  margin: 0;
-  white-space: pre-line;
-  font-family: var(--serif);
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.intro-mock .intro-scene {
-  font-size: 27px;
-  line-height: 1.9;
-  letter-spacing: .045em;
-}
-
-.intro-mock .intro-poem {
-  font-size: 23px;
-  line-height: 1.95;
-  letter-spacing: .05em;
-}
-
-.intro-mock .intro-poem-meta {
-  margin: 22px 0 0;
-  font-family: var(--sans);
-  font-size: 11px;
-  line-height: 1.6;
-  letter-spacing: .04em;
-  color: var(--ink-faint);
-}
-
-.intro-mock .intro-sub {
-  max-width: 290px;
-  margin: 42px 0 0;
+.intro-mock .intro-hero-copy > p:last-child {
+  margin: 28px 0 0;
   font-family: var(--sans);
   font-size: 13px;
   line-height: 2;
-  letter-spacing: .02em;
-  color: var(--ink-soft);
+  letter-spacing: .01em;
+  color: var(--on-scene-strong);
 }
 
-.intro-mock .intro-cta {
-  appearance: none;
-  -webkit-appearance: none;
-  display: inline-flex;
-  align-items: center;
-  margin-top: 46px;
-  padding: 0 0 8px;
-  border: 0;
-  border-bottom: 1px solid var(--ink);
-  border-radius: 0;
-  background: transparent;
-  font-family: var(--serif);
-  font-size: 14px;
-  letter-spacing: .04em;
-  color: var(--ink);
-  cursor: pointer;
+.intro-mock .intro-flow {
+  padding: 44px 9px 88px;
 }
 
-.intro-mock .intro-book-nav {
+.intro-mock .intro-flow-lead {
+  margin-bottom: 8px;
+  padding: 0 6px 20px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-faint);
+}
+
+.intro-mock .intro-flow-item {
   display: grid;
-  grid-template-columns: 56px 1fr 56px;
-  align-items: center;
-  min-height: 64px;
-  padding: 0 18px;
-  border-top: 1px solid rgba(222, 213, 202, .72);
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  padding: 26px 6px 28px;
+  border-bottom: 1px solid var(--line);
 }
 
-.intro-mock .intro-book-nav button {
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  border: 0;
-  background: transparent;
+.intro-mock .intro-flow-no {
+  padding-top: 4px;
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .06em;
+  color: var(--ink-faint);
+}
+
+.intro-mock .intro-flow-item h2 {
+  margin: 0;
   font-family: var(--serif);
   font-size: 20px;
-  color: var(--ink-soft);
-  cursor: pointer;
-  touch-action: manipulation;
+  line-height: 1.55;
+  font-weight: 500;
+  letter-spacing: .025em;
+  color: var(--ink);
 }
 
-.intro-mock .intro-book-nav button:last-child {
-  justify-self: end;
-}
-
-.intro-mock .intro-book-nav button:disabled {
-  opacity: .16;
-}
-
-.intro-mock .intro-book-nav [data-intro-indicator] {
-  text-align: center;
-  font-family: var(--serif);
-  font-size: 11px;
-  letter-spacing: .14em;
-  color: var(--ink-faint);
-}
-
-.intro-mock .intro-swipe-hint {
+.intro-mock .intro-flow-item p {
   margin: 10px 0 0;
-  text-align: center;
+  max-width: 300px;
   font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: .04em;
-  color: var(--ink-faint);
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink-soft);
 }
 
-/* 旧introの中央寄せアニメーションをこの画面では無効化 */
-.intro-mock .deck-card.intro-card-active .intro-page > * {
-  animation: none;
+.intro-mock .intro-start {
+  margin-top: 34px;
+  min-height: 58px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  letter-spacing: .035em;
+  color: var(--ink);
+  text-decoration: none;
 }
 
