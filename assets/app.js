@@ -462,7 +462,7 @@
     var avatarCurrent = mount.getAttribute("data-header-avatar-current") === "true";
 
     var header = document.createElement("header");
-    header.className = "app-shell-header" + (mode === "paper" ? " app-shell-header--paper" : "");
+    header.className = "app-shell-header" + (mode === "paper" ? " app-shell-header--paper" : mode === "transparent" ? " app-shell-header--transparent" : "");
 
     var titleHtml = "";
     if (title) {
