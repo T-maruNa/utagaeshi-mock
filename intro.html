@@ -21,68 +21,50 @@
   -->
   <main class="page intro-mock">
 
-    <div data-app-header="paper" data-header-tools="none"></div>
+    <div data-app-header="overlay" data-header-boundary=".intro-hero"></div>
 
-    <section class="intro-book" aria-label="うたがえしについて">
-      <div class="deck-viewport intro-deck" data-intro>
+    <section class="intro-hero" aria-labelledby="intro-title"
+             style="background-image:url('assets/scenes/10/10_street_01.webp')">
+      <div class="intro-hero-copy">
+        <p class="intro-kicker">はじめての方へ</p>
+        <h1 id="intro-title">千年前の歌人と、<br>同じ景色を見る。</h1>
+        <p>今日の景色を見て、浮かんだことをひとつ残す。<br>その景色には、今の誰かと昔の誰かの言葉も残っています。</p>
+      </div>
+    </section>
 
-        <article class="deck-card intro-card-active" data-intro-page>
-          <div class="intro-page">
-            <div class="intro-page-number" aria-hidden="true">01</div>
-            <div class="intro-page-copy">
-              <p class="intro-eyebrow">うたがえし</p>
-              <h1 class="intro-title">今日の景色から、<br>言葉をひとつ。</h1>
-              <p class="intro-sub">毎日の小さな景色を見て、浮かんだことを残す場所です。</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="deck-card" data-intro-page hidden>
-          <div class="intro-page">
-            <div class="intro-page-number" aria-hidden="true">02</div>
-            <div class="intro-page-copy">
-              <p class="intro-eyebrow">景色を見る</p>
-              <p class="intro-scene">風が少し軽い<br>帰り道の影が<br>いつもより長い</p>
-              <p class="intro-sub">その日に出会った小さな景色が、ひとつ届きます。</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="deck-card" data-intro-page hidden>
-          <div class="intro-page">
-            <div class="intro-page-number" aria-hidden="true">03</div>
-            <div class="intro-page-copy">
-              <p class="intro-eyebrow">千年前の言葉</p>
-              <p class="intro-poem">ちはやぶる
-神代もきかず
-龍田川
-からくれなゐに
-水くくるとは</p>
-              <p class="intro-poem-meta">在原業平朝臣『百人一首』十七番</p>
-              <p class="intro-sub">同じ景色について残された言葉として、そっと混ざります。</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="deck-card" data-intro-page hidden>
-          <div class="intro-page">
-            <div class="intro-page-number" aria-hidden="true">04</div>
-            <div class="intro-page-copy">
-              <p class="intro-eyebrow">残す</p>
-              <p class="intro-title">短歌にしなくていい。</p>
-              <p class="intro-sub">浮かんだことを、そのままひとこと。<br>読むだけの日があっても大丈夫です。</p>
-              <button class="intro-cta" type="button" data-href="index.html">今日の景色を見る</button>
-            </div>
-          </div>
-        </article>
+    <section class="intro-flow" aria-label="うたがえしの使い方">
+      <div class="intro-flow-lead">
+        <span>うたがえしで、すること</span>
       </div>
 
-      <div class="intro-book-nav">
-        <button type="button" data-intro-prev disabled aria-label="前のページ">←</button>
-        <span data-intro-indicator>1 / 4</span>
-        <button type="button" data-intro-next aria-label="次のページ">→</button>
-      </div>
-      <p class="intro-swipe-hint">左右にスワイプしてめくる</p>
+      <article class="intro-flow-item">
+        <span class="intro-flow-no">01</span>
+        <div>
+          <h2>景色を見る</h2>
+          <p>その日ひとつの、小さな景色が届きます。</p>
+        </div>
+      </article>
+
+      <article class="intro-flow-item">
+        <span class="intro-flow-no">02</span>
+        <div>
+          <h2>浮かんだことを残す</h2>
+          <p>短歌にする必要はありません。ひとことでも、書かない日でも大丈夫です。</p>
+        </div>
+      </article>
+
+      <article class="intro-flow-item">
+        <span class="intro-flow-no">03</span>
+        <div>
+          <h2>同じ景色の言葉をめくる</h2>
+          <p>今の誰かの言葉に混ざって、千年前の人が残した言葉も現れます。</p>
+        </div>
+      </article>
+
+      <a class="intro-start" href="index.html">
+        <span>今日の景色を見る</span>
+        <span aria-hidden="true">→</span>
+      </a>
     </section>
   </main>
 </div>
