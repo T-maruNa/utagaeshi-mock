@@ -19,69 +19,71 @@
     1ページ1メッセージの、小さな本のまま。
     初回訪問者をここへ送る導線は持たない（ホームから始めてよい）。
   -->
-  <main class="page">
+  <main class="page intro-mock">
 
-    <div data-app-header="paper" data-header-title="はじめての方へ" data-header-tools="none"></div>
-    <div class="deck">
-      <div class="deck-viewport" data-intro>
-        <div class="deck-home-link">
-          <button type="button" data-href="index.html">ホームへ</button>
-        </div>
+    <div data-app-header="paper" data-header-tools="none"></div>
+
+    <section class="intro-book" aria-label="うたがえしについて">
+      <div class="deck-viewport intro-deck" data-intro>
 
         <article class="deck-card intro-card-active" data-intro-page>
           <div class="intro-page">
-            <p class="intro-eyebrow">うたがえし</p>
-            <p class="intro-title">今日の景色から、<br>言葉をひとつ。</p>
-            <p class="intro-sub">毎日の小さな景色を見て、浮かんだことを残す場所です。</p>
+            <div class="intro-page-number" aria-hidden="true">01</div>
+            <div class="intro-page-copy">
+              <p class="intro-eyebrow">うたがえし</p>
+              <h1 class="intro-title">今日の景色から、<br>言葉をひとつ。</h1>
+              <p class="intro-sub">毎日の小さな景色を見て、浮かんだことを残す場所です。</p>
+            </div>
           </div>
         </article>
 
         <article class="deck-card" data-intro-page hidden>
           <div class="intro-page">
-            <p class="intro-eyebrow">まず、今日の景色を見る</p>
-            <p class="intro-poem">最近、風が少し軽くなってきましたね。
-帰り道の景色にも、季節の変化が見つかるかもしれません。</p>
-            <p class="intro-reply-arrow" aria-hidden="true">↓</p>
-            <p class="intro-example-reply">あなたなら、どんな言葉が浮かびますか。</p>
+            <div class="intro-page-number" aria-hidden="true">02</div>
+            <div class="intro-page-copy">
+              <p class="intro-eyebrow">景色を見る</p>
+              <p class="intro-scene">風が少し軽い<br>帰り道の影が<br>いつもより長い</p>
+              <p class="intro-sub">その日に出会った小さな景色が、ひとつ届きます。</p>
+            </div>
           </div>
         </article>
 
         <article class="deck-card" data-intro-page hidden>
           <div class="intro-page">
-            <p class="intro-eyebrow">昔の人は、こう詠んだ</p>
-            <p class="intro-poem">ちはやぶる
+            <div class="intro-page-number" aria-hidden="true">03</div>
+            <div class="intro-page-copy">
+              <p class="intro-eyebrow">千年前の言葉</p>
+              <p class="intro-poem">ちはやぶる
 神代もきかず
 龍田川
 からくれなゐに
 水くくるとは</p>
-            <p class="intro-poem-meta">在原業平朝臣『百人一首』十七番</p>
-            <p class="intro-sub">同じ景色から、千年前の人の言葉ものぞけます。</p>
+              <p class="intro-poem-meta">在原業平朝臣『百人一首』十七番</p>
+              <p class="intro-sub">同じ景色について残された言葉として、そっと混ざります。</p>
+            </div>
           </div>
         </article>
 
         <article class="deck-card" data-intro-page hidden>
           <div class="intro-page">
-            <p class="intro-eyebrow">うまい言葉でなくても大丈夫</p>
-            <p class="intro-title">短歌にする必要は<br>ありません。</p>
-            <p class="intro-sub">
-              浮かんだことを、そのままひとこと。<br>
-              読むだけでも大丈夫です。
-            </p>
-            <button class="btn btn-primary intro-cta" type="button" data-href="index.html">今日の景色へ</button>
+            <div class="intro-page-number" aria-hidden="true">04</div>
+            <div class="intro-page-copy">
+              <p class="intro-eyebrow">残す</p>
+              <p class="intro-title">短歌にしなくていい。</p>
+              <p class="intro-sub">浮かんだことを、そのままひとこと。<br>読むだけの日があっても大丈夫です。</p>
+              <button class="intro-cta" type="button" data-href="index.html">今日の景色を見る</button>
+            </div>
           </div>
         </article>
       </div>
 
-      <div class="deck-nav">
-        <button class="deck-prev" type="button" data-intro-prev disabled>← 前のページ</button>
-        <span class="deck-indicator" data-intro-indicator>1 / 4</span>
-        <button class="deck-next" type="button" data-intro-next>次のページ →</button>
+      <div class="intro-book-nav">
+        <button type="button" data-intro-prev disabled aria-label="前のページ">←</button>
+        <span data-intro-indicator>1 / 4</span>
+        <button type="button" data-intro-next aria-label="次のページ">→</button>
       </div>
-
-      <p class="intro-swipe-hint">← スワイプでもめくれます →</p>
-    </div>
-
-    <div class="spacer"></div>
+      <p class="intro-swipe-hint">左右にスワイプしてめくる</p>
+    </section>
   </main>
 </div>
 
