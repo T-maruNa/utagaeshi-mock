@@ -20,3 +20,197 @@
 [hidden] {
   display: none !important;
 }
+
+/* =========================================================
+   intro — 説明スライドではなく、小さな詩集の扉として見せる
+   ========================================================= */
+.intro-mock {
+  padding-top: 0;
+}
+
+.intro-mock .intro-book {
+  margin: 0 -15px;
+  background: var(--surface);
+  border-top: 1px solid rgba(222, 213, 202, .55);
+  border-bottom: 1px solid rgba(222, 213, 202, .72);
+}
+
+.intro-mock .intro-deck {
+  position: relative;
+  min-height: 610px;
+}
+
+.intro-mock .deck-card {
+  width: 100%;
+}
+
+.intro-mock .intro-page {
+  position: relative;
+  min-height: 610px;
+  display: block;
+  padding: 78px 30px 64px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.intro-mock .intro-page-number {
+  position: absolute;
+  top: 28px;
+  right: 24px;
+  font-family: var(--serif);
+  font-size: 82px;
+  line-height: .85;
+  font-weight: 400;
+  letter-spacing: -.06em;
+  color: var(--ink);
+  opacity: .055;
+  pointer-events: none;
+}
+
+.intro-mock .intro-page-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 315px;
+}
+
+.intro-mock .intro-eyebrow {
+  margin: 0 0 42px;
+  padding-left: 28px;
+  position: relative;
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: .14em;
+  color: var(--ink-faint);
+}
+
+.intro-mock .intro-eyebrow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: 18px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.intro-mock .intro-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(29px, 8vw, 36px);
+  line-height: 1.65;
+  font-weight: 500;
+  letter-spacing: .035em;
+  color: var(--ink);
+}
+
+.intro-mock .intro-scene,
+.intro-mock .intro-poem {
+  margin: 0;
+  white-space: pre-line;
+  font-family: var(--serif);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.intro-mock .intro-scene {
+  font-size: 27px;
+  line-height: 1.9;
+  letter-spacing: .045em;
+}
+
+.intro-mock .intro-poem {
+  font-size: 23px;
+  line-height: 1.95;
+  letter-spacing: .05em;
+}
+
+.intro-mock .intro-poem-meta {
+  margin: 22px 0 0;
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+}
+
+.intro-mock .intro-sub {
+  max-width: 290px;
+  margin: 42px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 2;
+  letter-spacing: .02em;
+  color: var(--ink-soft);
+}
+
+.intro-mock .intro-cta {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 46px;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.intro-mock .intro-book-nav {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  min-height: 64px;
+  padding: 0 18px;
+  border-top: 1px solid rgba(222, 213, 202, .72);
+}
+
+.intro-mock .intro-book-nav button {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.intro-mock .intro-book-nav button:last-child {
+  justify-self: end;
+}
+
+.intro-mock .intro-book-nav button:disabled {
+  opacity: .16;
+}
+
+.intro-mock .intro-book-nav [data-intro-indicator] {
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--ink-faint);
+}
+
+.intro-mock .intro-swipe-hint {
+  margin: 10px 0 0;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+}
+
+/* 旧introの中央寄せアニメーションをこの画面では無効化 */
+.intro-mock .deck-card.intro-card-active .intro-page > * {
+  animation: none;
+}
+
