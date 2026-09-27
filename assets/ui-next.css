@@ -261,18 +261,6 @@
 .home-mock .vcard-bottom {
   margin-top: auto;
 }
-
-/* ---------- ヘッダー ----------
-   ヘッダーはどの画面でも同じ部品（HomeTodayHeader）なので、見た目も
-   ここ1か所に書く。以前は .home-mock 用と .book-mock/.scenes-mock 用で
-   ほぼ同じ指定を2セット持っていて、片方だけ直すと画面によって
-   ヘッダーがずれる形になっていた。
-   画面ごとに本当に違うのは、下の余白とブランドの間隔だけ。 */
-.home-mock-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .brand-wrap {
   display: flex;
   align-items: center;
@@ -281,12 +269,6 @@
   font-family: var(--serif);
   font-size: 22px;
   letter-spacing: 0.14em;
-  color: var(--ink);
-  text-decoration: none;
-}
-.book-name {
-  font-family: var(--serif);
-  font-size: 13px;
   color: var(--ink);
   text-decoration: none;
 }
@@ -307,46 +289,8 @@
   background: var(--ink);
   border-radius: var(--radius-pill);
 }
-/* 画面ごとの差はこれだけ */
-.home-mock .home-mock-top {
-  margin-bottom: 22px;
-}
 .home-mock .brand-wrap {
   gap: 17px;
-}
-/* 右上のひとまとまり（アイコン＋メニュー）。ヘッダーは space-between
-   なので、2つを素で並べるとブランドとの間で散らばる。
-   間隔は16px。これ未満にすると、下で広げている44pxの判定同士が重なって
-   「アイコンを押したのにメニューが開く」が起きる
-   （アイコンは左右+7px、メニューは左右+7.5px） */
-.home-mock-top .header-tools {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-/* 自分のアイコン。押すとプロフィールへ。
-   メニューの中にも「プロフィール」はあるが、自分の顔だけは畳まない */
-.home-mock-top .header-avatar-link {
-  display: flex;
-  text-decoration: none;
-}
-.home-mock-top .header-avatar {
-  flex: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-/* アイコンが無い人。プロフィールと同じく頭文字だけを地に置く */
-.home-mock-top .header-avatar.is-blank {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ece4d9;
-  color: #806f5d;
-  font-family: var(--serif);
-  font-size: 14px;
-  line-height: 1;
 }
 
 /* ---------- compose ---------- */
@@ -917,36 +861,6 @@
   font-size: 11px;
   color: var(--ink-soft);
 }
-
-/* ---------------------------------------------------------
-   今日のヒーロー化
-
-   ヘッダー＋景色カードを1つの大きな写真にし、composeがその下端へ
-   食い込む。`index.html`（今日）だけに付く `.home-hero` でスコープする。
-   他の .home-mock 画面（その日の景色 day.html など）はこの節の影響を
-   受けない。実装（utagaeshi）へ持っていくときは HomeToday.tsx の
-   `<main>` に home-hero を足し、CardDeck.tsx で .deck / .deck-ctrl /
-   .swipe-note / .deck-open-row を .deck-frame で包む。
-
-   ここから下のセレクタは `.home-mock .xxx` と同じ詳細度（クラス2つ）の
-   ものが多いので、**この節はファイルの中で元の指定より後ろに置くこと**。
-   詳細度が同じ場合はCSSの出現順で後勝ちになる。
-   --------------------------------------------------------- */
-
-/* ---------- ヘッダーを写真の上へ ---------- */
-.home-hero .home-mock-top {
-  position: absolute;
-  top: 22px;
-  left: 24px;
-  right: 24px;
-  z-index: 3;
-  margin-bottom: 0;
-}
-.home-hero .brand,
-.home-hero .book-name {
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
 .home-hero .home-menu span {
   background: var(--on-scene);
   box-shadow: var(--on-scene-shadow-sm);
@@ -1081,12 +995,6 @@
   color: var(--ink);
   font-family: var(--sans);
   line-height: normal;
-}
-/* ヘッダーの共通部分は「ヘッダー」の節にある。
-   返し帳と一覧は、ホームより下の余白が広く、ブランドの間隔が1px狭い */
-.book-mock .home-mock-top,
-.scenes-mock .home-mock-top {
-  margin-bottom: 26px;
 }
 .book-mock .brand-wrap,
 .scenes-mock .brand-wrap {
@@ -1998,46 +1906,6 @@ button.index-row {
 .app:has(> .admin-scene-detail) {
   --app-max: 480px;
 }
-
-/* ---------------------------------------------------------
-   押せる範囲
-
-   Phase 5 の実測で、指で押す部分が小さすぎるものが見つかった。
-   ハンバーガーは29x24px、「整える」「削除する」は高さ15pxしかない。
-   WCAG 2.5.8 の下限は24x24で、そこにも届いていない。
-
-   ■ 大きく描くのではなく、当たり判定だけ広げる
-   この画面は静かな見た目が設計そのものなので、ボタンを大きく描くと
-   設計が壊れる。padding で内側を広げ、同じ値の負の margin で外形を
-   元に戻す。こうすると**見た目と配置は1pxも動かないまま**、押せる
-   範囲だけが広がる。
-
-   広げる量は上下に10〜12px。隣の要素の判定と重なって「押したつもりの
-   ものと違うものが反応する」ほうが困るので、44pxまでは広げない。
-   --------------------------------------------------------- */
-/* ヘッダーの中は flex で位置が決まるうえ、幅と高さを固定してあるので、
-   padding では広げられない（box-sizing が border-box なので内側を食う）。
-   ここだけは透明な板を重ねて判定を広げる。右上の角にあり、隣の操作と
-   重なる心配が無い場所なので、この手が使える */
-/* .home-mock 付きで書いてあったので、これまでの景色や返し帳
-   （.scenes-mock / .book-mock）のハンバーガーだけ判定が29x24のままだった。
-   ヘッダーはどの画面でも同じ部品なので、ここも画面で分けない */
-.home-menu,
-.brand-wrap .book-name,
-.home-mock-top .header-avatar-link {
-  position: relative;
-}
-.home-menu::after,
-.brand-wrap .book-name::after,
-.home-mock-top .header-avatar-link::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: max(100%, 44px);
-  height: max(100%, 44px);
-}
 /* この2つは既に margin を持っている（.book-link は 26〜30px auto 0 で
    中央寄せ）。padding + 負の margin で広げると、その margin ごと
    置き換えてしまって配置が変わる。ここも板を重ねる */
@@ -2367,39 +2235,6 @@ button.index-row {
   padding-right: 24px;
 }
 
-
-/* =========================================================
-   2026-09-20 トップ固定透過ヘッダー
-   景色の上にブランドだけを固定し、スクロール後は可読性を戻す。
-   ========================================================= */
-.home-mock.home-hero .home-mock-top {
-  position: sticky;
-  top: 0;
-  left: auto;
-  right: auto;
-  transform: none;
-  width: calc(100% + 30px);
-  min-height: 72px;
-  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px;
-  margin: 0 -15px -72px;
-  z-index: 60;
-  background: transparent;
-  border: 0;
-  pointer-events: none;
-}
-
-.home-mock.home-hero .home-mock-top .brand-wrap,
-.home-mock.home-hero .home-mock-top .header-tools,
-.home-mock.home-hero .home-mock-top .home-menu,
-.home-mock.home-hero .home-mock-top .header-avatar-link {
-  pointer-events: auto;
-}
-
-/* 返し帳はBottomNavにあるので、トップヘッダーでは重複させない */
-.home-mock.home-hero .book-name {
-  display: none;
-}
-
 .home-mock.home-hero .brand-wrap {
   gap: 0;
 }
@@ -2418,23 +2253,6 @@ button.index-row {
   background: rgba(255, 255, 255, 0.88);
   color: #6b5d4d;
   box-shadow: var(--on-scene-shadow-sm);
-}
-
-/* ヒーローを抜けたら固定ヘッダーだけ静かに紙面色へ切り替える */
-.home-mock.home-hero .home-mock-top.is-scrolled {
-  background: color-mix(in srgb, #fffdf8 88%, transparent);
-  backdrop-filter: saturate(1.1) blur(12px);
-  border-bottom: 1px solid rgba(211, 201, 188, 0.55);
-}
-
-.home-mock.home-hero .home-mock-top.is-scrolled .brand {
-  color: var(--ink);
-  text-shadow: none;
-}
-
-.home-mock.home-hero .home-mock-top.is-scrolled .home-menu span {
-  background: var(--ink);
-  box-shadow: none;
 }
 
 
@@ -2467,32 +2285,9 @@ button.index-row {
   line-height: 1;
 }
 
-
-/* =========================================================
-   2026-09-20 これまでの景色 — 「目次」寄りの再設計
-   写真ギャラリーではなく、日付と景色の文をたどる静かな索引にする。
-   ========================================================= */
-
-/* トップと同じブランド行を残しつつ、一覧では紙面上に固定する */
-.scenes-mock .home-mock-top {
-  position: sticky;
-  top: 0;
-  z-index: 45;
-  width: calc(100% + 30px);
-  min-height: 64px;
-  margin: -18px -15px 30px;
-  padding: calc(14px + env(safe-area-inset-top, 0px)) 15px 10px;
-  background: color-mix(in srgb, #fffdf8 90%, transparent);
-  backdrop-filter: saturate(1.05) blur(12px);
-  border-bottom: 1px solid rgba(222, 213, 202, 0.62);
-}
-
 /* ページ名は本文で一度だけ見せる */
 .scenes-mock .brand-wrap {
   gap: 0;
-}
-.scenes-mock .book-name {
-  display: none;
 }
 
 /* 表題は「アプリの見出し」より、本の章扉に近づける */
@@ -2605,31 +2400,8 @@ button.index-row {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-
-
-/* =========================================================
-   2026-09-20 過去日詳細 — 「あの日を読み返す」画面
-   トップの景色体験を引き継ぎつつ、投稿画面ではなく記録ページに寄せる。
-   ========================================================= */
-
-/* ヘッダーはページ名を重ねず、ブランドだけを固定して共通化 */
-.day-mock .home-mock-top {
-  position: sticky;
-  top: 0;
-  z-index: 55;
-  width: calc(100% + 30px);
-  min-height: 68px;
-  margin: -18px -15px 0;
-  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px;
-  background: color-mix(in srgb, #fffdf8 88%, transparent);
-  backdrop-filter: saturate(1.05) blur(12px);
-  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
-}
 .day-mock .brand-wrap {
   gap: 0;
-}
-.day-mock .book-name {
-  display: none;
 }
 
 /* 日付を記憶の入口にして、説明文は置かない */
@@ -2728,24 +2500,6 @@ button.index-row {
 /* dayもトップ同様、最上部から写真を始める */
 .home-mock.home-hero.day-mock {
   padding-top: 0;
-}
-
-/* day専用で入れていた紙色stickyヘッダーを打ち消し、
-   トップと同じ「写真の上に浮く固定透過ヘッダー」にする */
-.home-mock.home-hero.day-mock .home-mock-top {
-  position: sticky;
-  top: 0;
-  left: auto;
-  right: auto;
-  transform: none;
-  width: calc(100% + 30px);
-  min-height: 72px;
-  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 10px;
-  margin: 0 -15px -72px;
-  z-index: 60;
-  background: transparent;
-  border: 0;
-  backdrop-filter: none;
 }
 
 /* 上半分はトップと同じ大きさ・文字位置へ完全に戻す */
@@ -2857,31 +2611,8 @@ button.index-row {
 .home-mock.home-hero.day-mock .words {
   margin-top: 30px;
 }
-
-
-/* =========================================================
-   2026-09-20 返し帳 — 「本を読む場所」へ
-   管理画面ではなく、1枚の言葉をめくりながら記憶を拾う体験に寄せる。
-   ========================================================= */
-
-/* 共通ヘッダー。ページ名は本文で一度だけ見せる */
-.book-mock .home-mock-top {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: calc(100% + 30px);
-  min-height: 66px;
-  margin: -18px -15px 0;
-  padding: calc(14px + env(safe-area-inset-top, 0px)) 15px 10px;
-  background: color-mix(in srgb, #fffdf8 90%, transparent);
-  backdrop-filter: saturate(1.05) blur(12px);
-  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
-}
 .book-mock .brand-wrap {
   gap: 0;
-}
-.book-mock .book-name {
-  display: none;
 }
 
 /* 「ゆき の返し帳」＋「返し帳」の重複を1つの章扉に統合 */
@@ -3213,30 +2944,6 @@ button.index-row {
   margin-top: 0;
 }
 
-/* カードと統合ヘッダーの間を詰める */
-
-
-
-/* =========================================================
-   2026-09-20 返し帳ヘッダー簡略化 + タブを目次へ
-   上はグローバルヘッダーだけ。モード切替は目次の入口で行う。
-   ========================================================= */
-.book-mock .book-simple-header {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  width: calc(100% + 30px);
-  min-height: 64px;
-  margin: -18px -15px 0;
-  padding: calc(14px + env(safe-area-inset-top, 0px)) 15px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: color-mix(in srgb, #fffdf8 92%, transparent);
-  backdrop-filter: saturate(1.05) blur(12px);
-  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
-}
-
 /* 旧統合ヘッダー要素は使わない */
 .book-mock .book-shell-top,
 .book-mock .book-shell-title {
@@ -3265,24 +2972,6 @@ button.index-row {
   margin-top: 0;
   padding-top: 20px;
   border-top: 0;
-}
-
-
-/* =========================================================
-   2026-09-20 返し帳 — 詩集としての階層を強める
-   作品面は明朝と余白で見せ、操作UIは静かに残す。
-   ========================================================= */
-
-/* ヘッダーは存在感を抑え、作品面を前に出す */
-.book-mock .book-simple-header {
-  min-height: 58px;
-  padding-top: calc(10px + env(safe-area-inset-top, 0px));
-  padding-bottom: 8px;
-  background: color-mix(in srgb, #fffdf8 94%, transparent);
-}
-.book-mock .book-simple-header .brand {
-  font-size: 17px;
-  letter-spacing: 0.16em;
 }
 
 /* 写真面を詩集の1ページとして扱う */
@@ -3375,65 +3064,6 @@ button.index-row {
   font-family: var(--serif);
   font-size: 13px;
   line-height: 1.6;
-}
-
-
-/* =========================================================
-   2026-09-20 返し帳ヘッダーを写真上では透過
-   トップ/dayと同じく、作品面の上では背景を持たせない。
-   ========================================================= */
-.book-mock .book-simple-header {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  width: calc(100% + 30px);
-  min-height: 58px;
-  margin: -18px -15px -58px;
-  padding: calc(10px + env(safe-area-inset-top, 0px)) 15px 8px;
-  background: transparent;
-  backdrop-filter: none;
-  border-bottom: 0;
-  pointer-events: none;
-}
-
-.book-mock .book-simple-header .brand-wrap,
-.book-mock .book-simple-header .header-tools,
-.book-mock .book-simple-header .home-menu,
-.book-mock .book-simple-header .header-avatar-link {
-  pointer-events: auto;
-}
-
-.book-mock .book-simple-header .brand {
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
-
-.book-mock .book-simple-header .home-menu span {
-  background: var(--on-scene);
-  box-shadow: var(--on-scene-shadow-sm);
-}
-
-.book-mock .book-simple-header .header-avatar.is-blank {
-  background: rgba(255, 255, 255, 0.88);
-  color: #6b5d4d;
-  box-shadow: var(--on-scene-shadow-sm);
-}
-
-/* 写真を抜けたら紙色へ戻して可読性を確保 */
-.book-mock .book-simple-header.is-scrolled {
-  background: color-mix(in srgb, #fffdf8 90%, transparent);
-  backdrop-filter: saturate(1.05) blur(12px);
-  border-bottom: 1px solid rgba(222, 213, 202, 0.58);
-}
-
-.book-mock .book-simple-header.is-scrolled .brand {
-  color: var(--ink);
-  text-shadow: none;
-}
-
-.book-mock .book-simple-header.is-scrolled .home-menu span {
-  background: var(--ink);
-  box-shadow: none;
 }
 
 
@@ -3777,5 +3407,28 @@ button.index-row {
   max-width: 86%;
   margin: 0;
   padding: 0;
+}
+
+/* AppHeader の副題。全ページ共通部品の任意スロット。 */
+.app-shell-header .app-shell-title {
+  margin-left: 16px;
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.app-shell-header:not(.app-shell-header--paper):not(.is-scrolled) .app-shell-title {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.app-shell-header--paper .app-shell-title,
+.app-shell-header.is-scrolled .app-shell-title {
+  color: var(--ink);
+  text-shadow: none;
 }
 
