@@ -21,35 +21,65 @@
   display: none !important;
 }
 
-/* intro はスライダー構造を変えず、各ページ全体を景色にする。
-   2・3ページ目は同じ景色を使い、「同じ景色から今と昔の言葉」をつなぐ。 */
+
+/* intro はカードではなく .app 全体を景色にする。
+   スライド切替時は setupIntro が --intro-bg を更新する。 */
+.app.intro-app {
+  min-height: 100svh;
+  padding-bottom: 0;
+  background-image: var(--intro-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  isolation: isolate;
+}
+
+.app.intro-app::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--scene-scrim);
+  pointer-events: none;
+}
+
+.app.intro-app > * {
+  position: relative;
+  z-index: 1;
+}
+
 .intro-mock {
+  min-height: 100svh;
   padding-top: 0;
+  padding-bottom: 0;
+}
+
+.intro-mock > .deck {
+  margin-top: 0;
 }
 
 .intro-mock .deck-viewport {
+  position: relative;
+  min-height: 100svh;
   margin: 0 -20px;
 }
 
 .intro-mock .intro-bg {
-  position: relative;
-  min-height: 64vh;
-  background-size: cover;
-  background-position: center;
+  min-height: 100svh;
+  background: transparent !important;
   overflow: hidden;
 }
 
 .intro-mock .intro-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--scene-scrim);
-  pointer-events: none;
+  display: none;
 }
 
 .intro-mock .intro-bg .intro-page {
   position: relative;
   z-index: 1;
+  min-height: 100svh;
+  padding-bottom: 128px;
   color: var(--on-scene);
 }
 
@@ -82,20 +112,11 @@
   text-shadow: none;
 }
 
-/* intro の操作UIはすべて景色カード内に置く。カード外には出さない。 */
-.intro-mock > .deck {
-  margin-top: 0;
-}
-
-.intro-mock .deck-viewport {
-  position: relative;
-}
-
 .intro-mock .intro-deck-controls {
   position: absolute;
   left: 18px;
   right: 18px;
-  bottom: 14px;
+  bottom: max(18px, env(safe-area-inset-bottom, 0px));
   z-index: 4;
 }
 
@@ -119,8 +140,3 @@
 .intro-mock .intro-deck-controls .intro-swipe-hint {
   margin: 2px 0 0;
 }
-
-.intro-mock .intro-bg .intro-page {
-  padding-bottom: 112px;
-}
-
