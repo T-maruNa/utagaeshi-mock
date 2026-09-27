@@ -21,18 +21,23 @@
   display: none !important;
 }
 
+
 /* =========================================================
-   intro — TOPと同じ「景色 → 言葉」の視覚言語で説明する
+   intro — スライダーのまま、TOPと同じ写真＋言葉の世界観に揃える
    ========================================================= */
-.intro-mock {
-  padding-top: 0;
+.intro-mock { padding-top: 0; }
+
+.intro-mock .intro-slider { margin: 0 -15px; }
+
+.intro-mock .intro-slider-viewport {
+  position: relative;
+  min-height: 610px;
 }
 
-.intro-mock .intro-hero {
+.intro-mock .intro-slide {
   position: relative;
-  min-height: 590px;
-  margin: 0 -15px;
-  padding: 0 24px 54px;
+  min-height: 610px;
+  padding: 0 24px 62px;
   display: flex;
   align-items: flex-end;
   background-size: cover;
@@ -40,7 +45,7 @@
   overflow: hidden;
 }
 
-.intro-mock .intro-hero::before {
+.intro-mock .intro-slide::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -48,15 +53,16 @@
   pointer-events: none;
 }
 
-.intro-mock .intro-hero-copy {
+.intro-mock .intro-slide-copy {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 340px;
   color: var(--on-scene);
   text-shadow: var(--on-scene-shadow);
 }
 
-.intro-mock .intro-kicker {
+.intro-mock .intro-slide-kicker {
   margin: 0 0 18px;
   font-family: var(--sans);
   font-size: 11px;
@@ -65,86 +71,78 @@
   color: var(--on-scene-soft);
 }
 
-.intro-mock .intro-hero h1 {
+.intro-mock .intro-slide h1,
+.intro-mock .intro-slide-main {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(30px, 8.4vw, 38px);
+  font-size: clamp(29px, 8.2vw, 37px);
   line-height: 1.62;
   font-weight: 500;
   letter-spacing: .035em;
+  color: var(--on-scene);
 }
 
-.intro-mock .intro-hero-copy > p:last-child {
-  margin: 28px 0 0;
+.intro-mock .intro-slide-desc {
+  margin: 26px 0 0;
   font-family: var(--sans);
   font-size: 13px;
-  line-height: 2;
+  line-height: 1.95;
   letter-spacing: .01em;
   color: var(--on-scene-strong);
 }
 
-.intro-mock .intro-flow {
-  padding: 44px 9px 88px;
-}
-
-.intro-mock .intro-flow-lead {
-  margin-bottom: 8px;
-  padding: 0 6px 20px;
-  border-bottom: 1px solid var(--line);
-  font-family: var(--sans);
-  font-size: 11px;
-  letter-spacing: .1em;
-  color: var(--ink-faint);
-}
-
-.intro-mock .intro-flow-item {
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  gap: 12px;
-  padding: 26px 6px 28px;
-  border-bottom: 1px solid var(--line);
-}
-
-.intro-mock .intro-flow-no {
-  padding-top: 4px;
+.intro-mock .intro-slide-cta {
+  display: inline-block;
+  margin-top: 32px;
+  padding: 0 0 7px;
+  border-bottom: 1px solid rgba(255,255,255,.82);
   font-family: var(--serif);
-  font-size: 12px;
-  line-height: 1;
-  letter-spacing: .06em;
-  color: var(--ink-faint);
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--on-scene);
+  text-decoration: none;
+  text-shadow: var(--on-scene-shadow-sm);
 }
 
-.intro-mock .intro-flow-item h2 {
-  margin: 0;
+.intro-mock .intro-slider-nav {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  min-height: 64px;
+  padding: 0 18px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+.intro-mock .intro-slider-nav button {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
   font-family: var(--serif);
   font-size: 20px;
-  line-height: 1.55;
-  font-weight: 500;
-  letter-spacing: .025em;
-  color: var(--ink);
-}
-
-.intro-mock .intro-flow-item p {
-  margin: 10px 0 0;
-  max-width: 300px;
-  font-family: var(--sans);
-  font-size: 13px;
-  line-height: 1.9;
   color: var(--ink-soft);
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
-.intro-mock .intro-start {
-  margin-top: 34px;
-  min-height: 58px;
-  padding: 0 6px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--ink);
+.intro-mock .intro-slider-nav button:last-child { justify-self: end; }
+.intro-mock .intro-slider-nav button:disabled { opacity: .16; }
+
+.intro-mock .intro-slider-nav [data-intro-indicator] {
+  text-align: center;
   font-family: var(--serif);
-  font-size: 16px;
-  letter-spacing: .035em;
-  color: var(--ink);
-  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-faint);
 }
 
+.intro-mock .intro-swipe-hint {
+  margin: 10px 0 0;
+  text-align: center;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+}
