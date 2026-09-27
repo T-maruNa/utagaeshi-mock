@@ -21,24 +21,64 @@
   display: none !important;
 }
 
-/* intro は既存のスライダー/タイポをそのまま使い、景色を挿絵として足す。
-   2・3ページ目は同じ景色にして「同じ景色から今と昔の言葉」を視覚でつなぐ。 */
-.intro-page .intro-visual {
-  display: block;
-  width: min(100%, 320px);
-  height: 146px;
-  margin: 0 auto 26px;
-  border-radius: 12px;
-  object-fit: cover;
-  box-shadow: var(--shadow-soft);
+/* intro はスライダー構造を変えず、各ページ全体を景色にする。
+   2・3ページ目は同じ景色を使い、「同じ景色から今と昔の言葉」をつなぐ。 */
+.intro-mock {
+  padding-top: 0;
 }
 
-.intro-page .intro-visual--opening {
-  height: 132px;
+.intro-mock .deck-viewport {
+  margin: 0 -20px;
 }
 
-.intro-page .intro-visual--closing {
-  height: 118px;
-  opacity: .82;
+.intro-mock .intro-bg {
+  position: relative;
+  min-height: 64vh;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.intro-mock .intro-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--scene-scrim);
+  pointer-events: none;
+}
+
+.intro-mock .intro-bg .intro-page {
+  position: relative;
+  z-index: 1;
+  color: var(--on-scene);
+}
+
+.intro-mock .intro-bg .intro-eyebrow,
+.intro-mock .intro-bg .intro-title,
+.intro-mock .intro-bg .intro-poem,
+.intro-mock .intro-bg .intro-example-reply,
+.intro-mock .intro-bg .intro-sub,
+.intro-mock .intro-bg .intro-poem-meta,
+.intro-mock .intro-bg .intro-reply-arrow {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+
+.intro-mock .intro-bg .intro-sub,
+.intro-mock .intro-bg .intro-poem-meta,
+.intro-mock .intro-bg .intro-eyebrow {
+  color: var(--on-scene-soft);
+}
+
+.intro-mock .intro-bg .intro-example-reply {
+  border-top-color: var(--on-scene-line);
+  border-bottom-color: var(--on-scene-line);
+}
+
+.intro-mock .intro-bg .intro-cta {
+  background: rgba(255, 253, 248, .94);
+  color: var(--ink);
+  border-color: transparent;
+  text-shadow: none;
 }
 
