@@ -20,3 +20,25 @@
 [hidden] {
   display: none !important;
 }
+
+/* intro は既存のスライダー/タイポをそのまま使い、景色を挿絵として足す。
+   2・3ページ目は同じ景色にして「同じ景色から今と昔の言葉」を視覚でつなぐ。 */
+.intro-page .intro-visual {
+  display: block;
+  width: min(100%, 320px);
+  height: 146px;
+  margin: 0 auto 26px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: var(--shadow-soft);
+}
+
+.intro-page .intro-visual--opening {
+  height: 132px;
+}
+
+.intro-page .intro-visual--closing {
+  height: 118px;
+  opacity: .82;
+}
+
