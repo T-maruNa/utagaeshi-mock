@@ -50,7 +50,6 @@
 }
 
 .intro-mock {
-  min-height: 100svh;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -61,12 +60,12 @@
 
 .intro-mock .deck-viewport {
   position: relative;
-  min-height: 100svh;
+  min-height: 64vh;
   margin: 0 -20px;
 }
 
 .intro-mock .intro-bg {
-  min-height: 100svh;
+  min-height: 64vh;
   background: transparent !important;
   overflow: hidden;
 }
@@ -78,8 +77,8 @@
 .intro-mock .intro-bg .intro-page {
   position: relative;
   z-index: 1;
-  min-height: 100svh;
-  padding-bottom: 128px;
+  min-height: 64vh;
+  padding-bottom: 112px;
   color: var(--on-scene);
 }
 
@@ -139,4 +138,11 @@
 
 .intro-mock .intro-deck-controls .intro-swipe-hint {
   margin: 2px 0 0;
+}
+
+
+@media (min-width: 520px) {
+  .app.intro-app {
+    min-height: calc(100svh - 48px);
+  }
 }
