@@ -21,50 +21,55 @@
   -->
   <main class="page intro-mock">
 
-    <div data-app-header="overlay" data-header-boundary=".intro-hero"></div>
+    <div data-app-header="overlay" data-header-boundary=".intro-slider"></div>
 
-    <section class="intro-hero" aria-labelledby="intro-title"
-             style="background-image:url('assets/scenes/10/10_street_01.webp')">
-      <div class="intro-hero-copy">
-        <p class="intro-kicker">はじめての方へ</p>
-        <h1 id="intro-title">千年前の歌人と、<br>同じ景色を見る。</h1>
-        <p>今日の景色を見て、浮かんだことをひとつ残す。<br>その景色には、今の誰かと昔の誰かの言葉も残っています。</p>
+    <section class="intro-slider" aria-label="うたがえしについて">
+      <div class="intro-slider-viewport" data-intro>
+
+        <article class="intro-slide intro-card-active" data-intro-page
+                 style="background-image:url('assets/scenes/10/10_street_01.webp')">
+          <div class="intro-slide-copy">
+            <p class="intro-slide-kicker">はじめての方へ</p>
+            <h1>千年前の歌人と、<br>同じ景色を見る。</h1>
+            <p class="intro-slide-desc">うたがえしは、毎日の小さな景色に、今の自分の言葉を残す場所です。</p>
+          </div>
+        </article>
+
+        <article class="intro-slide" data-intro-page hidden
+                 style="background-image:url('assets/scenes/10/10_park_01.webp')">
+          <div class="intro-slide-copy">
+            <p class="intro-slide-kicker">景色を見る</p>
+            <p class="intro-slide-main">その日ひとつの、<br>小さな景色が届きます。</p>
+            <p class="intro-slide-desc">まずは見るだけで大丈夫。何か浮かんだら、そのまま次へ。</p>
+          </div>
+        </article>
+
+        <article class="intro-slide" data-intro-page hidden
+                 style="background-image:url('assets/scenes/10/10_room_01.webp')">
+          <div class="intro-slide-copy">
+            <p class="intro-slide-kicker">言葉を残す</p>
+            <p class="intro-slide-main">短歌にしなくていい。</p>
+            <p class="intro-slide-desc">ひとことでも、まとまっていなくてもいい。浮かんだことを、そのまま残せます。</p>
+          </div>
+        </article>
+
+        <article class="intro-slide" data-intro-page hidden
+                 style="background-image:url('assets/scenes/10/10_night_sky_01.webp')">
+          <div class="intro-slide-copy">
+            <p class="intro-slide-kicker">同じ景色の言葉を読む</p>
+            <p class="intro-slide-main">今の誰かの言葉に、<br>千年前の言葉も混ざる。</p>
+            <p class="intro-slide-desc">同じ景色を見た人たちの言葉を、1枚ずつめくって読めます。</p>
+            <a class="intro-slide-cta" href="index.html">今日の景色を見る</a>
+          </div>
+        </article>
       </div>
-    </section>
 
-    <section class="intro-flow" aria-label="うたがえしの使い方">
-      <div class="intro-flow-lead">
-        <span>うたがえしで、すること</span>
+      <div class="intro-slider-nav">
+        <button type="button" data-intro-prev disabled aria-label="前のページ">←</button>
+        <span data-intro-indicator>1 / 4</span>
+        <button type="button" data-intro-next aria-label="次のページ">→</button>
       </div>
-
-      <article class="intro-flow-item">
-        <span class="intro-flow-no">01</span>
-        <div>
-          <h2>景色を見る</h2>
-          <p>その日ひとつの、小さな景色が届きます。</p>
-        </div>
-      </article>
-
-      <article class="intro-flow-item">
-        <span class="intro-flow-no">02</span>
-        <div>
-          <h2>浮かんだことを残す</h2>
-          <p>短歌にする必要はありません。ひとことでも、書かない日でも大丈夫です。</p>
-        </div>
-      </article>
-
-      <article class="intro-flow-item">
-        <span class="intro-flow-no">03</span>
-        <div>
-          <h2>同じ景色の言葉をめくる</h2>
-          <p>今の誰かの言葉に混ざって、千年前の人が残した言葉も現れます。</p>
-        </div>
-      </article>
-
-      <a class="intro-start" href="index.html">
-        <span>今日の景色を見る</span>
-        <span aria-hidden="true">→</span>
-      </a>
+      <p class="intro-swipe-hint">左右にスワイプしてめくる</p>
     </section>
   </main>
 </div>
