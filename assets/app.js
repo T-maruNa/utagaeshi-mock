@@ -457,21 +457,42 @@
 
     var mode = mount.getAttribute("data-app-header") || "overlay";
     var boundarySelector = mount.getAttribute("data-header-boundary");
+    var title = mount.getAttribute("data-header-title") || "";
+    var titleHref = mount.getAttribute("data-header-title-href") || "";
+    var avatarCurrent = mount.getAttribute("data-header-avatar-current") === "true";
+    var showTools = mount.getAttribute("data-header-tools") !== "none";
 
     var header = document.createElement("header");
     header.className = "app-shell-header" + (mode === "paper" ? " app-shell-header--paper" : "");
+
+    var titleHtml = "";
+    if (title) {
+      titleHtml = titleHref
+        ? '<a class="app-shell-title" href="' + titleHref + '">' + title + '</a>'
+        : '<span class="app-shell-title">' + title + '</span>';
+    }
+
+    var toolsHtml = "";
+    if (showTools) {
+      var avatarHtml = avatarCurrent
+        ? '<span class="header-avatar-link" aria-current="page"><span class="header-avatar is-blank">ゆ</span></span>'
+        : '<a class="header-avatar-link" href="profile.html" aria-label="プロフィール"><span class="header-avatar is-blank">ゆ</span></a>';
+
+      toolsHtml =
+        '<div class="header-tools">' +
+          avatarHtml +
+          '<button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>' +
+            '<span></span><span></span><span></span>' +
+          '</button>' +
+        '</div>';
+    }
+
     header.innerHTML =
       '<div class="brand-wrap">' +
         '<a class="brand" href="index.html">うたがえし</a>' +
+        titleHtml +
       '</div>' +
-      '<div class="header-tools">' +
-        '<a class="header-avatar-link" href="profile.html" aria-label="プロフィール">' +
-          '<span class="header-avatar is-blank">ゆ</span>' +
-        '</a>' +
-        '<button class="home-menu" type="button" aria-label="メニュー" aria-expanded="false" data-menu>' +
-          '<span></span><span></span><span></span>' +
-        '</button>' +
-      '</div>';
+      toolsHtml;
 
     mount.replaceWith(header);
 
@@ -489,7 +510,6 @@
     window.addEventListener("scroll", sync, { passive: true });
     window.addEventListener("resize", sync);
   }
-
   /* ---------------------------------------------------------
      ヘッダーのメニュー（HomeMenu）
      --------------------------------------------------------- */
