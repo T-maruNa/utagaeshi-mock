@@ -48,21 +48,26 @@
 
       <article class="book-record">
         <time class="book-record-date">2026年10月3日 8:12</time>
-        <p class="book-record-body">どんぐりを踏まないように歩いていたら、遅刻しそうになった。</p>
-        <div class="book-reactions"><span>届いた 2</span></div>
-        <details class="book-record-source">
-          <summary>投稿元の景色を見る</summary>
-          <div class="poem is-compact book-scene-card">
-            <div class="poem-body">ベンチの上に
-どんぐりがひとつ
-誰も座らない</div>
-          </div>
-        </details>
-        <!-- 「整える」を押したとき。文字は変えず、改行だけ直せる -->
+
+        <!--
+          「整える」を押したとき。プレーンテキストではなく、実際に読まれる
+          写真つきのカードをその場に出す。改行を直すたびにこのカードへも
+          そのまま反映される（app.js のライブ反映を参照）。
+          文字は変えず、改行だけ直せる。
+        -->
+        <div class="book-record-preview">
+          <article class="vcard vcard--mine" data-label="あなたの言葉"
+                   style="background-image:url('assets/scenes/10/10_park_01.webp')">
+            <div class="vcard-label">あなたの言葉</div>
+            <div class="vcard-body"><p class="vcard-text vcard-text--xl" data-linebreak-preview="reply-2">どんぐりを踏まないように歩いていたら、遅刻しそうになった。</p></div>
+            <div class="vcard-bottom"><span>今日</span><span>返し帳に残しました</span></div>
+          </article>
+        </div>
+
         <div class="book-linebreak-editor">
           <label for="reply-body-2">改行位置を整える</label>
           <p class="book-linebreak-note">文字は変えず、改行だけ追加・削除できます。</p>
-          <textarea id="reply-body-2" class="input book-linebreak-input" rows="6" maxlength="140">どんぐりを踏まないように歩いていたら、遅刻しそうになった。</textarea>
+          <textarea id="reply-body-2" class="input book-linebreak-input" rows="4" maxlength="140" data-linebreak-input="reply-2">どんぐりを踏まないように歩いていたら、遅刻しそうになった。</textarea>
           <div class="book-linebreak-actions">
             <button type="button" class="btn btn-primary">改行を保存</button>
             <button type="button" class="btn btn-ghost">キャンセル</button>

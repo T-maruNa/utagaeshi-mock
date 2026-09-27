@@ -650,6 +650,14 @@ button.logo { background: none; border: none; padding: 0; font: inherit; cursor:
 .book-record .book-scene-card { margin-top: 12px; }
 .book-record .book-reactions { margin-top: 12px; }
 .book-record .book-delete { margin-top: 10px; }
+/* 整えるを開いている間だけ出す、実物のカード。プレーンテキストの
+   .book-record-body と同時には出さない（本文はカード側だけが持つ） */
+.book-record-preview {
+  margin-top: 10px;
+}
+.book-record-preview .vcard {
+  min-height: 320px;
+}
 .book-record-actions {
   display: flex;
   flex-wrap: nowrap;

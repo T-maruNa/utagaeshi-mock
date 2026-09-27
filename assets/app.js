@@ -339,6 +339,29 @@
     panes.forEach(setupBookPane);
   }
 
+  /* ---------------------------------------------------------
+     言葉を整える（/mypage/list）のカードプレビュー
+
+     整えるは「改行だけ直せる」操作なので、打つそばから実物のカード
+     （写真つき）へそのまま反映させる。プレーンテキストの一覧では
+     見えない、実際に読まれる見た目を見ながら直せるようにするため
+     （home のデッキ内「整える」は写真カードが670pxあり、入力欄が
+     画面外に押し出されるので、ここでは同じ問題が起きない普通の
+     高さのカードを使う）。
+     --------------------------------------------------------- */
+  function setupBookLinebreakPreview(root) {
+    all("[data-linebreak-input]", root).forEach(function (input) {
+      var key = input.getAttribute("data-linebreak-input");
+      var preview = root.querySelector(
+        '[data-linebreak-preview="' + key + '"]',
+      );
+      if (!preview) return;
+      input.addEventListener("input", function () {
+        applyText(preview, input.value, "xl");
+      });
+    });
+  }
+
   function setupBookPane(pane) {
     /* 目次の行が、そのままページの元になる（data-page は古い順の番号） */
     var rows = all("[data-book-open]", pane).sort(function (a, b) {
@@ -645,6 +668,7 @@
     }
     setupReactions(main);
     setupBook(main);
+    setupBookLinebreakPreview(main);
     setupAccordion(main);
     setupProfile(main);
     setupIntro(main);
