@@ -643,7 +643,8 @@
       var activePage = pages[index];
       var background = activePage ? activePage.getAttribute("data-intro-bg") : "";
       if (appShell && background) {
-        appShell.style.setProperty("--intro-bg", 'url("' + background + '")');
+        var backgroundUrl = new URL(background, document.baseURI).href;
+        appShell.style.setProperty("--intro-bg", 'url("' + backgroundUrl + '")');
       }
 
       if (indicator) indicator.textContent = (index + 1) + " / " + pages.length;
