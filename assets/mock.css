@@ -146,3 +146,36 @@
     min-height: calc(100svh - 48px);
   }
 }
+
+/* =========================================================
+   UI review experiment: home hero lower-zone balance
+
+   styles.css / ui-next.css above are synced exactly from utagaeshi/main.
+   This block is the only design experiment.
+
+   Move the lower card chrome down 40px as one group:
+   - arrows:       bottom 212px -> 172px
+   - count/label:  bottom 210px -> 170px
+   - action row:   bottom 146px -> 106px
+   - card metadata follows by the same 40px so spacing does not collapse.
+
+   Horizontal alignment, sizes, typography, card structure and body copy are unchanged.
+   ========================================================= */
+.home-mock.home-hero .deck-ctrl button {
+  bottom: 172px;
+}
+
+.home-mock.home-hero .deck-count {
+  bottom: 170px;
+}
+
+.home-mock.home-hero .deck-open-row {
+  bottom: 106px;
+}
+
+/* 自分・千年前・他人のカードには下段メタがある。
+   操作群だけ下げると近づきすぎるため、同じ量だけ下げて関係を保つ。 */
+.home-mock.home-hero .vcard-bottom {
+  transform: translateY(40px);
+}
+

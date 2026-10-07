@@ -1,16 +1,4 @@
 /* =========================================================
-   うたがえし — 刷新後の共通部品のスタイル
-
-   実装（utagaeshi）の src/app/ui-next.css をそのまま持ってきたもの。
-   visual-card / デッキ / 目次 / 返し帳 / プロフィールなど、
-   景色ファーストの画面を作っている部品はすべてここにある。
-
-   ■ 触り方
-   ここを直したら実装の ui-next.css にも同じ差分を入れる（逆も同じ）。
-   モックだけに要る差分は mock.css に置き、この1枚には足さない。
-   ========================================================= */
-
-/* =========================================================
    うたがえし — 刷新後の共通部品のスタイル（Phase 1-2〜）
    値は globals.css のトークンを参照する。直接の色・サイズ指定は増やさない。
 
@@ -191,7 +179,7 @@
 
 /* ---------------------------------------------------------
    未投稿ホーム
-   UIの正本は utagaeshi_same_visual_card_mock.html の `#before`。
+   UIの正本は utagaeshi-mock の `index.html`（投稿前の状態）。
    値はモックからそのまま移している。独自解釈で変えないこと。
 
    セレクタは .home-mock の中に閉じる。.word / .words / .brand のような
@@ -261,6 +249,13 @@
 .home-mock .vcard-bottom {
   margin-top: auto;
 }
+
+/* ---------- ヘッダー ----------
+   ヘッダーはどの画面でも同じ部品（AppHeader）なので、見た目も
+   ここ1か所に書く。以前は .home-mock 用と .book-mock/.scenes-mock 用で
+   ほぼ同じ指定を2セット持っていて、片方だけ直すと画面によって
+   ヘッダーがずれる形になっていた。
+   ブランド・アイコン・メニューの寸法は .app-shell-header の節にある。 */
 .brand-wrap {
   display: flex;
   align-items: center;
@@ -361,7 +356,7 @@
 .home-mock .compose-count {
   margin: 6px 2px 0;
   text-align: right;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
   font-variant-numeric: tabular-nums;
 }
@@ -403,7 +398,7 @@
 .deck-edit-count {
   margin: 6px 2px 0;
   text-align: right;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
   font-variant-numeric: tabular-nums;
 }
@@ -488,7 +483,7 @@
 }
 .home-mock .compose-error {
   margin: 10px 0 0;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   line-height: 1.6;
   color: var(--danger, #a4443a);
 }
@@ -564,7 +559,7 @@
   display: block;
   margin-bottom: 5px;
   color: #806f5d;
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 /* 景色の文は3行あるので、ここでは2行まで */
 .home-mock .scene-link-text {
@@ -579,7 +574,9 @@
 /* 言葉の札と同じ示し方でそろえる */
 .home-mock .scene-link.is-current {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 7px 17px rgba(64, 55, 47, 0.05);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 7px 17px rgba(64, 55, 47, 0.05);
 }
 
 .home-mock .words-head {
@@ -632,12 +629,14 @@
 /* いまデッキで開いている札。地の色が3種類あるので、枠の色で示す */
 .home-mock .word.is-current {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 7px 17px rgba(64, 55, 47, 0.05);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 7px 17px rgba(64, 55, 47, 0.05);
 }
 .home-mock .word-type {
   margin-bottom: 7px;
   color: #806f5d;
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .home-mock .word p {
   margin: 0;
@@ -662,7 +661,7 @@
 .home-mock .word-meta {
   margin-top: 9px;
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 
 .home-mock .book-link {
@@ -677,7 +676,7 @@
 
 /* ---------------------------------------------------------
    デッキ（1ページ目は今日の景色、2ページ目以降は言葉）
-   値は utagaeshi_same_visual_card_mock.html の `#after` の `.deck` から。
+   値は utagaeshi-mock の `index.html`（投稿後の状態）の `.deck` から。
 
    .deck-nav は globals.css の旧intro用に同名の指定があるので、
    .deck-ctrl に改名している（.home-mock 配下だけとはいえ、
@@ -718,8 +717,9 @@
   gap: 14px;
   /* いちばん背の高い中身（… を含む .deck-acts）に合わせて固定する。
      めくって1ページ目（「これまでの景色を見る」だけ）になっても、
-     他の人の言葉（… が出ない）になっても、ここは動かない */
-  min-height: 40px;
+     他の人の言葉（… が出ない）になっても、ここは動かない。
+     モバイルのタップ領域も44pxを下回らせない。 */
+  min-height: 44px;
   margin-top: 10px;
   /* … のメニューを浮かせる基準。行の高さを変えずに重ねる */
   position: relative;
@@ -754,7 +754,10 @@
   appearance: none;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 7px 2px;
   border: 0;
   background: none;
@@ -777,16 +780,18 @@
   height: 14px;
   background: var(--line-strong);
 }
-/* 「届いた」も同じ姿にする。ピルの土台（globals.css の .react）は
-   返し帳などで使うので触らず、この行にだけ効く上書きにする */
+/* 「届いた」は /・/poems/[id]・/users/[userId] の3画面で共通。
+   未反応時は各画面の既存色をそのまま使い、押した後だけ明確に状態を変える。 */
 .home-mock .deck-open-row .reactions {
   gap: 0;
 }
 .home-mock .deck-open-row .react {
   gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 7px 2px;
   border: 0;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   background: none;
   color: inherit;
   font-family: var(--sans);
@@ -794,8 +799,9 @@
   line-height: 20px;
 }
 .home-mock .deck-open-row .react.on {
-  background: none;
-  color: var(--accent-ink);
+  background: var(--accent-active);
+  color: #fff;
+  text-shadow: none;
 }
 .home-mock .deck-open-row .react .dot {
   width: 10px;
@@ -808,7 +814,7 @@
 
 .home-mock .deck-act-menu {
   position: absolute;
-  top: 40px;
+  top: 44px;
   right: 42px;
   z-index: 5;
   display: flex;
@@ -819,6 +825,7 @@
   box-shadow: 0 8px 24px rgba(67, 50, 40, 0.1);
 }
 .home-mock .deck-act-menu button {
+  min-height: 44px;
   padding: 9px 13px;
   border: 0;
   border-radius: 999px;
@@ -834,6 +841,9 @@
   color: var(--danger);
 }
 .home-mock .deck-open {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink-soft);
   font-family: var(--serif);
   font-size: 13px;
@@ -855,115 +865,13 @@
   color: var(--ink);
 }
 .home-mock .deck-count span {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-soft);
-}
-
-/* ---------- 景色カードを縦に拡大 ---------- */
-.home-mock.home-hero .vcard {
-  /* 670pxは「返しが上限140字（最小サイズ17px・9行）」を実測して決めた値。
-     620pxで組んだところ、本文が最大まで伸びたときに下のページャー・
-     アクション行とぶつかった。padding-topはヘッダーの逃げ、
-     padding-bottomは .vcard-bottom（自分/千年前/他人カードの下段メタ）の
-     逃げ。ここを変えるときは、必ず140字いっぱいの返しで再確認すること */
-  padding: 92px 24px 118px;
-}
-
-/* ---------- .deck 一式を写真の上へ重ねる基準 ----------
-   .deck / .deck-ctrl / .swipe-note / .deck-open-row をまとめて包む枠
-   （index.html の .deck-frame）。中身は .deck の高さぶんしか無いので、
-   絶対配置の要素がここを基準に写真(.vcard)の上へ正しく重なる。
-   この枠自体は .home-hero が無い画面では position:static のままで、
-   見た目に影響しない */
-.home-hero .deck-frame {
-  position: relative;
-}
-
-/* 矢印は写真の左右端、縦方向は「n/m・種別ラベル」の行に高さを揃える。
-   中央固定にすると、返しの文字数が多い日（最大9行）に本文と重なる。
-   届いた・シェア・…の行は左寄せで矢印の位置(x:16〜58px)と重なるため、
-   その行に揃えることもできない */
-.home-hero .deck-ctrl {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  display: block;
-  /* 矢印以外の場所を押しても何も起きないようにする（クリックが
-     素通りして.deckのスワイプ判定に届くよう、ここではpointer-eventsを
-     切る。矢印自身だけ下のルールで戻す） */
-  pointer-events: none;
-  z-index: 2;
-}
-.home-hero .deck-ctrl button {
-  position: absolute;
-  bottom: 212px;
-  pointer-events: auto;
-  background: rgba(20, 22, 18, 0.28);
-  border-color: rgba(255, 255, 255, 0.55);
-  color: #fff;
-  backdrop-filter: blur(2px);
-}
-.home-hero .deck-ctrl button:first-of-type {
-  left: 16px;
-}
-.home-hero .deck-ctrl button:last-of-type {
-  right: 16px;
-}
-.home-hero .deck-count {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 215px;
-  /* text-alignは .home-mock .deck-count の center のままにする。
-     中央寄せの短い文字（n/m・種別ラベル）だから矢印の内側に収まる。
-     左寄せにすると、左の矢印(x:16〜58px)と文字がぶつかる */
-}
-.home-hero .deck-count strong,
-.home-hero .deck-count span {
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
-.home-hero .swipe-note {
-  position: absolute;
-  left: 24px;
-  bottom: 192px;
-  color: var(--on-scene-soft);
-  text-shadow: var(--on-scene-shadow-sm);
-}
-
-/* アクション行（届いた・シェア・…）も写真の下端へ */
-.home-hero .deck-open-row {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 146px;
-  min-height: 0;
-  margin: 0;
-  justify-content: flex-start;
-}
-.home-hero .deck-acts,
-.home-hero .deck-open {
-  color: var(--on-scene-strong);
-  text-shadow: var(--on-scene-shadow-sm);
-}
-.home-hero .deck-act-sep {
-  background: var(--on-scene-line);
-}
-
-/* ---------- composeが景色の下端へ食い込む ---------- */
-.home-hero .compose-card {
-  position: relative;
-  z-index: 4;
-  /* -96pxは.vcardのpadding-bottom(118px)から、.vcard-bottomと
-     compose-cardの間に22pxの隙間を残した値。ここも.vcardの高さと
-     セットで決めているので、片方だけ変えない */
-  margin-top: -96px;
-  border-radius: 24px 24px 18px 18px;
 }
 
 /* ---------------------------------------------------------
    返し帳
-   UIの正本は utagaeshi_mypage_grouped_toc_liked_mock.html。
+   UIの正本は utagaeshi-mock の `mypage.html`。
    値はモックからそのまま移している。独自解釈で変えないこと。
 
    ホーム(.home-mock)と同じく、セレクタは .book-mock の中に閉じる。
@@ -990,7 +898,7 @@
 .book-mock .profile-line {
   margin: 0 2px 16px;
   color: #786f67;
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .book-mock .profile-line strong {
   font-family: var(--serif);
@@ -1018,7 +926,7 @@
 }
 .book-mock .book-title span,
 .scenes-mock .book-title span {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
 }
 
@@ -1083,13 +991,55 @@
 }
 
 /* ---------- ページャ ---------- */
+.book-mock .pager {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-top: 15px;
+}
+.book-mock .pager-btn {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: #fffaf3;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 12px;
+  cursor: pointer;
+}
+.book-mock .pager-btn.right {
+  justify-self: end;
+}
+.book-mock .pager-btn:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+.book-mock .counter {
+  min-width: 72px;
+  text-align: center;
+}
+.book-mock .counter strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.book-mock .counter span {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-caption);
+  color: var(--ink-faint);
+}
 /* 返し帳とデッキで同じ案内。スワイプでめくれるのは見た目に出ないので、
    めくれる画面には必ずこの一行を添える */
 .book-mock .swipe-note,
 .home-mock .swipe-note {
   margin-top: 9px;
   text-align: center;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
 }
 
@@ -1113,7 +1063,7 @@
   color: var(--ink);
 }
 .book-mock .toc-head span {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
 }
 .book-mock .grouped-toc,
@@ -1177,7 +1127,7 @@
 .book-mock .toc-month-count,
 .scenes-mock .toc-month-count {
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .book-mock .toc-month-arrow,
 .scenes-mock .toc-month-arrow {
@@ -1236,7 +1186,7 @@
 }
 .book-mock .toc-date {
   color: #756d65;
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .book-mock .toc-text {
   overflow: hidden;
@@ -1332,7 +1282,7 @@
   display: block;
   margin-bottom: 4px;
   color: #756d65;
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .scenes-mock .index-row-sub {
   color: var(--ink-faint);
@@ -1395,13 +1345,13 @@
 }
 .person-mock .person-head span {
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 /* 自分のページに来たときの但し書き。ここは返し帳ではない、と言う行 */
 .person-mock .person-self-note {
   margin: 0 2px 18px;
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 /* 自己紹介は本人の言葉なので、一覧の文と同じ明朝で置く */
 .person-mock .person-bio {
@@ -1453,7 +1403,7 @@
   display: block;
   margin-bottom: 5px;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .profile-mock .profile-field input,
 .profile-mock .profile-field textarea {
@@ -1509,12 +1459,12 @@
   gap: 10px;
   margin-top: 6px;
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .profile-mock .profile-error {
   margin: 6px 0 0;
   color: var(--danger, #a4553f);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 /* 直している間、下の内容は消さずに薄くする */
 .profile-mock .profile-rest.is-dim {
@@ -1578,7 +1528,7 @@
 }
 .profile-mock .profile-counts span {
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 /* 導線。返し帳の月の見出しと同じ行の作りにそろえる */
 .profile-mock .profile-links a {
@@ -1601,7 +1551,7 @@
   margin-top: 4px;
   color: var(--ink-faint);
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .profile-mock .profile-link-arrow {
   color: #aaa197;
@@ -1623,7 +1573,7 @@
 .account-mock .account-rows dt {
   margin-bottom: 5px;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .account-mock .account-rows dd {
   margin: 0;
@@ -1664,7 +1614,7 @@
   padding: 11px 5px 13px;
   border-bottom: 1px solid #e8e1d8;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
   line-height: 1.8;
 }
 .account-mock .account-form {
@@ -1681,18 +1631,18 @@
   display: block;
   margin-bottom: 6px;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .account-mock .account-field small {
   display: block;
   margin-top: 5px;
   color: var(--ink-faint);
-  font-size: 11px;
+  font-size: var(--fs-caption);
 }
 .account-mock .account-note {
   margin: 14px 0 0;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: var(--fs-caption);
   line-height: 1.8;
 }
 .account-mock .account-save {
@@ -1761,22 +1711,6 @@
 }
 .day-mock .word-meta {
   margin-top: 7px;
-}
-.home-mock .day-title {
-  margin: 0 2px 16px;
-}
-.home-mock .day-title h1 {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 21px;
-  font-weight: 500;
-  color: var(--ink);
-}
-.home-mock .day-title span {
-  display: block;
-  margin-top: 5px;
-  color: var(--ink-soft);
-  font-size: 11px;
 }
 
 /* ---------------------------------------------------------
@@ -1890,6 +1824,40 @@ button.index-row {
 .app:has(> .admin-scenes),
 .app:has(> .admin-scene-detail) {
   --app-max: 480px;
+}
+
+/* ---------------------------------------------------------
+   押せる範囲
+
+   Phase 5 の実測で、指で押す部分が小さすぎるものが見つかった。
+   ハンバーガーは29x24px、「整える」「削除する」は高さ15pxしかない。
+   WCAG 2.5.8 の下限は24x24で、そこにも届いていない。
+
+   ■ 大きく描くのではなく、当たり判定だけ広げる
+   この画面は静かな見た目が設計そのものなので、ボタンを大きく描くと
+   設計が壊れる。padding で内側を広げ、同じ値の負の margin で外形を
+   元に戻す。こうすると**見た目と配置は1pxも動かないまま**、押せる
+   範囲だけが広がる。
+
+   広げる量は上下に10〜12px。隣の要素の判定と重なって「押したつもりの
+   ものと違うものが反応する」ほうが困るので、44pxまでは広げない。
+   --------------------------------------------------------- */
+/* ヘッダーの中は flex で位置が決まるうえ、幅と高さを固定してあるので、
+   padding では広げられない（box-sizing が border-box なので内側を食う）。
+   ここだけは透明な板を重ねて判定を広げる。右上の角にあり、隣の操作と
+   重なる心配が無い場所なので、この手が使える */
+/* ヘッダーはどの画面でも同じ部品なので、ここも画面で分けない */
+.home-menu {
+  position: relative;
+}
+.home-menu::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
 }
 /* この2つは既に margin を持っている（.book-link は 26〜30px auto 0 で
    中央寄せ）。padding + 負の margin で広げると、その margin ごと
@@ -2017,7 +1985,7 @@ button.index-row {
   margin-top: 10px;
 }
 .legal-mock .legal-contact dt {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
 }
 .legal-mock .legal-contact dd {
@@ -2027,7 +1995,7 @@ button.index-row {
 }
 .legal-mock .legal-revised {
   margin: 28px 0 0;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--ink-faint);
 }
 
@@ -2047,7 +2015,7 @@ button.index-row {
 .legal-consent {
   margin: 14px 0 0;
   text-align: center;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   line-height: 1.8;
   color: var(--ink-soft);
 }
@@ -2056,978 +2024,19 @@ button.index-row {
   text-underline-offset: 3px;
 }
 
-
 /* =========================================================
-   2026-09-19 トップ静音化
-   UIカード感を減らし、景色と言葉を主役にする。
-   機能・DOM構造は変えず、index.html(.home-hero)だけ上書きする。
-   ========================================================= */
-
-/* スワイプ説明は、触れば分かる補助UIなのでトップでは常時出さない */
-.home-hero .swipe-note {
-  display: none;
-}
-
-/* 今日の景色カードは「カード」より「画面」に寄せる */
-.home-mock.home-hero .vcard {
-  padding-top: 112px;
-}
-
-/* ラベルを主張させず、景色の文を前に出す */
-.home-hero .vcard-label {
-  opacity: 0.72;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-}
-.home-hero .vcard-label::before {
-  width: 18px;
-  opacity: 0.7;
-}
-
-/* 景色の文を少し下へ置き、写真の余白を感じられるようにする */
-.home-hero .vcard--scene .vcard-body {
-  padding-top: 78px;
-  max-width: 86%;
-}
-.home-hero .vcard--scene .vcard-text {
-  line-height: 2.02;
-  letter-spacing: 0.035em;
-}
-
-/* 矢印を「丸ボタン」から、写真端に浮く記号へ寄せる */
-.home-hero .deck-ctrl button {
-  width: 34px;
-  height: 44px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  backdrop-filter: none;
-  box-shadow: none;
-  font-size: 22px;
-  opacity: 0.72;
-}
-.home-hero .deck-ctrl button:first-of-type {
-  left: 8px;
-}
-.home-hero .deck-ctrl button:last-of-type {
-  right: 8px;
-}
-.home-hero .deck-ctrl button:disabled {
-  opacity: 0.14;
-}
-
-/* n/m・種別も操作パネルではなく、小さな注釈として扱う */
-.home-hero .deck-count {
-  bottom: 210px;
-}
-.home-hero .deck-count strong {
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  opacity: 0.8;
-}
-.home-hero .deck-count span {
-  margin-top: 3px;
-  font-size: 10px;
-  opacity: 0.7;
-}
-
-/* カード下アクションもさらに薄く */
-.home-hero .deck-open-row {
-  bottom: 146px;
-}
-.home-hero .deck-acts,
-.home-hero .deck-open {
-  opacity: 0.78;
-  font-size: 12px;
-}
-
-/* 投稿欄を「白いカード」ではなく、景色の次に続く紙面へ */
-.home-hero .compose-card {
-  margin-top: -52px;
-  padding: 44px 8px 12px;
-  border: 0;
-  border-radius: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(250, 247, 241, 0.92) 0,
-    rgba(250, 247, 241, 0.985) 44px,
-    rgba(250, 247, 241, 1) 100%
-  );
-  box-shadow: none;
-}
-
-/* 問いかけは少しだけ作品側へ */
-.home-hero .compose-card h1 {
-  margin-left: 4px;
-  font-size: 20px;
-  letter-spacing: 0.045em;
-}
-
-/* 入力欄を箱ではなく「書く面」に近づける */
-.home-hero .compose-input {
-  min-height: 170px;
-  padding: 18px 4px 16px;
-  border: 0;
-  border-bottom: 1px solid rgba(112, 98, 84, 0.28);
-  border-radius: 0;
-  background: transparent;
-  line-height: 1.9;
-  box-shadow: none;
-}
-.home-hero .compose-input:focus {
-  border-color: var(--accent);
-  box-shadow: none;
-}
-
-/* 字数と補足は控えめに */
-.home-hero .compose-count {
-  margin-top: 8px;
-  opacity: 0.7;
-}
-.home-hero .compose-helper,
-.home-hero .legal-consent {
-  opacity: 0.72;
-}
-
-/* CTAも巨大なピルをやめ、静かな矩形へ */
-.home-hero .compose-submit {
-  width: auto;
-  min-width: 132px;
-  margin: 14px 0 0 auto;
-  padding: 11px 24px;
-  border-radius: 8px;
-  display: block;
-}
-
-/* みんなの言葉との間をしっかり空け、景色→書く→読むの段差を作る */
-.home-hero .words {
-  margin-top: 52px;
-}
-
-
-/* ---------- ヒーローを親の左右paddingいっぱいまで広げる ---------- */
-/* .home-mock の左右15pxは本文には必要だが、今日の景色だけは窮屈に見える。
-   deck-frame だけ親paddingを打ち消して、写真面を画面幅いっぱいに近づける。 */
-.home-mock.home-hero {
-  padding-top: 0;
-}
-
-
-
-/* 広げた分、カード内部の読み余白は維持する */
-.home-hero .deck-frame .vcard {
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-
-
-.home-mock
-
-.home-mock
-
-
-/* =========================================================
-   2026-09-20 モバイルのデッキ矢印タップ改善
-   見た目は小さいまま、実際のタップ領域だけ広げる。
-   ページ全体のピンチズームは残し、矢印のダブルタップズームだけ抑える。
-   ========================================================= */
-.home-hero .deck-ctrl button {
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* 広げた判定がカード外へ逃げないよう、端から少しだけ内側へ */
-.home-hero .deck-ctrl button:first-of-type {
-  left: 0;
-}
-.home-hero .deck-ctrl button:last-of-type {
-  right: 0;
-}
-
-/* 見た目の矢印サイズ自体は大きくしすぎない */
-.home-hero .deck-ctrl button {
-  font-size: 22px;
-  line-height: 1;
-}
-
-/* ページ名は本文で一度だけ見せる */
-
-/* 表題は「アプリの見出し」より、本の章扉に近づける */
-.scenes-mock .book-title {
-  display: block;
-  margin: 0 2px 30px;
-}
-.scenes-mock .book-title h1 {
-  font-size: 31px;
-  line-height: 1.45;
-  letter-spacing: 0.035em;
-}
-.scenes-mock .book-title span {
-  display: block;
-  margin-top: 9px;
-  font-size: 12px;
-  letter-spacing: 0.02em;
-}
-
-/* 月をカードにしない。章見出しとして余白だけで区切る */
-.scenes-mock .grouped-toc {
-  gap: 30px;
-}
-.scenes-mock .toc-month,
-.scenes-mock .toc-month.current-month {
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-.scenes-mock .toc-month-head,
-.scenes-mock .toc-month-head.static {
-  min-height: 42px;
-  padding: 0 2px 10px;
-  grid-template-columns: auto 1fr auto;
-  border: 0;
-  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
-  background: transparent;
-}
-.scenes-mock .toc-month-head.static {
-  grid-template-columns: auto 1fr;
-}
-.scenes-mock .toc-month-name {
-  font-size: 17px;
-  letter-spacing: 0.055em;
-}
-.scenes-mock .toc-month-count {
-  justify-self: start;
-  margin-left: 2px;
-  font-size: 10px;
-  opacity: 0.78;
-}
-.scenes-mock .toc-month-arrow {
-  font-size: 18px;
-  opacity: 0.68;
-}
-
-/* 月の中身も枠を作らず、そのまま紙面に並べる */
-.scenes-mock .toc-month-body,
-.scenes-mock .toc-month.current-month .toc-month-body {
-  padding: 0;
-}
-
-/* 1日を「サムネ付きカード」ではなく、日記の索引行として見せる */
-.scenes-mock .index-row {
-  grid-template-columns: 64px minmax(0, 1fr) 12px;
-  gap: 14px;
-  min-height: 94px;
-  padding: 15px 2px;
-  border-bottom: 1px solid rgba(232, 225, 216, 0.92);
-}
-.scenes-mock .toc-month-body .index-row:last-child {
-  border-bottom: 0;
-}
-
-.scenes-mock .index-row-thumb {
-  width: 64px;
-  height: 64px;
-  border-radius: 8px;
-}
-
-/* 日付は索引情報。景色の文より一段弱くする */
-.scenes-mock .index-row-lead {
-  margin-bottom: 7px;
-  font-size: 10px;
-  letter-spacing: 0.05em;
-  color: var(--ink-faint);
-}
-.scenes-mock .index-row-sub {
-  color: inherit;
-  opacity: 0.78;
-}
-
-/* 主役は景色の文 */
-.scenes-mock .index-row-text {
-  font-size: 16px;
-  line-height: 1.7;
-  letter-spacing: 0.025em;
-  color: var(--ink);
-}
-
-.scenes-mock .index-row-arrow {
-  font-size: 17px;
-  color: #b3aaa1;
-}
-
-/* スマホでは行全体を押しやすくし、連打ズームを起こしにくくする */
-.scenes-mock .index-row,
-.scenes-mock .toc-month-head {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* 日付を記憶の入口にして、説明文は置かない */
-.home-mock.day-mock .day-title {
-  margin: 30px 2px 20px;
-}
-.home-mock.day-mock .day-title-date {
-  display: block;
-  margin: 0 0 7px;
-  color: var(--ink-faint);
-  font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: 0.13em;
-}
-.home-mock.day-mock .day-title h1 {
-  margin: 0;
-  font-size: 24px;
-  line-height: 1.5;
-  letter-spacing: 0.035em;
-}
-
-/* カード・ページャ・アクションを1つの写真領域として扱う */
-.day-mock .day-deck-frame {
-  position: relative;
-  margin-left: -15px;
-  margin-right: -15px;
-}
-
-.day-mock .day-deck-frame .vcard {
-  min-height: 610px;
-  padding: 88px 24px 118px;
-  border-radius: 0 0 18px 18px;
-  box-shadow: none;
-}
-
-.day-mock .day-deck-frame .vcard-label {
-  opacity: 0.75;
-  font-size: 11px;
-  letter-spacing: 0.09em;
-}
-.day-mock .day-deck-frame .vcard-label::before {
-  width: 18px;
-  opacity: 0.68;
-}
-
-/* 本文は写真の余白を残して、下寄せしすぎない */
-.day-mock .day-deck-frame .vcard--scene .vcard-body {
-}
-
-/* ページャは写真の中へ。見た目は小さく、タップ領域は広く */
-
-/* 操作方法の説明は常時出さず、操作で理解できるようにする */
-.day-mock .day-deck-frame .swipe-note {
-  display: none;
-}
-
-/* 反応やシェアは読む体験を邪魔しない位置と濃さへ */
-.day-mock .day-deck-frame .deck-acts {
-  opacity: 0.72;
-  font-size: 11px;
-}
-
-/* 写真の次に一覧が自然につながるよう、別カード感を作らない */
-.day-mock .words {
-  margin-top: 42px;
-}
-.day-mock .words-head {
-  margin-bottom: 16px;
-}
-.day-mock .words-head h2 {
-  font-size: 19px;
-  letter-spacing: 0.04em;
-}
-
-/* 一覧は引き続き1列。dayでは本文を少し読み物寄りにする */
-.day-mock .word {
-  padding: 16px 15px;
-}
-.day-mock .word p {
-  line-height: 1.75;
-}
-
-/* 遷移先を探す操作もスマホでズームを誘発しにくくする */
-.day-mock .word,
-.day-mock .scene-link {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-
-/* =========================================================
-   2026-09-20 dayをトップのヒーローへ統一
-   上半分は独自レイアウトを持たず、home-heroの位置・余白をそのまま使う。
-   ========================================================= */
-
-/* dayもトップ同様、最上部から写真を始める */
-.home-mock.home-hero.day-mock {
-  padding-top: 0;
-}
-
-/* 上半分はトップと同じ大きさ・文字位置へ完全に戻す */
-.home-mock.home-hero.day-mock .day-deck-frame {
-  position: relative;
-  margin-left: -15px;
-  margin-right: -15px;
-}
-
-.home-mock.home-hero.day-mock .day-deck-frame .vcard {
-  padding: 112px 24px 118px;
-}
-
-.home-mock.home-hero.day-mock .day-deck-frame .vcard-label {
-  opacity: 0.72;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-}
-.home-mock.home-hero.day-mock .day-deck-frame .vcard-label::before {
-  width: 18px;
-  opacity: 0.7;
-}
-
-/* 景色本文もトップと同位置 */
-.home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-body {
-}
-.home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-text {
-  line-height: 2.02;
-  letter-spacing: 0.035em;
-}
-
-/* ページャもトップの位置へ戻す */
-
-/* day独自で入れていた余白をなくし、写真の次へ素直につなぐ */
-.home-mock.home-hero.day-mock .words {
-  margin-top: 52px;
-}
-
-
-/* =========================================================
-   2026-09-20 dayヒーローの空白整理
-   日付とページ文脈を写真内へ入れ、トップより少し短い記録カードにする。
-   ========================================================= */
-.home-mock.home-hero.day-mock .day-deck-frame .vcard {
-  padding-top: 132px;
-  padding-bottom: 112px;
-}
-
-/* 日付＋「この日の言葉」を写真上部のページ見出しとして固定表示 */
-.day-mock .day-hero-meta {
-  position: absolute;
-  top: 80px;
-  left: 24px;
-  z-index: 5;
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-  pointer-events: none;
-}
-.day-mock .day-hero-meta span {
-  display: block;
-  margin-bottom: 5px;
-  font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  opacity: 0.78;
-}
-.day-mock .day-hero-meta strong {
-  display: block;
-  font-family: var(--serif);
-  font-size: 19px;
-  font-weight: 500;
-  letter-spacing: 0.045em;
-}
-
-/* 種別ラベルはページ見出しの下に置き、本文との階層を明確にする */
-.home-mock.home-hero.day-mock .day-deck-frame .vcard-label {
-  margin-top: 44px;
-  font-size: 11px;
-}
-
-/* 景色文は空白を取りすぎず、上部情報から自然につなげる */
-.home-mock.home-hero.day-mock .day-deck-frame .vcard--scene .vcard-body {
-}
-
-/* カードを短くしたぶん、操作群も同じ比率で下へ寄せ直す */
-
-
-/* =========================================================
-   2026-09-20 dayヒーロー下部UIの再配置
-   本文・作者とページャの衝突を避け、余っていた画像下部へ操作群を下げる。
-   ========================================================= */
-
-/* 下部情報のために取っていた余白を少し詰める */
-.home-mock.home-hero.day-mock .day-deck-frame .vcard {
-  padding-bottom: 78px;
-}
-
-/* カード自身のメタ（百人一首23番 / 千年前 など）を少し上へ残し、
-   その下にページャと反応を置く */
-.home-mock.home-hero.day-mock .day-deck-frame .vcard-bottom {
-  margin-top: 22px;
-}
-
-/* 矢印とページ番号を画像下部へ */
-
-/* 反応・シェア行は最下部へ */
-
-/* 下の一覧までの空白も少し削る */
-.home-mock.home-hero.day-mock .words {
-  margin-top: 30px;
-}
-
-/* 「ゆき の返し帳」＋「返し帳」の重複を1つの章扉に統合 */
-.book-mock .profile-line {
-  display: none;
-}
-.book-mock .book-title.book-title--personal {
-  display: block;
-  margin: 28px 2px 22px;
-}
-.book-mock .book-title--personal .book-title-kicker {
-  display: block;
-  margin: 0 0 1px;
-  font-family: var(--serif);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
-}
-.book-mock .book-title--personal h1 {
-  margin: 0;
-  font-size: 31px;
-  line-height: 1.4;
-  letter-spacing: 0.05em;
-}
-.book-mock .book-title--personal .book-title-copy {
-  display: block;
-  margin-top: 8px;
-  font-size: 11px;
-  letter-spacing: 0.025em;
-}
-
-/* タブはUIの箱ではなく、本の章を切り替える見出しとして扱う */
-.book-mock .book-tabs {
-  margin: 0 0 18px;
-  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
-}
-.book-mock .book-tab {
-  padding: 9px 4px 11px;
-  font-size: 13px;
-  letter-spacing: 0.035em;
-}
-.book-mock .book-tab.active::after {
-  left: 33%;
-  right: 33%;
-  height: 1px;
-}
-
-/* 言葉の1枚を主役にする。左右の本文余白だけ残して写真は広げる */
-.book-mock .book-pane > 
-.book-mock .book-pane > [data-book-card] .vcard {
-  padding: 72px 24px 76px;
-}
-.book-mock .book-pane > [data-book-card] .vcard-label {
-  font-size: 11px;
-  letter-spacing: 0.07em;
-  opacity: 0.78;
-}
-.book-mock .book-pane > [data-book-card] .vcard-label::before {
-  width: 18px;
-}
-.book-mock .book-pane > [data-book-card] .vcard-chip {
-  top: 72px;
-  right: 24px;
-  min-height: 26px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  backdrop-filter: none;
-  font-size: 11px;
-  opacity: 0.78;
-}
-.book-mock .book-pane > [data-book-card] .vcard-body {
-}
-.book-mock .book-pane > [data-book-card] .vcard-bottom {
-  margin-top: 34px;
-}
-
-/* ページャは丸ボタンをやめ、写真の余韻を壊さない記号にする */
-
-/* 操作説明は常時出さない */
-.book-mock .swipe-note {
-  display: none;
-}
-
-/* 目次までしっかり間を取り、「読む」と「探す」を分離 */
-.book-mock .toc {
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(222, 213, 202, 0.9);
-}
-.book-mock .toc-head {
-  margin: 0 2px 18px;
-}
-.book-mock .toc-head h2 {
-  font-size: 21px;
-  letter-spacing: 0.05em;
-}
-.book-mock .toc-head span {
-  font-size: 10px;
-}
-
-/* 月もカードにせず、本の目次の章見出しとして扱う */
-.book-mock .grouped-toc {
-  gap: 28px;
-}
-.book-mock .toc-month,
-.book-mock .toc-month.current-month {
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-.book-mock .toc-month-head,
-.book-mock .toc-month-head.static {
-  min-height: 40px;
-  padding: 0 2px 9px;
-  border: 0;
-  border-bottom: 1px solid rgba(222, 213, 202, 0.88);
-  background: transparent;
-  grid-template-columns: auto 1fr auto;
-}
-.book-mock .toc-month-head.static {
-  grid-template-columns: auto 1fr;
-}
-.book-mock .toc-month-name {
-  font-size: 16px;
-  letter-spacing: 0.05em;
-}
-.book-mock .toc-month-count {
-  font-size: 10px;
-  opacity: 0.76;
-}
-.book-mock .toc-month-body,
-.book-mock .toc-month.current-month .toc-month-body {
-  padding: 0;
-}
-
-/* 目次の行も管理表ではなく、本の索引に寄せる */
-.book-mock .toc-row {
-  grid-template-columns: 26px 48px minmax(0, 1fr) 12px;
-  gap: 9px;
-  min-height: 58px;
-  padding: 11px 2px;
-  border-bottom: 1px solid rgba(232, 225, 216, 0.9);
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-.book-mock .toc-page {
-  font-size: 10px;
-  opacity: 0.7;
-}
-.book-mock .toc-date {
-  font-size: 10px;
-}
-.book-mock .toc-text {
-  font-size: 13px;
-  line-height: 1.55;
-}
-.book-mock .toc-arrow {
-  font-size: 16px;
-  opacity: 0.62;
-}
-.book-mock .toc-row.active {
-  background: transparent;
-  border-radius: 0;
-  box-shadow: inset 2px 0 0 var(--accent);
-  padding-left: 9px;
-}
-
-
-/* =========================================================
-   2026-09-20 返し帳 — ページ番号を視覚的な軸にする
-   ========================================================= */
-.book-mock .book-title.book-title--personal {
-  margin: 28px 2px 18px;
-}
-.book-mock .book-title--personal h1 {
-  margin: 0;
-  font-size: 28px;
-  line-height: 1.4;
-  letter-spacing: 0.055em;
-}
-
-/* タブからカードまでの距離を少し詰める */
-.book-mock .book-tabs {
-  margin-bottom: 12px;
-}
-
-/* ページ番号レイヤー */
-.book-mock .book-page-card {
-  position: relative;
-}
-.book-mock .book-page-mark {
-  position: absolute;
-  top: 22px;
-  left: 24px;
-  z-index: 5;
-  pointer-events: none;
-  color: var(--on-scene);
-  text-shadow: var(--on-scene-shadow-sm);
-}
-.book-mock .book-page-mark strong {
-  display: block;
-  font-family: var(--serif);
-  font-size: 64px;
-  line-height: 0.92;
-  font-weight: 400;
-  letter-spacing: -0.04em;
-  opacity: 0.18;
-}
-
-/* ページ番号を置いたぶん、既存ラベルと本文を少し下げる */
-.book-mock .book-page-card .vcard {
-  padding-top: 118px;
-}
-.book-mock .book-page-card .vcard-label {
-  margin-top: 14px;
-}
-.book-mock .book-page-card .vcard-chip {
-  top: 112px;
-}
-
-/* 目次でもページ番号を少し強くし、上のカードとの関係を作る */
-.book-mock .toc-page {
-  font-size: 12px;
-  color: var(--ink-soft);
-  opacity: 0.95;
-  font-family: var(--serif);
-}
-.book-mock .toc-row.active .toc-page {
-  color: var(--accent-ink);
-}
-
-/* 現在ページは背景ではなく左罫＋ページ番号で示す */
-.book-mock .toc-row.active {
-  box-shadow: inset 2px 0 0 var(--accent);
-  background: transparent;
-}
-
-/* ページャ中央の「返し帳」は重複するので隠す */
-
-
-/* =========================================================
-   2026-09-20 返し帳ヘッダー直下の余白調整
-   ヘッダーと「ゆきの返し帳」を分断しすぎない。
-   ========================================================= */
-.book-mock .book-title.book-title--personal {
-  margin-top: 12px;
-  margin-bottom: 14px;
-}
-
-
-/* =========================================================
-   2026-09-20 返し帳ヘッダー統合
-   ブランド / 返し帳タイトル / タブを1つの固定ヘッダーとして扱う。
-   ========================================================= */
-.book-mock .book-shell-header {
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  width: calc(100% + 30px);
-  min-height: 0;
-  margin: -18px -15px 12px;
-  padding: calc(12px + env(safe-area-inset-top, 0px)) 15px 0;
-  background: color-mix(in srgb, #fffdf8 92%, transparent);
-  backdrop-filter: saturate(1.05) blur(12px);
-  border-bottom: 1px solid rgba(222, 213, 202, 0.62);
-}
-
-.book-mock .book-shell-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 38px;
-}
-
-
-.book-mock .book-shell-title {
-  margin-top: 7px;
-  font-family: var(--serif);
-  font-size: 23px;
-  line-height: 1.35;
-  font-weight: 500;
-  letter-spacing: 0.055em;
-  color: var(--ink);
-}
-
-/* 旧本文タイトルは使わない */
-.book-mock .book-title.book-title--personal {
-  display: none;
-}
-
-/* タブを本文UIではなく、返し帳ヘッダーの下段として扱う */
-.book-mock .book-shell-header .book-tabs {
-  margin: 10px 0 0;
-  border-bottom: 0;
-}
-
-.book-mock .book-shell-header .book-tab {
-  padding: 9px 2px 10px;
-  font-size: 12px;
-  letter-spacing: 0.035em;
-  color: var(--ink-faint);
-}
-
-.book-mock .book-shell-header .book-tab.active {
-  color: var(--ink);
-}
-
-.book-mock .book-shell-header .book-tab.active::after {
-  left: 28%;
-  right: 28%;
-  bottom: 0;
-  height: 2px;
-  background: var(--accent);
-}
-
-/* ヘッダー直下からカードを始める */
-.book-mock .book-pane {
-  margin-top: 0;
-}
-
-.book-mock .book-pane > [data-book-card] {
-  margin-top: 0;
-}
-
-/* 旧統合ヘッダー要素は使わない */
-.book-mock .book-shell-top,
-.book-mock .book-shell-title {
-  display: none;
-}
-
-/* カードをヘッダー直下から始める */
-.book-mock .book-pane {
-  margin-top: 0;
-}
-.book-mock .book-pane > [data-book-card] {
-  margin-top: 0;
-}
-
-/* タブは「目次の種類」を切り替えるUIとして目次直前に置く */
-.book-mock .book-tabs--toc {
-  margin: 38px 0 0;
-  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
-}
-.book-mock .book-tabs--toc .book-tab {
-  padding: 10px 4px 12px;
-  font-size: 13px;
-  letter-spacing: 0.035em;
-}
-.book-mock .book-tabs--toc + .toc {
-  margin-top: 0;
-  padding-top: 20px;
-  border-top: 0;
-}
-
-/* 写真面を詩集の1ページとして扱う */
-.book-mock .book-page-card .vcard {
-  padding: 126px 24px 74px;
-}
-
-/* ページ番号は大きく、ただし写真より前に出すぎない */
-.book-mock .book-page-mark {
-  top: 30px;
-  left: 24px;
-}
-.book-mock .book-page-mark strong {
-  font-size: 76px;
-  line-height: 0.86;
-  font-weight: 400;
-  letter-spacing: -0.055em;
-  opacity: 0.16;
-}
-
-/* 既存の日付ラベルはページ番号側に統合する */
-.book-mock .book-page-card .vcard-label {
-  display: none;
-}
-
-/* 種別は小さな注釈として右上へ */
-.book-mock .book-page-card .vcard-chip {
-  top: 38px;
-  right: 24px;
-  min-height: auto;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font-family: var(--serif);
-  font-size: 12px;
-  letter-spacing: 0.07em;
-  opacity: 0.82;
-}
-
-/* 言葉そのものを最も強くする */
-.book-mock .book-page-card .vcard-text {
-  line-height: 1.95;
-  letter-spacing: 0.035em;
-}
-
-/* 下部メタは小さく、余韻を壊さない */
-
-/* ページャは本のページをめくる程度の存在感に */
-
-/* 目次切替も「UIタブ」ではなく詩集の章見出しに寄せる */
-.book-mock .book-tabs--toc {
-  margin-top: 34px;
-}
-.book-mock .book-tabs--toc .book-tab {
-  font-family: var(--serif);
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  color: var(--ink-soft);
-}
-.book-mock .book-tabs--toc .book-tab.active {
-  color: var(--ink);
-}
-.book-mock .book-tabs--toc .book-tab.active::after {
-  left: 36%;
-  right: 36%;
-  height: 1px;
-}
-
-/* 「目次」も少し作品側へ */
-.book-mock .toc-head h2 {
-  font-size: 22px;
-  letter-spacing: 0.08em;
-}
-.book-mock .toc-head span {
-  font-family: var(--serif);
-  font-size: 11px;
-}
-
-/* 目次のページ番号と日付を詩集らしく揃える */
-.book-mock .toc-page {
-  font-size: 13px;
-  letter-spacing: 0.04em;
-}
-.book-mock .toc-date {
-  font-family: var(--serif);
-  font-size: 11px;
-  letter-spacing: 0.02em;
-}
-.book-mock .toc-text {
-  font-family: var(--serif);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-
-/* =========================================================
-   2026-09-21 AppHeader 正本
-   index / day / mypage / scenes は全て同じDOM・同じ寸法を使う。
-   ページ差分は overlay / paper の背景挙動だけ。
+   AppHeader（今日・その日の景色・返し帳・これまでの景色の共通ヘッダー）
+
+   正本は utagaeshi-mock の assets/app.js `setupAppHeader` /
+   assets/ui-next.css `.app-shell-header`。以前の HomeTodayHeader は
+   画面ごとにサブブランド文字（「返し帳」等）を出していたが、この4画面は
+   「うたがえし」＋アイコン＋メニューだけの同じ見た目にする。画面の文脈は
+   ヒーローの中身（景色の文・日付・ページ番号）が持つので、ヘッダー側は
+   持たない。
+
+   sticky + 負のマージンで、親の左右15px paddingを打ち消して写真の上へ
+   食い込ませる。overlay（写真の上で透過→紙面）とpaper（最初から紙面）の
+   2モードで寸法は完全に共通、背景の挙動だけが違う。
    ========================================================= */
 .app-shell-header {
   position: sticky;
@@ -3048,6 +2057,8 @@ button.index-row {
   background: transparent;
   border: 0;
   backdrop-filter: none;
+  /* 透過中は写真面のタップを邪魔しない。ブランド／アイコン／メニューだけ
+     下の子要素で pointer-events を戻す */
   pointer-events: none;
 }
 
@@ -3073,6 +2084,18 @@ button.index-row {
   text-decoration: none;
   text-shadow: var(--on-scene-shadow-sm);
 }
+/* /intro だけ、ブランドを <Link> ではなく skipIntro を呼ぶ<button>にする
+   （AppHeaderのbrandAction）。ボタンの既定見た目を消して<a>と同じにする */
+.app-shell-header .brand-wrap form {
+  display: contents;
+}
+.app-shell-header button.brand {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
 
 .app-shell-header .header-tools {
   display: flex;
@@ -3086,6 +2109,7 @@ button.index-row {
   text-decoration: none;
 }
 
+/* 見た目は30pxのままタップ域だけ44pxに広げる */
 .app-shell-header .header-avatar-link::after {
   content: "";
   position: absolute;
@@ -3126,44 +2150,61 @@ button.index-row {
   box-shadow: var(--on-scene-shadow-sm);
 }
 
-/* overlay: 写真を抜けたら紙面ヘッダーへ */
+/* overlay: 写真を抜けたら紙面ヘッダーへ（AppHeaderScrollSyncが.is-scrolledを付ける） */
 .app-shell-header.is-scrolled {
   background: color-mix(in srgb, #fffdf8 90%, transparent);
   backdrop-filter: saturate(1.05) blur(12px);
   border-bottom: 1px solid rgba(222, 213, 202, 0.58);
 }
-
 .app-shell-header.is-scrolled .brand {
   color: var(--ink);
   text-shadow: none;
 }
-
 .app-shell-header.is-scrolled .home-menu span {
   background: var(--ink);
   box-shadow: none;
 }
 
-
-
-/* paper: 寸法は完全共通。背景だけ最初から紙面 */
+/* paper: 寸法は完全共通。背景だけ最初から紙面（これまでの景色） */
 .app-shell-header--paper {
   margin-bottom: 18px;
   background: color-mix(in srgb, #fffdf8 94%, transparent);
   backdrop-filter: saturate(1.05) blur(12px);
   border-bottom: 1px solid rgba(222, 213, 202, 0.58);
 }
-
 .app-shell-header--paper .brand {
   color: var(--ink);
   text-shadow: none;
 }
-
 .app-shell-header--paper .home-menu span {
   background: var(--ink);
   box-shadow: none;
 }
 
-/* 4画面ともヘッダーを画面最上部から始める */
+/* AppHeader の副題。全ページ共通部品の任意スロット。
+   写真の上に乗らない画面（プロフィール・アカウント設定・
+   ○○さんの残した言葉・言葉を整える）の見出しに使う */
+.app-shell-header .app-shell-title {
+  margin-left: 16px;
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+}
+.app-shell-header:not(.app-shell-header--paper):not(.is-scrolled) .app-shell-title {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.app-shell-header--paper .app-shell-title,
+.app-shell-header.is-scrolled .app-shell-title {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+/* 4画面ともヘッダーを画面最上部から始める（左右下のpaddingは残す） */
 .home-mock.home-hero,
 .book-mock,
 .scenes-mock {
@@ -3171,24 +2212,30 @@ button.index-row {
 }
 
 /* =========================================================
-   2026-09-21 MainVisualCard 正本
-   top / day / mypage のメイン画像カード外枠だけを共通化する。
-   本文・日付・ページ番号など内部配置の padding / margin は各画面側に残す。
+   今日のヒーロー化（最新版）
+
+   正本は utagaeshi-mock の index.html / assets/ui-next.css。
+   `/`（HomeToday.tsx）だけに付く `.home-hero` でスコープする。
+   CardDeck.tsx で .deck / .deck-ctrl / .swipe-note / .deck-open-row を
+   .deck-frame で包み、この節の絶対配置が写真(.vcard)の上へ正しく重なる
+   基準にする。
    ========================================================= */
+
+/* 写真面を画面幅いっぱいへ。親の左右15px paddingを打ち消す
+   （home/day/返し帳の3画面で共通の値） */
 :root {
   --main-visual-height: 670px;
   --main-visual-radius: 0 0 18px 18px;
 }
-
-/* 3画面とも同じフル幅 */
 .home-mock.home-hero .deck-frame,
-.book-mock [data-book-card] {
+.book-mock .book-page-card {
+  position: relative;
   margin-left: -15px;
   margin-right: -15px;
 }
 
-/* 3画面とも同じ画像外枠。min-heightではなく固定heightにして、
-   中身によってページごとの見た目の高さがズレないようにする。 */
+/* 3画面（今日・その日の景色・返し帳）とも同じ画像外枠。min-heightではなく
+   固定heightにして、中身でページごとの高さがズレないようにする */
 .home-mock.home-hero .deck-frame .vcard,
 .book-mock .book-page-card .vcard {
   height: var(--main-visual-height);
@@ -3200,30 +2247,290 @@ button.index-row {
   background-position: center;
 }
 
+/* 670pxは「返しが上限140字（最小サイズ17px・9行）」を実測して決めた値。
+   140字いっぱいの返しで、本文が下のページャー・アクション行と重ならない
+   ことを変更のたびに確認すること */
+.home-mock.home-hero .vcard {
+  padding: 112px 24px 118px;
+}
 
+/* ラベルを主張させず、景色の文を前に出す */
+.home-hero .vcard-label {
+  opacity: 0.72;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+.home-hero .vcard-label::before {
+  width: 18px;
+  opacity: 0.7;
+}
 
-/* dayでは日付・ページ文脈が写真上部に既にあるため、
-   vcard-bottom の日付/補助メタは重複させない。 */
+/* 景色の文だけ少し下へ置き、写真の余白を感じられるようにする。
+   自分・千年前・他人の言葉カードは触らない（ラベル直下のまま）。
+   景色の文字は .vcard--scene .vcard-text 側で25px固定（可変サイズの
+   対象外）なので、ここを下げすぎると4行の景色で矢印下の「n / m」表示
+   （.home-hero .deck-count, bottom:210px）と重なる。実測
+   （Playwright, 390px幅・4行の実例）で78pxだと17px重なっていたため、
+   30pxまで下げて余白を確保した */
+.home-hero .vcard--scene .vcard-body {
+  padding-top: 30px;
+  max-width: 86%;
+}
+.home-hero .vcard--scene .vcard-text {
+  line-height: 2.02;
+  letter-spacing: 0.035em;
+}
+
+/* スワイプ説明は、触れば分かる補助UIなので常時は出さない
+   （矢印が写真の上に常に見えているため） */
+.home-hero .swipe-note {
+  display: none;
+}
+
+/* 矢印を写真の左右端に浮く記号にする。中央固定にすると、返しの文字数が
+   多い日（最大9行）に本文と重なるため、n/m・種別ラベルの行に高さを
+   揃えている */
+.home-hero .deck-ctrl {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: block;
+  /* 矢印以外を押しても何も起きないようにする（クリックが素通りして
+     .deckのスワイプ判定に届くよう、ここではpointer-eventsを切る。
+     矢印自身だけ下のルールで戻す） */
+  pointer-events: none;
+  z-index: 2;
+}
+.home-hero .deck-ctrl button {
+  position: absolute;
+  bottom: 212px;
+  /* タップ域は56x56のまま、見た目は写真端の記号ひとつに絞る */
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+  color: var(--on-scene);
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1;
+  text-shadow: var(--on-scene-shadow-sm);
+  opacity: 0.72;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+}
+.home-hero .deck-ctrl button:first-of-type {
+  left: 0;
+}
+.home-hero .deck-ctrl button:last-of-type {
+  right: 0;
+}
+.home-hero .deck-ctrl button:disabled {
+  opacity: 0.14;
+}
+
+/* n/m・種別も操作パネルではなく、小さな注釈として扱う */
+.home-hero .deck-count {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 210px;
+  text-align: center;
+}
+.home-hero .deck-count strong {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+.home-hero .deck-count span {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+  margin-top: 3px;
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* アクション行（届いた・シェア・…）も写真の下端へ、さらに薄く */
+.home-hero .deck-open-row {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 146px;
+  min-height: 44px;
+  margin: 0;
+  justify-content: flex-start;
+}
+.home-hero .deck-acts,
+.home-hero .deck-open {
+  color: var(--on-scene-strong);
+  text-shadow: var(--on-scene-shadow-sm);
+  font-size: 12px;
+}
+/* 通常の小さな操作は今まで通り控えめに見せる。
+   親全体を薄くすると reacted の背景色まで透けるので、未反応側だけに適用する。 */
+.home-hero .deck-open,
+.home-hero .deck-act,
+.home-hero .deck-open-row .react:not(.on),
+.home-hero .deck-act-sep {
+  opacity: 0.78;
+}
+.home-hero .deck-act-sep {
+  background: var(--on-scene-line);
+}
+
+.home-hero .words {
+  margin-top: 52px;
+}
+
+/* composeが景色の下端へ食い込む。「白いカード」ではなく、景色の次に
+   続く紙面として見せる（角丸・枠を持たず、グラデーションで馴染ませる） */
+.home-hero .compose-card {
+  position: relative;
+  z-index: 4;
+  /* -52pxは.vcardのpadding-bottom(118px)から、下の帯と重ならない
+     ぶんだけ差し引いた値。.vcardの高さとセットで決めているので、
+     片方だけ変えない */
+  margin-top: -52px;
+  padding: 44px 8px 12px;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 247, 241, 0.92) 0,
+    rgba(250, 247, 241, 0.985) 44px,
+    rgba(250, 247, 241, 1) 100%
+  );
+  box-shadow: none;
+}
+.home-hero .compose-card h1 {
+  margin-left: 4px;
+  font-size: 20px;
+  letter-spacing: 0.045em;
+}
+.home-hero .compose-input {
+  min-height: 170px;
+  padding: 18px 4px 16px;
+  border: 0;
+  border-bottom: 1px solid rgba(112, 98, 84, 0.28);
+  border-radius: 0;
+  background: transparent;
+  line-height: 1.9;
+  box-shadow: none;
+}
+.home-hero .compose-input:focus {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+.home-hero .compose-count {
+  margin-top: 8px;
+  opacity: 0.7;
+}
+.home-hero .compose-helper,
+.home-hero .legal-consent {
+  opacity: 0.72;
+}
+.home-hero .compose-submit {
+  width: auto;
+  min-width: 132px;
+  margin: 14px 0 0 auto;
+  padding: 11px 24px;
+  border-radius: 8px;
+  display: block;
+}
+
+/* =========================================================
+   その日の景色（day）
+
+   正本は utagaeshi-mock の day.html。作りはホームと同じ .home-hero を
+   共有しつつ、日付＋「この日の言葉」を写真上部の見出しとして重ねる分だけ
+   固有。ページャー・アクション行の位置は返し帳と共通なので
+   .deck-frame--record（下の節）に任せる。
+   ========================================================= */
+.home-mock.home-hero.day-mock .day-deck-frame .vcard {
+  padding: 132px 24px 78px;
+}
+
+/* 種別ラベル（この日の景色／あなたの言葉／千年前の言葉）は
+   ページ見出しの下に置く */
+.day-mock .vcard-label {
+  margin-top: 44px;
+  opacity: 0.72;
+  font-size: var(--fs-caption);
+}
+
+/* 日付＋「この日の言葉」を写真上部のページ見出しとして固定表示 */
+.day-mock .day-hero-meta {
+  position: absolute;
+  top: 80px;
+  left: 24px;
+  z-index: 5;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+  pointer-events: none;
+}
+.day-mock .day-hero-meta span {
+  display: block;
+  margin-bottom: 5px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+}
+/* モックは strong だが、実装はページの見出しとして実際の h1 にする
+   （モックのaria-hidden="true"のまま持ってくると、この画面の唯一の
+   見出しが読み上げから消える） */
+.day-mock .day-hero-meta h1 {
+  display: block;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: 0.045em;
+}
+
+/* 自分/千年前/他人カードの下段メタ（日付・届いた反応）は、上部の
+   ページ見出しと重複するので出さない */
 .home-mock.home-hero.day-mock .day-deck-frame .vcard-bottom {
   display: none;
 }
 
 /* =========================================================
-   2026-09-22 返し帳の縦リズム 正本
-   本文・下部アクション・日付を独立して配置し、極端な上下移動を防ぐ。
+   返し帳のページ番号（book-page-mark）
+
+   正本は utagaeshi-mock の mypage.html。カードの日付ラベルの代わりに、
+   大きな透かし数字でページ位置を示す（本のノンブルのイメージ）。
    ========================================================= */
-.book-mock .book-page-card .vcard {
-  padding: 126px 24px 42px;
+.book-mock .book-page-card {
+  position: relative;
 }
-
-/* 本文は上にも下にも寄せすぎない中間位置 */
-.book-mock .book-page-card .vcard-body {
+.book-mock .book-page-mark {
+  position: absolute;
+  top: 30px;
+  left: 24px;
+  z-index: 5;
+  pointer-events: none;
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
 }
-
-/* 「この日の景色を見る」は本文の直後ではなくカード下部へ */
-
-/* dayと同じ数字の日付表記・小さな補助情報のトーン */
+.book-mock .book-page-mark strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 76px;
+  line-height: 0.86;
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  opacity: 0.16;
+}
 .book-mock .book-page-mark span {
+  display: block;
   margin-top: 8px;
   font-family: var(--sans);
   font-size: 10px;
@@ -3231,25 +2538,38 @@ button.index-row {
   opacity: 0.78;
 }
 
-/* =========================================================
-   2026-09-22 返し帳も共通デッキ構造へ
-   pager / vcard-bottom を廃止し、home/day と同じ
-   deck-frame / deck-ctrl / deck-open-row を使う。
-   ========================================================= */
-.book-mock .book-page-card.deck-frame {
-  position: relative;
+/* 写真面を詩集の1ページとして扱う */
+.book-mock .book-page-card .vcard {
+  padding: 126px 24px 42px;
 }
 
-/* 矢印・ページ番号はトップのデッキと同じ高さ */
+/* 既存の日付ラベルはページ番号側に統合するので出さない */
+.book-mock .book-page-card .vcard-label {
+  display: none;
+}
 
+/* 種別（あなたの言葉／心に残った言葉／この日の景色）は小さな注釈として右上へ */
+.book-mock .book-page-card .vcard-chip {
+  top: 72px;
+  right: 24px;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.07em;
+  opacity: 0.78;
+}
 
+.book-mock .book-page-card .vcard-text {
+  line-height: 1.95;
+  letter-spacing: 0.035em;
+}
 
-
-
-
-
-/* 景色/言葉の切替もカード下端ではなく、共通の操作行へ */
-
+/* 言葉⇄この日の景色の切替・届いた反応は、写真面の下部へ静かに置く
+   （返し帳は .home-hero を使わないので、on-scene系トークンをここで
+   直接指定する） */
 .book-mock .book-page-card .deck-open,
 .book-mock .book-page-card [data-book-meta-right] {
   color: var(--on-scene-strong);
@@ -3257,9 +2577,6 @@ button.index-row {
   font-size: 12px;
   opacity: 0.78;
 }
-
-
-
 .book-mock .book-page-card button.deck-open {
   appearance: none;
   -webkit-appearance: none;
@@ -3273,9 +2590,11 @@ button.index-row {
 }
 
 /* =========================================================
-   2026-09-22 RecordDeckControls 正本
-   day / 返し帳の画像上操作は同じ位置・同じ寸法を使う。
-   ページ固有CSSで座標を持たない。
+   RecordDeckControls（day・返し帳で共通）
+
+   正本は utagaeshi-mock の `.deck-frame--record`。1枚の記録として読む
+   2画面（その日の景色・返し帳）は、矢印・n/m・アクション行を同じ位置・
+   同じ寸法で写真の上に重ねる。ページ固有CSSで座標を持たない。
    ========================================================= */
 .deck-frame--record {
   position: relative;
@@ -3307,15 +2626,12 @@ button.index-row {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-
 .deck-frame--record .deck-ctrl button:first-of-type {
   left: 0;
 }
-
 .deck-frame--record .deck-ctrl button:last-of-type {
   right: 0;
 }
-
 .deck-frame--record .deck-ctrl button:disabled {
   opacity: 0.14;
 }
@@ -3329,7 +2645,6 @@ button.index-row {
   color: var(--on-scene);
   text-shadow: var(--on-scene-shadow-sm);
 }
-
 .deck-frame--record .deck-count strong {
   font-family: var(--serif);
   font-size: 12px;
@@ -3352,11 +2667,10 @@ button.index-row {
   gap: 14px;
 }
 
-/* =========================================================
-   2026-09-23 RecordDeckBody 正本
-   day / 返し帳の本文は、前にあるラベルやページ番号の高さに依存せず
-   画像カード上端から同じ位置に置く。
-   ========================================================= */
+/* 返し帳（.deck-frame--record の直接の子にvcardがある画面）だけ、
+   本文をラベルやページ番号の高さに依存せず画像上端から同じ位置に置く。
+   その日の景色は .deck の中にvcardがあるため対象外（従来どおり
+   vcard-labelの直下から始まる） */
 .deck-frame--record > .vcard > .vcard-body {
   position: absolute;
   top: 240px;
@@ -3368,46 +2682,278 @@ button.index-row {
   padding: 0;
 }
 
-/* AppHeader の副題。全ページ共通部品の任意スロット。 */
-.app-shell-header .app-shell-title {
-  margin-left: 16px;
+/* =========================================================
+   タブ（返し帳）は「目次の種類」を切り替えるUIとして目次直前に置く
+
+   正本は utagaeshi-mock の `.book-tabs--toc`。基本の `.book-tabs` は
+   下線、`.toc` は上線を別々に持つため、この2つが隣り合うとそのまま
+   線が2本並んでしまう。`.book-tabs--toc + .toc` で目次側の上線を消し、
+   タブの下線だけを境界線として残す。
+   ========================================================= */
+.book-mock .book-tabs--toc {
+  margin: 34px 0 0;
+  border-bottom: 1px solid rgba(222, 213, 202, 0.9);
+}
+.book-mock .book-tabs--toc .book-tab {
+  padding: 10px 4px 12px;
   font-family: var(--serif);
-  font-size: 13px;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  color: inherit;
-  text-decoration: none;
-  pointer-events: auto;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+.book-mock .book-tabs--toc .book-tab.active {
+  color: var(--ink);
+}
+.book-mock .book-tabs--toc .book-tab.active::after {
+  left: 36%;
+  right: 36%;
+  height: 1px;
+}
+.book-mock .book-tabs--toc + .toc {
+  margin-top: 0;
+  padding-top: 20px;
+  border-top: 0;
 }
 
-.app-shell-header:not(.app-shell-header--paper):not(.is-scrolled) .app-shell-title {
+/* =========================================================
+   はじめての方へ（/intro）正本
+
+   カードではなく .app 全体を景色にする。ページをめくるたびに
+   IntroDeck が .app の --intro-bg を書き換える（setupIntro の移植）。
+   共通の .app（layout.tsx が全画面に敷く列）を直接は変えず、
+   .app:has(> .intro-mock) で /intro のときだけ効かせる
+   （.book-mock 等と同じ、この codebase の既存パターン）。
+   ========================================================= */
+.app:has(> .intro-mock) {
+  min-height: 100svh;
+  padding-bottom: 0;
+  background-image: var(--intro-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  isolation: isolate;
+}
+.app:has(> .intro-mock)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--scene-scrim);
+  pointer-events: none;
+}
+.app:has(> .intro-mock) > * {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 520px) {
+  .app:has(> .intro-mock) {
+    min-height: calc(100svh - 48px);
+  }
+}
+
+.intro-mock {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.intro-mock > .deck {
+  margin-top: 0;
+}
+.intro-mock .deck-viewport {
+  position: relative;
+  min-height: 64vh;
+  margin: 0 -20px;
+}
+
+.intro-mock .intro-bg {
+  min-height: 64vh;
+  background: transparent !important;
+  overflow: hidden;
+}
+.intro-mock .intro-bg .intro-page {
+  position: relative;
+  z-index: 1;
+  min-height: 64vh;
+  padding-bottom: 112px;
+  color: var(--on-scene);
+}
+.intro-mock .intro-bg .intro-eyebrow,
+.intro-mock .intro-bg .intro-title,
+.intro-mock .intro-bg .intro-poem,
+.intro-mock .intro-bg .intro-example-reply,
+.intro-mock .intro-bg .intro-sub,
+.intro-mock .intro-bg .intro-poem-meta,
+.intro-mock .intro-bg .intro-reply-arrow {
   color: var(--on-scene);
   text-shadow: var(--on-scene-shadow-sm);
 }
-
-.app-shell-header--paper .app-shell-title,
-.app-shell-header.is-scrolled .app-shell-title {
+.intro-mock .intro-bg .intro-sub,
+.intro-mock .intro-bg .intro-poem-meta,
+.intro-mock .intro-bg .intro-eyebrow {
+  color: var(--on-scene-soft);
+}
+.intro-mock .intro-bg .intro-example-reply {
+  border-top-color: var(--on-scene-line);
+  border-bottom-color: var(--on-scene-line);
+}
+.intro-mock .intro-bg .intro-cta {
+  background: rgba(255, 253, 248, 0.94);
   color: var(--ink);
+  border-color: transparent;
   text-shadow: none;
 }
 
-/* 2026-09-27 AppHeader transparent 最終差分
-   透明モードは背景だけ変える。
-   アバター等の部品見た目は共通 AppHeader の値をそのまま使う。 */
-.app-shell-header--transparent {
-  background: transparent;
-  border: 0;
-  backdrop-filter: none;
+.intro-mock .intro-deck-controls {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: max(18px, env(safe-area-inset-bottom, 0px));
+  z-index: 4;
+}
+.intro-mock .intro-deck-controls .deck-nav {
+  margin-top: 0;
+  justify-content: space-between;
+  gap: 12px;
+}
+.intro-mock .intro-deck-controls .deck-nav button,
+.intro-mock .intro-deck-controls .deck-indicator,
+.intro-mock .intro-deck-controls .intro-swipe-hint {
+  color: var(--on-scene);
+  text-shadow: var(--on-scene-shadow-sm);
+}
+.intro-mock .intro-deck-controls .deck-nav button:disabled {
+  opacity: 0.38;
+}
+.intro-mock .intro-deck-controls .intro-swipe-hint {
+  margin: 2px 0 0;
 }
 
-.app-shell-header--transparent .brand,
-.app-shell-header--transparent .app-shell-title {
+
+/* ---------- シェア経由ランディング ---------- */
+/* Xなどで人の言葉を見て来た人に「その言葉 → その景色 → 自分も残せる」を
+   1本で見せる。通常の /poems は閲覧画面なので、ここだけ参加導線まで持つ。 */
+.app:has(> .app-shell-header + .share-landing) {
+  --app-max: 430px;
+  background: linear-gradient(#fffdf9, #faf6f0);
+}
+
+.share-landing {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding: 18px 15px 48px;
   color: var(--ink);
-  text-shadow: none;
 }
 
-.app-shell-header--transparent .home-menu span {
-  background: var(--ink);
-  box-shadow: none;
+.share-landing-hero .vcard {
+  min-height: 405px;
 }
 
+.share-landing-arrow {
+  margin: 18px 0 14px;
+  color: var(--ink-faint);
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1;
+  text-align: center;
+}
+
+.share-origin {
+  padding: 0 4px;
+}
+
+.share-origin h2 {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--fs-lead);
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+
+.share-scene-card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 190px;
+  padding: 22px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background-image: var(--scene-placeholder);
+  background-size: cover;
+  background-position: center 48%;
+  box-shadow: var(--shadow-soft);
+  color: var(--on-scene);
+  isolation: isolate;
+}
+
+.share-scene-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--scene-scrim);
+}
+
+.share-scene-card p {
+  margin: 0;
+  max-width: 88%;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  font-size: var(--fs-scene);
+  line-height: 1.75;
+  text-shadow: var(--on-scene-shadow);
+}
+
+.share-explain {
+  margin: 18px 2px 0;
+  color: var(--ink-soft);
+  font-size: var(--fs-meta);
+  line-height: 1.85;
+}
+
+.share-day-link {
+  display: inline-block;
+  margin: 14px 2px 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--fs-body);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.share-join {
+  margin-top: 34px;
+  padding: 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.share-join p {
+  margin: 0 0 13px;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: var(--fs-body);
+}
+
+.share-join-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.share-join-button:active {
+  transform: translateY(1px);
+}
