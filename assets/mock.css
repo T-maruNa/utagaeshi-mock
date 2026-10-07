@@ -148,34 +148,38 @@
 }
 
 /* =========================================================
-   UI review experiment: home hero lower-zone balance
+   UI review experiment: unified deck control zone
 
-   styles.css / ui-next.css above are synced exactly from utagaeshi/main.
-   This block is the only design experiment.
+   home / day / 返し帳で同じクラスを付け、下部操作の縦位置をここだけで管理する。
+   本体(main)は未変更。mockで共通化後の見え方を確認するための差分。
 
-   Move the lower card chrome down 40px as one group:
-   - arrows:       bottom 212px -> 172px
-   - count/label:  bottom 210px -> 170px
-   - action row:   bottom 146px -> 106px
-   - card metadata follows by the same 40px so spacing does not collapse.
+   共通の縦ゾーン:
+   - arrows: bottom 100px
+   - count/label: bottom 112px
+   - action row: bottom 44px
+   - vcard-bottom: bottom 14px（存在するカードだけ）
 
-   Horizontal alignment, sizes, typography, card structure and body copy are unchanged.
+   横位置・サイズ・タイポグラフィ・カード構造は各既存スタイルを維持。
    ========================================================= */
-.home-mock.home-hero .deck-ctrl button {
-  bottom: 172px;
+.deck-frame--unified-controls .deck-ctrl button {
+  bottom: 100px;
 }
 
-.home-mock.home-hero .deck-count {
-  bottom: 170px;
+.deck-frame--unified-controls .deck-count {
+  bottom: 112px;
 }
 
-.home-mock.home-hero .deck-open-row {
-  bottom: 106px;
+.deck-frame--unified-controls .deck-open-row {
+  bottom: 44px;
 }
 
-/* 自分・千年前・他人のカードには下段メタがある。
-   操作群だけ下げると近づきすぎるため、同じ量だけ下げて関係を保つ。 */
-.home-mock.home-hero .vcard-bottom {
-  transform: translateY(40px);
+/* 自分/他人など下段メタがあるカードも同じ下部ゾーンへ着地させる。
+   day は既存ルールで .vcard-bottom 自体が非表示。 */
+.deck-frame--unified-controls .vcard-bottom {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 14px;
+  margin-top: 0;
 }
 
